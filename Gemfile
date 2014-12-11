@@ -58,6 +58,10 @@ gem "faraday"
 gem "faraday-cookie_jar"
 
 
-# TEST/DEBUG
+# HEROKU
+gem "rails_12factor"
+
+
+# TEST?DEBUG
 gem "foreman"
 gem "pry"
