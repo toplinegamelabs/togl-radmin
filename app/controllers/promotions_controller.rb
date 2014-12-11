@@ -62,7 +62,62 @@ class PromotionsController < ApplicationController
   end
 
   def edit
+    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
+    environment = config[Rails.env]["environment"]
+
+    oauth_token = OauthManager.execute(environment: environment, client_app: "dailymvp" || params[:client_app])
+    rapi_response = RapiManager.new(environment: environment, oauth_token: oauth_token).promotions
+
+    @promotion = rapi_response.select { |promo_contest| promo_contest["promotion"]["identifier"].to_s.downcase == params[:id].to_s.downcase }.first
+
+  end
+
+  def update_by_identifier
+
+    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
+    environment = config[Rails.env]["environment"]
+
+    oauth_token = OauthManager.execute(environment: environment, client_app: "dailymvp" || params[:client_app])
     
+
+    put_params = {
+      promotion: {
+        name: params["promo_name"],
+        identifier: params["promo_identifier"],
+        description: params["promo_description"],
+        images: {
+            mobile: {
+              banner: params["promo_mobile_banner"],
+              background: params["promo_mobile_background"],
+              badge: params["promo_mobile_badge"]
+            },
+            desktop: {
+              banner: params["promo_desktop_banner"],
+              background: params["promo_desktop_background"],
+              badge: params["promo_desktop_badge"]
+            },
+            tablet: {
+              banner: params["promo_tablet_banner"],
+              background: params["promo_tablet_background"],
+              badge: params["promo_tablet_badge"]
+            }
+          },
+        name_logo: {
+            unicode: params["promo_logo_unicode"],
+            css_class: params["promo_logo_css_class"]
+          },
+        display_type: params["promo_display_type"]
+      }
+    }
+    update_response = RapiManager.new(environment: environment, oauth_token: oauth_token).update_promo_challenge(put_params.to_json)
+
+    if update_response.status == 204
+      flash.keep[:notice] = "Promotion updated!"
+      redirect_to promotions_path
+    else
+      flash.keep[:error] = JSON.parse(update_response.body).values.flatten.join("\n")
+      redirect_to :back
+    end
   end
 
   def create

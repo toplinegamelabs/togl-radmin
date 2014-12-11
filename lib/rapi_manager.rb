@@ -87,6 +87,20 @@ class RapiManager
   end
 
   
+
+  def update_promo_challenge(params)
+    rapi_conn = get_connection
+    json_response = rapi_conn.put do |req|
+      req.url '/admin/promotional_challenge.json'
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+      req.body = params
+    end
+  end
+
+
   def promotions
     rapi_conn = get_connection
 

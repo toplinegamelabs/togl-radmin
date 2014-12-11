@@ -1,5 +1,5 @@
-<%= form_tag "/promotions", method: :post do %>
 
+<%- if @promotion.blank? %>
   <strong>Creator</strong><br/>
   <%= hidden_field_tag :user_id, "" %>
   <%= label_tag :username, "Username" %>
@@ -7,72 +7,81 @@
   <span id="username-output"></span>
   <br/>
   <br/>
+<%- end %>
 
 
   <strong>Promo Basics</strong><br/>
   <%= label_tag :promo_name, "Promo Name" %>
-  <%= text_field_tag :promo_name, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_name, @promotion ? @promotion["promotion"]["name"] : "", onchange: "validate();" %>
   <br/>
-  <%= label_tag :promo_identifier, "Promo Identifier (unique alphanumeric)" %>
+  <%= label_tag :promo_identifier, "Promo Identifier" %>
+
+<%- if @promotion.blank? %>
   <%= text_field_tag :promo_identifier, "", onchange: "promo_identifier_changed();" %>
+<%- else %>
+  <span style="color: #BBB"><%= @promotion["promotion"]["identifier"] %></span>
+  <%= hidden_field_tag :promo_identifier, @promotion["promotion"]["identifier"] %>
+<%- end %>
+
   <span id="identifier-output"></span>
   <br/>
   <%= label_tag :promo_description, "Promo Description" %>
-  <%= text_area_tag :promo_description, "", onchange: "validate();" %>
+  <%= text_area_tag :promo_description, @promotion ? @promotion["promotion"]["description"].join("\n") : "", onchange: "validate();" %>
   <br/>
 
   <br/>
   <strong>Promo Visuals</strong><br/>
   <%= label_tag :promo_display_type, "Display Type" %>
-  <%= text_field_tag :promo_display_type, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_display_type, @promotion ? @promotion["promotion"]["display_type"] : "", onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_logo_css_class, "Logo Css" %>
-  <%= text_field_tag :promo_logo_css_class, "icon-star", onchange: "validate();" %>
+  <%= text_field_tag :promo_logo_css_class, @promotion ? @promotion["promotion"]["name_logo"]["css_class"] : "icon-star", onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_logo_unicode, "Logo Unicode" %>
-  <%= text_field_tag :promo_logo_unicode, "e683", onchange: "validate();" %>
+  <%= text_field_tag :promo_logo_unicode, @promotion ? @promotion["promotion"]["name_logo"]["unicode"] : "e683", onchange: "validate();" %>
   <br/>
 
   <br/>
   <strong>Promo Mobile Images</strong><br/>
   <%= label_tag :promo_mobile_background, "Background" %>
-  <%= text_field_tag :promo_mobile_background, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_mobile_background, @promotion ? @promotion["promotion"]["images"]["mobile"]["background"] : "", onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_mobile_banner, "Banner" %>
-  <%= text_field_tag :promo_mobile_banner, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_mobile_banner, @promotion ? @promotion["promotion"]["images"]["mobile"]["banner"] : "", onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_mobile_badge, "Badge" %>
-  <%= text_field_tag :promo_mobile_badge, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_mobile_badge, @promotion ? @promotion["promotion"]["images"]["mobile"]["badge"] : "", onchange: "validate();" %>
   <br/>
 
   <br/>
   <strong>Promo Tablet Images</strong><br/>
   <%= label_tag :promo_tablet_background, "Background" %>
-  <%= text_field_tag :promo_tablet_background, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_tablet_background, @promotion ? @promotion["promotion"]["images"]["tablet"]["background"] : "", onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_tablet_banner, "Banner" %>
-  <%= text_field_tag :promo_tablet_banner, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_tablet_banner, @promotion ? @promotion["promotion"]["images"]["tablet"]["banner"] : "", onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_tablet_badge, "Badge" %>
-  <%= text_field_tag :promo_tablet_badge, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_tablet_badge, @promotion ? @promotion["promotion"]["images"]["tablet"]["badge"] : "", onchange: "validate();" %>
   <br/>
 
   <br/>
   <strong>Promo Desktop Images</strong><br/>
   <%= label_tag :promo_desktop_background, "Background" %>
-  <%= text_field_tag :promo_desktop_background, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_desktop_background, @promotion ? @promotion["promotion"]["images"]["desktop"]["background"] : "", onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_desktop_banner, "Banner" %>
-  <%= text_field_tag :promo_desktop_banner, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_desktop_banner, @promotion ? @promotion["promotion"]["images"]["desktop"]["banner"] : "", onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_desktop_badge, "Badge" %>
-  <%= text_field_tag :promo_desktope_badge, "", onchange: "validate();" %>
+  <%= text_field_tag :promo_desktope_badge, @promotion ? @promotion["promotion"]["images"]["desktop"]["badge"] : "", onchange: "validate();" %>
   <br/>
-
 
 
   <br/>
   <strong>Challenge Settings</strong><br/>
+
+<%- if @promotion.blank? %>
   <%= label_tag :max, "Max Challengers" %>
   <%= number_field_tag :max, 100, min: 2, onchange: "validate();" %>
   <span id="max-output"></span>
@@ -99,13 +108,23 @@
   <span id="entries-output"></span>
   <br/>
   <br/>
+<%- else %>
+  <%= label_tag :max, "Max Challengers" %>
+  <span style="color: #BBB"><%= @promotion["max"] %></span>
+  <br/>
+  <%= label_tag :game_id, "Game" %>
+  <span style="color: #BBB"><%= @promotion["game"]["name"] %></span>
+  <br/>
+  <%= label_tag :game_id, "Contest Template" %>
+  <span style="color: #BBB"><%= "#{@promotion["event_set"]["description"]} - #{@promotion["contest_template"]["buy_in"]["label"]} - #{@promotion["contest_template"]["size"]["label"]}" %></span>
+  <br/>
 
+<%- end %>
 
 
   <br/>
   <%= submit_tag "Submit", id: "submitter" %>
 
-<% end %>
 
 
 
@@ -129,12 +148,33 @@
 
   function validate() {
     valid = true;
+
+
+
+    // gotta have promo name
+    if($("#promo_name").val() != "") {
+      $("[for=promo_name]").css("color", "black");
+    } else {
+      valid = false;
+      $("[for=promo_name]").css("color", "red");
+    }
+
+
+  <%- if @promotion.blank? %>
+
     // gots a user
     if($("#user_id").val() != "") {
       $("[for=username]").css("color", "black");
     } else {
       valid = false;
       $("[for=username]").css("color", "red");
+    }
+    // max it out
+    if($("#max").val() > 1) {
+      $("[for=max]").css("color", "black");
+    } else {
+      valid = false;
+      $("[for=max]").css("color", "red");
     }
     // show promo identifier some love
     $("#identifier-output").text("");
@@ -149,21 +189,6 @@
     } else {
       valid = false;
       $("[for=promo_identifier]").css("color", "red");
-    }
-
-    // gotta have promo name
-    if($("#promo_name").val() != "") {
-      $("[for=promo_name]").css("color", "black");
-    } else {
-      valid = false;
-      $("[for=promo_name]").css("color", "red");
-    }
-    // max it out
-    if($("#max").val() > 1) {
-      $("[for=max]").css("color", "black");
-    } else {
-      valid = false;
-      $("[for=max]").css("color", "red");
     }
 
     // game it
@@ -196,6 +221,7 @@
       }
       $("[id^=entry_item_label_]").css("color", "red");
     }
+  <%- end %>
 
     // are we valid?
     update_submit(valid);
@@ -224,6 +250,7 @@
     });
   }
 
+<%- if @promotion.blank? %>
   function promo_identifier_changed() {
     if($("#promo_identifier").val() != "") {
       $.getJSON( "/promotions/identifier_check?identifier=" + $("#promo_identifier").val(), function(data) {
@@ -238,6 +265,7 @@
       validate(); 
     }
   }
+<%- end %>
 
   function game_changed() {
     $("#entries-sub-form").empty();

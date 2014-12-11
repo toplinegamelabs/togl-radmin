@@ -17,7 +17,7 @@
 
 <div id="user_nav" style="float: right">
   <% if current_user %>
-    <%= link_to "Logout", logout_path, method: :delete %>
+    <%= current_user.email %> | <%= link_to "Logout", logout_path, method: :delete %>
   <% else %>
     <%= link_to "Login", new_user_session_path %>
   <% end %>

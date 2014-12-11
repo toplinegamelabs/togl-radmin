@@ -7,6 +7,7 @@ ToglAdmin::Application.routes.draw do
   resources :promotions, only: [:new, :index, :show, :edit, :create, :update] do
     collection do
       get "identifier_check"
+      put "update_by_identifier"
     end
   end
 
