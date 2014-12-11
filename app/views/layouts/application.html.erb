@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ToglAdmin</title>
+  <%= stylesheet_link_tag    "application", media: "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+
+
+<div id="main_nav" style="float: left">
+  <%= link_to "Go Home", root_path %>
+</div>
+
+
+<div id="user_nav" style="float: right">
+  <% if current_user %>
+    <%= link_to "Logout", logout_path, method: :delete %>
+  <% else %>
+    <%= link_to "Login", new_user_session_path %>
+  <% end %>
+</div>
+
+<div style="clear: both"></div>
+<hr/>
+<br/>
+
+<%- if flash[:error] %>
+  <div style="color: red;">
+    <strong>Error! </strong>
+    <%= flash[:error] %>
+    <br/>
+    <br/>
+  </div>
+<%- end %>
+<%- if flash[:notice] %>
+  <div style="color: green;">
+    <strong>Hey! </strong>
+    <%= flash[:notice] %>
+    <br/>
+    <br/>
+  </div>
+<%- end %>
+
+<%= yield %>
+
+</body>
+</html>

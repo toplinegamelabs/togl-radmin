@@ -1,0 +1,24 @@
+defaults: &defaults
+  base_url: http://alderaan-api.togl.io
+  environment: alderaan
+  admin-token: HOHOHO
+
+integration_alt:
+  <<: *defaults
+  base_url: http://dagobah-api.togl.io
+  environment: dagobah
+
+development:
+  <<: *defaults
+
+production:
+  <<: *defaults
+
+integration:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+test:
+  <<: *defaults

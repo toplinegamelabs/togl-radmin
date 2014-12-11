@@ -1,0 +1,42 @@
+
+<%= link_to "Create Promotion", new_promotion_path %>
+
+
+<br/>
+<br/>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Identifier</th>
+    <th>State</th>
+    <th>Lock Time</th>
+    <th>Size</th>
+    <th>&nbsp;</th>
+  </tr>
+<%- @promotions.each do |promotional_contest| %>
+  <tr>
+    <td>
+      <%= promotional_contest["promotion"]["name"] %>
+    </td>
+    <td>
+      <%= promotional_contest["promotion"]["identifier"] %>
+    </td>
+    <td>
+      <%= promotional_contest["state"] %>
+    </td>
+    <td>
+      <%= promotional_contest["contest_template"]["lock_time"].to_s %>
+    </td>
+    <td>
+      <%- if promotional_contest["contest_type"] == "Challenge" %>
+        <%= promotional_contest["num_accepted_contests"] %>/<%= promotional_contest["max"] %>
+      <%- end %>
+    </td>
+    <td>
+      <%- if promotional_contest["state"] == "scheduled" %>
+        <%= link_to "Edit", { controller: :promotions, action: :edit, id: promotional_contest["promotion"]["identifier"] } %>
+      <%- end %>
+    </td>
+  </tr>
+<%- end %>
+</table>

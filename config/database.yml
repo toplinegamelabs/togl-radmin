@@ -1,0 +1,29 @@
+defaults: &defaults
+  adapter: postgresql
+  encoding: utf8
+  host: localhost
+  pool: 5
+
+development:
+  <<: *defaults
+  database: togl-radmin_development
+  username: togl-rapi
+  password:
+
+test:
+  <<: *defaults
+  database: togl-radmin_test
+  username: togl-rapi
+  password:
+
+staging:
+  <<: *defaults
+  database: togl-radmin_staging
+  username: togl-rapi
+  password:
+
+production:
+  <<: *defaults
+  database: togl-radmin_development
+  username: togl-rapi
+  password:

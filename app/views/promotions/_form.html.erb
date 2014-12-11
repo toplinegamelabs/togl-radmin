@@ -1,0 +1,301 @@
+<%= form_tag "/promotions", method: :post do %>
+
+  <strong>Creator</strong><br/>
+  <%= hidden_field_tag :user_id, "" %>
+  <%= label_tag :username, "Username" %>
+  <%= text_field_tag :username, "", onchange: "user_lookup();" %>
+  <span id="username-output"></span>
+  <br/>
+  <br/>
+
+
+  <strong>Promo Basics</strong><br/>
+  <%= label_tag :promo_name, "Promo Name" %>
+  <%= text_field_tag :promo_name, "", onchange: "validate();" %>
+  <br/>
+  <%= label_tag :promo_identifier, "Promo Identifier (unique alphanumeric)" %>
+  <%= text_field_tag :promo_identifier, "", onchange: "promo_identifier_changed();" %>
+  <span id="identifier-output"></span>
+  <br/>
+  <%= label_tag :promo_description, "Promo Description" %>
+  <%= text_area_tag :promo_description, "", onchange: "validate();" %>
+  <br/>
+
+  <br/>
+  <strong>Promo Visuals</strong><br/>
+  <%= label_tag :promo_display_type, "Display Type" %>
+  <%= text_field_tag :promo_display_type, "", onchange: "validate();" %>
+  <br/>
+  <%= label_tag :promo_logo_css_class, "Logo Css" %>
+  <%= text_field_tag :promo_logo_css_class, "icon-star", onchange: "validate();" %>
+  <br/>
+  <%= label_tag :promo_logo_unicode, "Logo Unicode" %>
+  <%= text_field_tag :promo_logo_unicode, "e683", onchange: "validate();" %>
+  <br/>
+
+  <br/>
+  <strong>Promo Mobile Images</strong><br/>
+  <%= label_tag :promo_mobile_background, "Background" %>
+  <%= text_field_tag :promo_mobile_background, "", onchange: "validate();" %>
+  <br/>
+  <%= label_tag :promo_mobile_banner, "Banner" %>
+  <%= text_field_tag :promo_mobile_banner, "", onchange: "validate();" %>
+  <br/>
+  <%= label_tag :promo_mobile_badge, "Badge" %>
+  <%= text_field_tag :promo_mobile_badge, "", onchange: "validate();" %>
+  <br/>
+
+  <br/>
+  <strong>Promo Tablet Images</strong><br/>
+  <%= label_tag :promo_tablet_background, "Background" %>
+  <%= text_field_tag :promo_tablet_background, "", onchange: "validate();" %>
+  <br/>
+  <%= label_tag :promo_tablet_banner, "Banner" %>
+  <%= text_field_tag :promo_tablet_banner, "", onchange: "validate();" %>
+  <br/>
+  <%= label_tag :promo_tablet_badge, "Badge" %>
+  <%= text_field_tag :promo_tablet_badge, "", onchange: "validate();" %>
+  <br/>
+
+  <br/>
+  <strong>Promo Desktop Images</strong><br/>
+  <%= label_tag :promo_desktop_background, "Background" %>
+  <%= text_field_tag :promo_desktop_background, "", onchange: "validate();" %>
+  <br/>
+  <%= label_tag :promo_desktop_banner, "Banner" %>
+  <%= text_field_tag :promo_desktop_banner, "", onchange: "validate();" %>
+  <br/>
+  <%= label_tag :promo_desktop_badge, "Badge" %>
+  <%= text_field_tag :promo_desktope_badge, "", onchange: "validate();" %>
+  <br/>
+
+
+
+  <br/>
+  <strong>Challenge Settings</strong><br/>
+  <%= label_tag :max, "Max Challengers" %>
+  <%= number_field_tag :max, 100, min: 2, onchange: "validate();" %>
+  <span id="max-output"></span>
+  <br/>
+
+
+  <%= label_tag :game_id, "Game" %>
+  <%= select_tag :game_id, options_for_select(@games), onchange: "game_changed();" %>
+  <span id="game-output"></span>
+  <br/>
+
+
+  <%= label_tag :contest_template_id, "Contest Template" %>
+  <%= select_tag :contest_template_id, "", onchange: "contest_template_changed();" %>
+  <span id="ct-output"></span>
+  <br/>
+
+
+  <%= label_tag :entry_item, "", id: "entry_item_label", style: "display: none;" %>
+  <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display: none;" %>
+  <br/>
+  <div id="entries-sub-form"></div>
+  <br/>
+  <span id="entries-output"></span>
+  <br/>
+  <br/>
+
+
+
+  <br/>
+  <%= submit_tag "Submit", id: "submitter" %>
+
+<% end %>
+
+
+
+
+
+
+<script type="text/javascript">
+  var bal;
+  var unique_identifier; 
+  $(document).ready(function() {
+    initialize();
+    validate();
+  });
+
+  function initialize() {
+    document.getElementById('submitter').setAttribute("disabled", "disabled");
+    //document.getElementById('contest_template_id').setAttribute("disabled", "disabled");
+    bal = 0;
+    unique_identifier = true;
+  }
+
+  function validate() {
+    valid = true;
+    // gots a user
+    if($("#user_id").val() != "") {
+      $("[for=username]").css("color", "black");
+    } else {
+      valid = false;
+      $("[for=username]").css("color", "red");
+    }
+    // show promo identifier some love
+    $("#identifier-output").text("");
+    if($("#promo_identifier").val() != "") {
+      if(unique_identifier) {
+        $("[for=promo_identifier]").css("color", "black");
+      } else {
+        $("#identifier-output").text("not unique!");
+        $("[for=promo_identifier]").css("color", "red");
+        valid = false;
+      } 
+    } else {
+      valid = false;
+      $("[for=promo_identifier]").css("color", "red");
+    }
+
+    // gotta have promo name
+    if($("#promo_name").val() != "") {
+      $("[for=promo_name]").css("color", "black");
+    } else {
+      valid = false;
+      $("[for=promo_name]").css("color", "red");
+    }
+    // max it out
+    if($("#max").val() > 1) {
+      $("[for=max]").css("color", "black");
+    } else {
+      valid = false;
+      $("[for=max]").css("color", "red");
+    }
+
+    // game it
+    if($("#game_id").val() != "") {
+      $("[for=game_id]").css("color", "black");
+    } else {
+      valid = false;
+      $("[for=game_id]").css("color", "red");
+    }
+    // template it
+    if($("#contest_template_id").val() != "" && $("#contest_template_id").val() != null) {
+      $("[for=contest_template_id]").css("color", "black");
+    } else {
+      valid = false;
+      $("[for=contest_template_id]").css("color", "red");
+    }
+    
+    // entriesss
+    entry_count = $("[id^=entry_item_drop]").length;
+    unique_entry_count = $.unique($.map($("[id^=entry_item_drop_]"), function( i ) { return $(i).val(); })).length;
+    valid_entries = (entry_count > 0 && entry_count == unique_entry_count);
+
+    if(valid_entries) {
+      $("#entries-output").text("");
+      $("[id^=entry_item_label_]").css("color", "black");
+    } else {
+      valid = false;
+      if(entry_count != unique_entry_count) {
+        $("#entries-output").text("Duplicate entry item selection detected!");
+      }
+      $("[id^=entry_item_label_]").css("color", "red");
+    }
+
+    // are we valid?
+    update_submit(valid);
+  }
+
+  function update_submit(valid) {
+    if(valid) {
+      document.getElementById('submitter').removeAttribute("disabled");
+    } else {
+      document.getElementById('submitter').setAttribute("disabled", "disabled");
+    }
+  }
+
+  function user_lookup() {
+    $.getJSON( "/rapi_users/search?username=" + $("#username").val(), function(data) {
+      if (data.username == undefined) {
+        bal = 0;
+        $("#user_id").val("");
+        $("#username-output").text("User not found.");
+      } else { 
+        bal = data.balance;
+        $("#user_id").val(data.id);
+        $("#username-output").text("User found: " + data.username + " // Balance: " + data.balance);
+      }
+      validate();
+    });
+  }
+
+  function promo_identifier_changed() {
+    if($("#promo_identifier").val() != "") {
+      $.getJSON( "/promotions/identifier_check?identifier=" + $("#promo_identifier").val(), function(data) {
+        if (data.exists) {
+          unique_identifier = false;
+        } else {
+          unique_identifier = true;
+        }
+        validate();
+      });
+    } else {
+      validate(); 
+    }
+  }
+
+  function game_changed() {
+    $("#entries-sub-form").empty();
+    $('#contest_template_id').empty();
+    if($("#game_id").val() != "") {
+      $.getJSON( "/games/" + $("#game_id").val() + "/contest_templates.json", function(data) {
+        if (data.length == 0) {
+          $("#game-output").text("No contest templates open for this game.");
+        } else {
+          $("#game-output").text("");
+          $('#contest_template_id').append("<option value=\"\"></option>");
+          $.each(data, function(index, option) {
+            $('#contest_template_id').append("<option value=\"" + option[1] + "\">" + option[0] + "</option>");
+          });
+        }
+        validate();
+      });
+    }
+  }
+
+  function contest_template_changed() {
+    // todo validate balance yo
+    // $("[id^='entry_item_label_']").remove();
+    // $("[id^='entry_item_drop_']").remove();
+
+    $("#entries-sub-form").empty();
+    
+    $.getJSON( "/games/" + $("#game_id").val() + "/contest_templates/" + $("#contest_template_id").val() + "/event_participants.json", function(data) {
+      if (data.length == 0) {
+        $("#ct-output").text("No event participants are available for this contest template.");
+      } else {
+
+        $("#ct-output").text("");
+        $.each(data, function(index, slot) {
+
+          var drop = $("#entry_item").clone();
+          var label = $("#entry_item_label").clone();
+          drop.attr("id", "entry_item_drop_" + index);
+          label.attr("id", "entry_item_label_" + index);
+          label.attr("for", "entry_item_drop_" + index);
+          label.append(slot.display_name);
+
+          $.each(slot.event_participants, function(index, event_participant) {
+            drop.append("<option value=\"" + event_participant[1] + "\">" + event_participant[0] + "</option>");
+          });
+
+          $("#entries-sub-form").append(label);
+          $("#entries-sub-form").append(drop);
+          $("#entries-sub-form").append("<br/>");
+          label.show();
+          drop.show();
+          //$('#contest_template_id').append("<option value=\"" + option[1] + "\">" + option[0] + "</option>");
+        });
+
+      }
+      validate();
+    });
+  }
+
+</script>
+
