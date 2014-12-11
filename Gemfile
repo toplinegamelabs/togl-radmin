@@ -44,10 +44,20 @@ gem 'jbuilder', '~> 1.2'
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+
+
+# SECURITY/AUTH
+
 gem 'authlogic'
 gem 'bcrypt'
+
+
+# NETWORKING
 
 gem "faraday"
 gem "faraday-cookie_jar"
 
+
+# TEST/DEBUG
+gem "foreman"
 gem "pry"

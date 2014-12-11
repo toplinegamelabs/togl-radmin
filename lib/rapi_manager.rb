@@ -1,24 +1,6 @@
 class RapiManager
   def initialize(opts={})
-    @environment = opts.fetch(:environment) { raise 'environment required' }
     @oauth_token = opts.fetch(:oauth_token) { raise 'oauth token required' }
-
-    things = {
-      "alderaan" => {
-        "rapi_protocol_base" => "http://alderaan"
-      },
-      "dagobah" => {
-        "rapi_protocol_base" => "http://dagobah"
-      },
-      "staging" => {
-        "rapi_protocol_base" => "http://staging"
-      },
-      "production" => {
-        "rapi_protocol_base" => "https://production"
-      }
-    }
-
-    @rapi_protocol_base = things[@environment]["rapi_protocol_base"]
   end
 
 
@@ -120,12 +102,11 @@ class RapiManager
 private
 
   def admin_token
-    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
-    config[Rails.env]["admin-token"]
+    ENV['ADMIN_TOKEN']
   end
 
   def get_connection
-    Faraday.new(:url => "#{@rapi_protocol_base}-api.togl.io") do |faraday|
+    Faraday.new(:url => "#{ENV["URL_BASE"]}api.togl.io") do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
       faraday.response :logger                  # log requests to STDOUT
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP

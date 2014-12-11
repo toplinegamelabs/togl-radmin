@@ -6,20 +6,13 @@ class PromotionsController < ApplicationController
 
 
   def index
-    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
-    environment = config[Rails.env]["environment"]
-
-    oauth_token = OauthManager.execute(environment: environment, client_app: "dailymvp" || params[:client_app])
-    @promotions = RapiManager.new(environment: environment, oauth_token: oauth_token).promotions
+    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    @promotions = RapiManager.new(oauth_token: oauth_token).promotions
   end
 
   def new
-    
-    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
-    environment = config[Rails.env]["environment"]
-
-    oauth_token = OauthManager.execute(environment: environment, client_app: "dailymvp" || params[:client_app])
-    rapi_response = RapiManager.new(environment: environment, oauth_token: oauth_token).games
+    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    rapi_response = RapiManager.new(oauth_token: oauth_token).games
 
     @games = [[]] + rapi_response["games"].collect do |game|
       [game["name"], game["id"]]
@@ -62,22 +55,16 @@ class PromotionsController < ApplicationController
   end
 
   def edit
-    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
-    environment = config[Rails.env]["environment"]
 
-    oauth_token = OauthManager.execute(environment: environment, client_app: "dailymvp" || params[:client_app])
-    rapi_response = RapiManager.new(environment: environment, oauth_token: oauth_token).promotions
+    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    rapi_response = RapiManager.new(oauth_token: oauth_token).promotions
 
     @promotion = rapi_response.select { |promo_contest| promo_contest["promotion"]["identifier"].to_s.downcase == params[:id].to_s.downcase }.first
 
   end
 
   def update_by_identifier
-
-    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
-    environment = config[Rails.env]["environment"]
-
-    oauth_token = OauthManager.execute(environment: environment, client_app: "dailymvp" || params[:client_app])
+    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
     
 
     put_params = {
@@ -109,7 +96,7 @@ class PromotionsController < ApplicationController
         display_type: params["promo_display_type"]
       }
     }
-    update_response = RapiManager.new(environment: environment, oauth_token: oauth_token).update_promo_challenge(put_params.to_json)
+    update_response = RapiManager.new(oauth_token: oauth_token).update_promo_challenge(put_params.to_json)
 
     if update_response.status == 204
       flash.keep[:notice] = "Promotion updated!"
@@ -121,12 +108,10 @@ class PromotionsController < ApplicationController
   end
 
   def create
-    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
-    environment = config[Rails.env]["environment"]
 
-    oauth_token = OauthManager.execute(environment: environment, client_app: "dailymvp" || params[:client_app])
+    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
     
-    #user_response = RapiManager.new(environment: environment, oauth_token: oauth_token).user(params["username"])
+    #user_response = RapiManager.new(oauth_token: oauth_token).user(params["username"])
 
     
     entry_hash = { entry_items: [] }
@@ -170,7 +155,7 @@ class PromotionsController < ApplicationController
         display_type: params["promo_display_type"]
       }
     }
-    create_response = RapiManager.new(environment: environment, oauth_token: oauth_token).create_promo_challenge(post_params.to_json)
+    create_response = RapiManager.new(oauth_token: oauth_token).create_promo_challenge(post_params.to_json)
 
     if create_response.status == 201
       flash.keep[:notice] = "Promotion created!"
@@ -184,11 +169,9 @@ class PromotionsController < ApplicationController
 
 
   def identifier_check
-    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
-    environment = config[Rails.env]["environment"]
 
-    oauth_token = OauthManager.execute(environment: environment, client_app: "dailymvp" || params[:client_app])
-    rapi_response = RapiManager.new(environment: environment, oauth_token: oauth_token).promotions
+    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    rapi_response = RapiManager.new(oauth_token: oauth_token).promotions
 
     exists = rapi_response.select { |promo_contest| promo_contest["promotion"]["identifier"].to_s.downcase == params[:identifier].to_s.downcase }.present?
 

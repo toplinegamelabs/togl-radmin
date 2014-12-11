@@ -2,11 +2,8 @@ class EventParticipantsController < ApplicationController
   before_filter :require_user
 
   def index
-    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
-    environment = config[Rails.env]["environment"]
-
-    oauth_token = OauthManager.execute(environment: environment, client_app: "dailymvp" || params[:client_app])
-    rapi_manager = RapiManager.new(environment: environment, oauth_token: oauth_token)
+    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    rapi_manager = RapiManager.new(oauth_token: oauth_token)
 
     ep_response = rapi_manager.event_participants(params[:game_id], params[:contest_template_id])
     game_response = rapi_manager.games

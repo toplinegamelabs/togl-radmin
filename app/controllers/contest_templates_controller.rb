@@ -4,13 +4,8 @@ class ContestTemplatesController < ApplicationController
   def index
 
     # note: limited to h2h only for challenges
-
-
-    config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
-    environment = config[Rails.env]["environment"]
-
-    oauth_token = OauthManager.execute(environment: environment, client_app: "dailymvp" || params[:client_app])
-    rapi_response = RapiManager.new(environment: environment, oauth_token: oauth_token).contest_templates(params[:game_id])
+    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    rapi_response = RapiManager.new(oauth_token: oauth_token).contest_templates(params[:game_id])
 
     @contest_templates = []
     rapi_response["event_sets"].each do |event_set|
