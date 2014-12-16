@@ -21,7 +21,7 @@ class EventParticipantsController < ApplicationController
         end.sort do |a, b|
           [a["player"]["biography"]["position"], a["player"]["last_name"], a["player"]["first_name"]] <=> [b["player"]["biography"]["position"], b["player"]["last_name"], b["player"]["first_name"]]
         end.collect do |ep|
-          ["#{ep["player"]["team"]["abrv_name"]} - #{ep["player"]["full_name"]}", ep["id"].to_s]
+          ["#{ep["player"]["team"]["abrv_name"]} - #{ep["player"]["full_name"]} (Projected: #{ep["projected_points"]}pts)", ep["id"].to_s]
         end
       }
     end

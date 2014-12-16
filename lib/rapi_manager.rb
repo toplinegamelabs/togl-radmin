@@ -44,10 +44,22 @@ class RapiManager
     JSON.parse(json_response.body)
   end
 
-  def user(username)
+  def user_by_username(username)
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|
-      req.url "/admin/user_lookup.json?username=#{username}"
+      req.url "/admin/user_lookup.json", { username: username }
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+    JSON.parse(json_response.body)
+  end
+
+  def user_by_id(user_id)
+    rapi_conn = get_connection
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/user_lookup.json", { user_id: user_id }
       req.headers['Authorization'] = 'Bearer ' + @oauth_token
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
@@ -87,7 +99,7 @@ class RapiManager
     rapi_conn = get_connection
 
     json_response = rapi_conn.get do |req|
-      req.url "/admin/promotions.json"
+      req.url "/admin/promotions_list.json"
       req.headers['Authorization'] = 'Bearer ' + @oauth_token
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
@@ -98,6 +110,19 @@ class RapiManager
   end
 
 
+  def promotion(identifier)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/promotions_show.json", { identifier: identifier }
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)["challenge"]
+  end
 
 private
 
@@ -106,7 +131,8 @@ private
   end
 
   def get_connection
-    Faraday.new(:url => "#{ENV["URL_BASE"]}api.togl.io") do |faraday|
+    #Faraday.new(:url => "#{ENV["URL_BASE"]}api.togl.io") do |faraday|
+    Faraday.new(:url => "#{ENV["URL_BASE"]}") do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
       faraday.response :logger                  # log requests to STDOUT
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP

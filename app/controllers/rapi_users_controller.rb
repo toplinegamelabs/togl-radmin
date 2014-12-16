@@ -3,7 +3,9 @@ class RapiUsersController < ApplicationController
 
   def search
     oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
-    rapi_response = RapiManager.new(oauth_token: oauth_token).user(params[:username])
+    rapi_response = RapiManager.new(oauth_token: oauth_token).user_by_username(params[:username])
+
+    rapi_response["balance"] = rapi_response["balance"]
 
     render json: rapi_response
   end

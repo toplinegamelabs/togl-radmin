@@ -47,6 +47,9 @@ gem 'jbuilder', '~> 1.2'
 # gem 'debugger', group: [:development, :test]
 
 
+# HASH HELP
+gem 'hashie'
+
 
 # SECURITY/AUTH
 
