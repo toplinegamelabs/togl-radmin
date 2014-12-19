@@ -1,0 +1,103 @@
+
+<%= label_tag :name, "Name" %> 
+<%= text_field_tag :name, @landing_page.name, onchange: "validate();" %>
+<br/>
+
+<%= label_tag :landing_page_template_id, "Template"%> 
+<%= select_tag :landing_page_template_id, 
+  options_for_select(@landing_page_templates.collect { |template| [template["identifier"], template["id"]] }, @landing_page.landing_page_template_id), 
+  onchange: "template_changed();" %> 
+<a href="#" onclick="show_sample();">Sample Template Variables</a>
+<br/>
+
+
+<%= label_tag :template_variables, "Custom Variables"%> 
+<br/>
+<%= text_area_tag :template_variables, @landing_page.template_variables, onchange: "cache_template_variables();", cols: "150", rows: "20" %>
+<br/>
+<%= submit_tag "Submit", id: "submitter" %>
+
+
+
+
+
+<script type="text/javascript">
+  var cached_template_variables = new Object();
+
+  $(document).ready(function() {
+<%- if @landing_page.landing_page_template_id %>
+    cache_template_variables();
+<%- else %>
+    template_changed();
+<%- end %>
+    validate();
+  });
+
+  function template_changed() {
+    if(cached_template_variables[$("#landing_page_template_id").val()] == undefined) {
+
+      document.getElementById('template_variables').setAttribute("disabled", "disabled");
+      $.getJSON( "/landing_page_templates/" + $("#landing_page_template_id").val() + ".json", function(data) {
+        $("#template_variables").val(JSON.stringify(data.base_template_variables, null,'  '));
+      }).always(function() {
+
+        document.getElementById('template_variables').removeAttribute("disabled");
+      });
+    } else {
+      $("#template_variables").val(cached_template_variables[$("#landing_page_template_id").val()]);
+    }
+  }
+
+
+  function cache_template_variables() {
+    if($("#landing_page_template_id").val() != "") {
+      cached_template_variables[$("#landing_page_template_id").val()] = $("#template_variables").val(); 
+    }
+  }
+
+
+  function validate() {
+    valid = true;
+
+    // gotta have promo name
+    if($("#name").val() != "") {
+      $("[for=name]").css("color", "black");
+    } else {
+      valid = false;
+      $("[for=name]").css("color", "red");
+    }
+
+    update_submit(valid);
+  }
+
+  function update_submit(valid) {
+    valid = true; // of course!
+    if(valid) {
+      document.getElementById('submitter').removeAttribute("disabled");
+    } else {
+      document.getElementById('submitter').setAttribute("disabled", "disabled");
+    }
+  }
+var test;
+
+  function show_sample() {
+    $.getJSON( "/landing_page_templates/" + $("#landing_page_template_id").val() + ".json", function(data) {
+      test = data.base_template_variables
+      my_window = window.open("", "Sample", "status=1,width=350,height=150");
+      my_window.document.write(JSON.stringify(data.base_template_variables, null,'&nbsp;').replace(/(?:\r\n|\r|\n)/g, '<br />'));
+    })
+  }
+
+
+  function update_client_app() {
+    $.ajax({
+      url: '/client_apps',
+      type: 'PUT',
+      data: "client_app=" + $("#client_app").val(),
+      success: function(data) {
+        update_ui_for_client_app();
+      }
+    });
+  }
+
+</script>

@@ -6,59 +6,28 @@ class PromotionsController < ApplicationController
 
 
   def index
-    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
-    @promotions = RapiManager.new(oauth_token: oauth_token).promotions
+    oauth_token = OauthManager.execute(client_app: @current_client_app)
+    @promotions = RapiManager.new(oauth_token: oauth_token).promotions.select { |p| p.present? }
   end
 
   def new
     @challenge = ChallengeHashie.new
 
-    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    oauth_token = OauthManager.execute(client_app: @current_client_app)
     rapi_response = RapiManager.new(oauth_token: oauth_token).games
 
     @games = [[]] + rapi_response["games"].collect do |game|
       [game["name"], game["id"]]
     end
 
-
-
-
-    # config = YAML.load(File.open("#{Rails.root}/config/rapi.yml"))
-    # base_url = config[Rails.env]["base_url"]
-
-    # games_url = URI.parse(URI.join(base_url, "games.json").to_s)
-    # games_request = Net::HTTP::Get.new(games_url.path)
-    # games_request["X-Application-Bypass"] = "dailymvp"
-    # games_result = Net::HTTP.new(games_url.host, games_url.port).start do |http|
-    #   http.request(games_request)
-    # end
-    # @games = JSON.parse(games_result.body)["games"].select { |g| g["state"] == "active" }
-
-
-    # @contest_templates = []
-    # @games.each do |game|
-    #   contest_templates_url = URI.parse(URI.join(base_url, "/games/#{game["id"]}/contest_templates.json").to_s)
-    #   contest_templates_request = Net::HTTP::Get.new(contest_templates_url.path)
-    #   contest_templates_request["X-Application-Bypass"] = "dailymvp"
-    #   contest_templates_result = Net::HTTP.new(contest_templates_url.host, contest_templates_url.port).start do |http|
-    #     http.request(contest_templates_request)
-    #   end
-
-    #   ct_result_json = JSON.parse(contest_templates_result.body)
-    #   ct_result_json["event_sets"].each do |event_set|
-
-    #     event_set["contest_templates"].each do |contest_template|
-    #       @contest_templates << ["#{event_set["description"]} - #{contest_template["buy_in"]["label"]} - #{contest_template["size"]["label"]}", contest_template["id"]]
-    #     end
-
-    #   end
-    #   #JSON.parse(contest_templates_result.body)["contest_templates"].select { |g| g["state"] == "active" }
-    # end
+    @promotion_groups = [[]] + RapiManager.new(oauth_token: oauth_token).list_promotion_groups.collect do |group|
+      [group["identifier"], group["id"]]
+    end
   end
 
   def edit
 
-    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    oauth_token = OauthManager.execute(client_app: @current_client_app)
     promo_contest = RapiManager.new(oauth_token: oauth_token).promotion(params[:id])
 
     user = RapiManager.new(oauth_token: oauth_token).user_by_id(promo_contest["creator_id"])
@@ -67,10 +36,13 @@ class PromotionsController < ApplicationController
     @challenge = ChallengeHashie.build_from_rapi_hash(promo_contest)
     @challenge.persisted = true
 
+    @promotion_groups = [[]] + RapiManager.new(oauth_token: oauth_token).list_promotion_groups.collect do |group|
+      [group["identifier"], group["id"]]
+    end
   end
 
   def update_by_identifier
-    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    oauth_token = OauthManager.execute(client_app: @current_client_app)
   
     entry_hash = { "id" => params[:entry_id], "entry_items" => [] }
     params["entry_item"].each_with_index do |entry_item, index|
@@ -91,6 +63,7 @@ class PromotionsController < ApplicationController
         "name" => params["promo_name"],
         "identifier" => params["promo_identifier"],
         "description" => params["promo_description"],
+        "promotion_group_id" => params["promotion_group_id"],
         "images" => {
             "mobile" => {
               "banner" => params["promo_mobile_banner"],
@@ -137,7 +110,7 @@ class PromotionsController < ApplicationController
 
   def create
 
-    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    oauth_token = OauthManager.execute(client_app: @current_client_app)
     
     #user_response = RapiManager.new(oauth_token: oauth_token).user(params["username"])
 
@@ -162,6 +135,7 @@ class PromotionsController < ApplicationController
         "name" => params["promo_name"],
         "identifier" => params["promo_identifier"],
         "description" => params["promo_description"],
+        "promotion_group_id" => params["promotion_group_id"],
         "images" => {
             "mobile" => {
               "banner" => params["promo_mobile_banner"],
@@ -228,8 +202,8 @@ class PromotionsController < ApplicationController
 
   def identifier_check
 
-    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
-    rapi_response = RapiManager.new(oauth_token: oauth_token).promotions
+    oauth_token = OauthManager.execute(client_app: @current_client_app)
+    rapi_response = RapiManager.new(oauth_token: oauth_token).promotions.select { |p| p.present? }
 
     exists = rapi_response.select { |promo_contest| promo_contest["promotion"]["identifier"].to_s.downcase == params[:identifier].to_s.downcase }.present?
 

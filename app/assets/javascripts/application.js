@@ -13,3 +13,27 @@
 //= require jquery
 //= require jquery_ujs
 //= require_tree .
+
+
+
+
+  function update_client_app() {
+    $.ajax({
+      url: '/client_apps',
+      type: 'PUT',
+      data: "client_app=" + $("#client_app").val(),
+      success: function(data) {
+        location.reload();
+      }
+    });
+  }
+
+  function update_ui_for_client_app() {
+    if($("#client_app").val() == "dailymvp") {
+      $("#heading").css("background-color","#00CCFF");
+    } else if($("#client_app").val() == "fannation") {
+      $("#heading").css("background-color","#FFCCCC");
+    } else {
+      $("#heading").css("background-color","#FFFFFF");
+    }
+  }

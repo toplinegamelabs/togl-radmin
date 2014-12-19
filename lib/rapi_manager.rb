@@ -124,6 +124,116 @@ class RapiManager
     JSON.parse(json_response.body)["challenge"]
   end
 
+
+  def landing_page_templates
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/landing_page_templates.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)
+  end
+
+  def show_landing_page_template(id)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/landing_page_templates/#{id}.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)
+  end
+
+  def landing_pages
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/landing_pages.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)
+  end
+
+  def create_landing_page(params)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.post do |req|
+      req.url '/admin/landing_pages.json'
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+      req.body = params
+    end
+  end
+
+  def update_landing_page(id, params)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.put do |req|
+      req.url "/admin/landing_pages/#{id}.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+      req.body = params
+    end
+  end
+
+  def show_landing_page(id)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/landing_pages/#{id}.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)
+  end
+
+  def list_promotion_groups
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/promotion_groups.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)    
+  end
+
+  def create_promotion_group(params)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.post do |req|
+      req.url '/admin/promotion_groups.json'
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+      req.body = params
+    end
+  end
+
 private
 
   def admin_token

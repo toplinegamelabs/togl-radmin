@@ -2,7 +2,7 @@ class EventParticipantsController < ApplicationController
   before_filter :require_user
 
   def index
-    oauth_token = OauthManager.execute(client_app: "dailymvp" || params[:client_app])
+    oauth_token = OauthManager.execute(client_app: @current_client_app)
     rapi_manager = RapiManager.new(oauth_token: oauth_token)
 
     ep_response = rapi_manager.event_participants(params[:game_id], params[:contest_template_id])

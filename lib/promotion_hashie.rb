@@ -4,6 +4,7 @@ class PromotionHashie < Hashie::Dash
   property :identifier
   property :description
   property :display_type
+  property :promotion_group_id
   property :name_logo, default: 
     {
       "css_class" => "icon-star",
@@ -30,7 +31,7 @@ class PromotionHashie < Hashie::Dash
     promo.display_type = hash["display_type"]
     promo.name_logo = hash["name_logo"]
     promo.images = hash["images"]
-
+    promo.promotion_group_id = hash["promotion_group_id"]
     promo
   end
 

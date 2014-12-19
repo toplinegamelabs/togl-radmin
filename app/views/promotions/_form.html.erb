@@ -75,9 +75,17 @@
 <%- else %>
   <%= text_field_tag :promo_identifier, @challenge.promotion.identifier, onchange: "promo_identifier_changed();" %>
 <%- end %>
-
   <span id="identifier-output"></span>
   <br/>
+
+
+  <%= label_tag :promotion_group_id, "Promotion Group" %>
+  <%= select_tag :promotion_group_id, options_for_select(@promotion_groups, @challenge.promotion.promotion_group_id), onchange: "validate();" %>
+  <span id="pg-output"></span>
+  <br/>
+  
+
+
   <%= label_tag :promo_description, "Promo Description" %>
   <%= text_area_tag :promo_description, @challenge.promotion.description, onchange: "validate();" %>
   <br/>
@@ -221,6 +229,14 @@
     } else {
       valid = false;
       $("[for=max]").css("color", "red");
+    }
+
+
+    if($("#promotion_group_id").val() != "" && $("#promotion_group_id").val() != null) {
+      $("[for=promotion_group_id]").css("color", "black");
+    } else {
+      valid = false
+      $("[for=promotion_group_id]").css("color", "red");
     }
 
   <%- if !@challenge.persisted? %>
@@ -417,5 +433,17 @@
     }
   }
 
+
+
+  function update_client_app() {
+    $.ajax({
+      url: '/client_apps',
+      type: 'PUT',
+      data: "client_app=" + $("#client_app").val(),
+      success: function(data) {
+        update_ui_for_client_app();
+      }
+    });
+  }
 </script>
 

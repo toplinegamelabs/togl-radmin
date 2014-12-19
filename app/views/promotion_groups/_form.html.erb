@@ -1,0 +1,37 @@
+  <%= label_tag :promo_identifier, "Promo Identifier" %>
+
+<%- if @promo_group.persisted? %>
+  <span style="color: #BBB"><%= @promo_group.identifier %></span>
+  <%= hidden_field_tag :identifier, @promo_group.identifier %>
+<%- else %>
+  <%= text_field_tag :identifier, @promo_group.identifier %>
+<%- end %>
+
+<br/>
+
+
+
+
+<%= label_tag :landing_page_id, "Landing Page"%> 
+<%= select_tag :landing_page_id, 
+  options_for_select(@landing_pages.collect { |page| [page["name"], page["id"]] }, @promo_group.landing_page_id) %> 
+<br/>
+
+<br/>
+<%= submit_tag "Submit", id: "submitter" %>
+
+
+
+
+<script type="text/javascript">
+  function update_client_app() {
+    $.ajax({
+      url: '/client_apps',
+      type: 'PUT',
+      data: "client_app=" + $("#client_app").val(),
+      success: function(data) {
+        update_ui_for_client_app();
+      }
+    });
+  }
+</script>

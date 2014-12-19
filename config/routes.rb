@@ -3,6 +3,14 @@ ToglAdmin::Application.routes.draw do
 
   resources :user_sessions, only: [:new, :create] 
   delete "/logout", to: "user_sessions#destroy", as: "logout"
+  
+
+  resources :games, only: [] do
+    resources :contest_templates, only: [:index] do
+      resources :event_participants, only: [:index]
+    end
+  end
+
 
   resources :promotions, only: [:new, :index, :show, :edit, :create, :update] do
     collection do
@@ -11,14 +19,17 @@ ToglAdmin::Application.routes.draw do
     end
   end
 
+
   get "/rapi_users/search", to: "rapi_users#search", as: "rapi_user_search"
 
+  resources :landing_pages, only: [:new, :index, :show, :edit, :create, :update]
+  resources :landing_page_templates, only: [:show]
+  resources :promotion_groups, only: [:new, :index, :show, :edit, :create, :update]
+  
 
-  resources :games, only: [] do
-    resources :contest_templates, only: [:index] do
-      resources :event_participants, only: [:index]
-    end
-  end
+
+  put "/client_apps" => "application#update_client_app"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

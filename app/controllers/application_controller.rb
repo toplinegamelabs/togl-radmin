@@ -5,12 +5,23 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
 
-
+  before_filter :current_client_app
+  before_filter :require_user, only: [:update_client_app]
+  
   def require_user
     unless current_user
       flash[:notice] = "Log in first."
       redirect_to new_user_session_url
     end
+  end
+
+  def current_client_app
+    @current_client_app = session[:client_app] || "dailymvp"
+  end
+
+  def update_client_app
+    session[:client_app] = params[:client_app]
+    render json: { client_app: session[:client_app] }
   end
 
   private

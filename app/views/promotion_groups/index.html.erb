@@ -1,0 +1,21 @@
+<%= link_to "Create Promotion Group", new_promotion_group_path %>
+
+
+<br/>
+<br/>
+<table>
+  <tr>
+    <th>Identifier</th>
+    <th>&nbsp;</th>
+  </tr>
+<%- @promotion_groups.each do |group| %>
+  <tr>
+    <td>
+      <%= group["identifier"] %>
+    </td>
+    <td>
+      <%= link_to "Edit", { controller: :promotion_groups, action: :edit, id: group["id"] } %>
+    </td>
+  </tr>
+<%- end %>
+</table>
