@@ -17,9 +17,15 @@
   options_for_select(@landing_pages.collect { |page| [page["name"], page["id"]] }, @promo_group.landing_page_id) %> 
 <br/>
 
+
+<%= label_tag :ends_at, "Ends On" %>
+<%= date_field_tag :ends_at, @promo_group.ends_at.present? ? DateTime.parse(@promo_group.ends_at).strftime("%Y-%m-%d") : nil %>
+@ midnight pacific
+<br/>
+
+
 <br/>
 <%= submit_tag "Submit", id: "submitter" %>
-
 
 
 

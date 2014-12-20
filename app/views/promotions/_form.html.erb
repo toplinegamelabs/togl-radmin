@@ -77,8 +77,7 @@
 <%- end %>
   <span id="identifier-output"></span>
   <br/>
-
-
+  
   <%= label_tag :promotion_group_id, "Promotion Group" %>
   <%= select_tag :promotion_group_id, options_for_select(@promotion_groups, @challenge.promotion.promotion_group_id), onchange: "validate();" %>
   <span id="pg-output"></span>
@@ -442,6 +441,7 @@
       data: "client_app=" + $("#client_app").val(),
       success: function(data) {
         update_ui_for_client_app();
+        user_lookup();
       }
     });
   }

@@ -19,7 +19,7 @@ ToglAdmin::Application.routes.draw do
     end
   end
 
-
+  get "/rapi_users/csv_list", to: "rapi_users#csv_list"
   get "/rapi_users/search", to: "rapi_users#search", as: "rapi_user_search"
 
   resources :landing_pages, only: [:new, :index, :show, :edit, :create, :update]
@@ -29,6 +29,8 @@ ToglAdmin::Application.routes.draw do
 
 
   put "/client_apps" => "application#update_client_app"
+
+
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

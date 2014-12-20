@@ -36,6 +36,8 @@
       <%- if promotional_contest["state"] == "scheduled" %>
         <%= link_to "Edit", { controller: :promotions, action: :edit, id: promotional_contest["promotion"]["identifier"] } %>
       <%- end %>
+
+      <%= link_to "Duplicate", { controller: :promotions, action: :new, id: promotional_contest["promotion"]["identifier"] } %>
     </td>
   </tr>
 <%- end %>

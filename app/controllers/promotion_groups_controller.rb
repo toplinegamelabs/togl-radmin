@@ -10,25 +10,59 @@ class PromotionGroupsController < ApplicationController
   end
 
   def edit
+    oauth_token = OauthManager.execute(client_app: @current_client_app)
+    @landing_pages = RapiManager.new(oauth_token: oauth_token).landing_pages
+    
+    pg_hash = RapiManager.new(oauth_token: oauth_token).show_promotion_group(params[:id])
+    @promo_group = PromotionGroupHashie.build_from_rapi_hash(pg_hash)
   end
 
   def new
-
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     @landing_pages = RapiManager.new(oauth_token: oauth_token).landing_pages
     @promo_group = PromotionGroupHashie.new
   end
 
   def update
-  end
-
-  def create
+    Time.zone = "America/Los_Angeles"
     oauth_token = OauthManager.execute(client_app: @current_client_app)
 
     promotion_group_params = {
       "promotion_group" => {
         "identifier" => params[:identifier],
-        "landing_page_id" => params[:landing_page_id]
+        "landing_page_id" => params[:landing_page_id],
+        "ends_at" => Time.zone.parse(params[:ends_at])
+      }
+    }
+
+    update_response = RapiManager.new(oauth_token: oauth_token).update_promotion_group(params[:id], promotion_group_params.to_json)
+    if update_response.status == 200
+      flash.keep[:notice] = "Promotion group updated!"
+      redirect_to promotion_groups_path
+    else
+      @landing_pages = RapiManager.new(oauth_token: oauth_token).landing_pages
+      @promo_group = PromotionGroupHashie.build_from_rapi_hash(promotion_group_params["promotion_group"])
+
+      errors_hash = JSON.parse(update_response.body)
+      errors_text = errors_hash.keys.collect { |key|
+        "#{key.to_s} - #{errors_hash[key].join(";")}"
+      }.join("\n")
+
+      flash.now[:error] = errors_text
+      render :new
+    end
+  end
+
+  def create
+    
+    Time.zone = "America/Los_Angeles"
+    oauth_token = OauthManager.execute(client_app: @current_client_app)
+
+    promotion_group_params = {
+      "promotion_group" => {
+        "identifier" => params[:identifier],
+        "landing_page_id" => params[:landing_page_id],
+        "ends_at" => Time.zone.parse(params[:ends_at])
       }
     }
 

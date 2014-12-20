@@ -11,7 +11,21 @@ class PromotionsController < ApplicationController
   end
 
   def new
-    @challenge = ChallengeHashie.new
+    if params[:id]
+
+      oauth_token = OauthManager.execute(client_app: @current_client_app)
+      promo_contest = RapiManager.new(oauth_token: oauth_token).promotion(params[:id])
+      user = RapiManager.new(oauth_token: oauth_token).user_by_id(promo_contest["creator_id"])
+      promo_contest["username"] = user["username"]
+      @challenge = ChallengeHashie.build_from_rapi_hash(promo_contest)
+
+      original_contest_template = @challenge.contest_template
+      @challenge.contest_template = ContestTemplateHashie.new
+      @challenge.contest_template.game = original_contest_template.game
+      @challenge.entry = EntryHashie.new
+    else
+      @challenge = ChallengeHashie.new
+    end
 
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     rapi_response = RapiManager.new(oauth_token: oauth_token).games
@@ -29,7 +43,6 @@ class PromotionsController < ApplicationController
 
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     promo_contest = RapiManager.new(oauth_token: oauth_token).promotion(params[:id])
-
     user = RapiManager.new(oauth_token: oauth_token).user_by_id(promo_contest["creator_id"])
     promo_contest["username"] = user["username"]
 

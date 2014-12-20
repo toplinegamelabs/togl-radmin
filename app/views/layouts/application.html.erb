@@ -9,13 +9,15 @@
 <body>
 
 
-<div id="heading" style="padding: 12px 4px; margin: 0;">
+<div id="heading" style="padding: 18px 12px; margin: 0;">
   <div id="main_nav" style="float: left">
     1. <%= link_to "Landing Page", landing_pages_path %>
     &nbsp;
     2. <%= link_to "Promotion Group", promotion_groups_path %>
     &nbsp;
     3. <%= link_to "Promotion", promotions_path %>
+    &nbsp;
+    Bonus: <%= link_to "Email List", rapi_users_csv_list_path(format: "csv") %>
   </div>
 
 

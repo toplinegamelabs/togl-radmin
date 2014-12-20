@@ -1,13 +1,10 @@
 class OauthManager
-  def self.execute(client_app: client_app)
+  # manually override a token just for local testing
+  def self.execute_test(client_app: client_app)
     "323TEST323"
   end
 
-
-
-
-
-  def self.execute2(client_app: client_app) 
+  def self.execute(client_app: client_app) 
     conn = Faraday.new(:url => "#{ENV["URL_BASE"]}oauth.togl.io:80", :ssl => {:verify => false}) do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
       faraday.response :logger                  # log requests to STDOUT
