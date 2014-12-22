@@ -1,10 +1,18 @@
 class OauthManager
+  def self.execute(client_app: client_app)
+    if ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include?(ENV["LOCAL_TESTING_MODE"])
+      execute_with_test_credentials(client_app: client_app)
+    else
+      execute_with_oauth(client_app: client_app)
+    end
+  end
+
   # manually override a token just for local testing
-  def self.execute_test(client_app: client_app)
+  def self.execute_with_test_credentials(client_app: client_app)
     "323TEST323"
   end
 
-  def self.execute(client_app: client_app) 
+  def self.execute_with_oauth
     conn = Faraday.new(:url => "#{ENV["URL_BASE"]}oauth.togl.io:80", :ssl => {:verify => false}) do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
       faraday.response :logger                  # log requests to STDOUT
