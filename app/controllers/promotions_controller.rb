@@ -124,8 +124,6 @@ class PromotionsController < ApplicationController
   def create
 
     oauth_token = OauthManager.execute(client_app: @current_client_app)
-    
-    #user_response = RapiManager.new(oauth_token: oauth_token).user(params["username"])
 
     
     entry_hash = { "entry_items" => [] }
