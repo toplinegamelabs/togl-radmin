@@ -281,10 +281,10 @@ private
   end
 
   def get_connection
-    url = if ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include?(ENV["LOCAL_TESTING_MODE"])
-      ENV["URL_BASE_TEST"]
+    if ActiveRecord::ConnectionAdapters::Column::TRUE_VALUES.include?(ENV["LOCAL_TESTING_MODE"])
+      url = ENV["URL_BASE_TEST"]
     else
-      "#{ENV["URL_BASE"]}-api.togl.io"
+      url = "#{ENV["URL_BASE"]}api.togl.io"
     end
 
     Faraday.new(:url => "#{url}") do |faraday|
