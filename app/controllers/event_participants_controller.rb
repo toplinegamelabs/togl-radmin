@@ -5,8 +5,8 @@ class EventParticipantsController < ApplicationController
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     rapi_manager = RapiManager.new(oauth_token: oauth_token)
 
-    ep_response = rapi_manager.event_participants(params[:game_id], params[:contest_template_id])
-    game_response = rapi_manager.games
+    ep_response = rapi_manager.list_event_participants(params[:game_id], params[:contest_template_id])
+    game_response = rapi_manager.list_games
 
     game = game_response["games"].select { |game| game["id"] == params[:game_id].to_i }.first
 

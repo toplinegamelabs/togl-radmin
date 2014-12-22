@@ -8,6 +8,8 @@ class OauthManager
   end
 
   # manually override a token just for local testing
+  # local rapi instance will need to have this test key in its Oauth tokens
+  # note: differences between client apps will not work when using a single test token like this.
   def self.execute_with_test_credentials(client_app: client_app)
     "323TEST323"
   end

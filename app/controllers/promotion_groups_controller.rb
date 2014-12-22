@@ -11,15 +11,16 @@ class PromotionGroupsController < ApplicationController
 
   def edit
     oauth_token = OauthManager.execute(client_app: @current_client_app)
-    @landing_pages = RapiManager.new(oauth_token: oauth_token).landing_pages
+    @landing_pages = RapiManager.new(oauth_token: oauth_token).list_landing_pages
     
     pg_hash = RapiManager.new(oauth_token: oauth_token).show_promotion_group(params[:id])
     @promo_group = PromotionGroupHashie.build_from_rapi_hash(pg_hash)
+    @promo_group.persisted = true
   end
 
   def new
     oauth_token = OauthManager.execute(client_app: @current_client_app)
-    @landing_pages = RapiManager.new(oauth_token: oauth_token).landing_pages
+    @landing_pages = RapiManager.new(oauth_token: oauth_token).list_landing_pages
     @promo_group = PromotionGroupHashie.new
   end
 
@@ -40,7 +41,7 @@ class PromotionGroupsController < ApplicationController
       flash.keep[:notice] = "Promotion group updated!"
       redirect_to promotion_groups_path
     else
-      @landing_pages = RapiManager.new(oauth_token: oauth_token).landing_pages
+      @landing_pages = RapiManager.new(oauth_token: oauth_token).list_landing_pages
       @promo_group = PromotionGroupHashie.build_from_rapi_hash(promotion_group_params["promotion_group"])
 
       errors_hash = JSON.parse(update_response.body)
@@ -71,7 +72,7 @@ class PromotionGroupsController < ApplicationController
       flash.keep[:notice] = "Promotion group created!"
       redirect_to promotion_groups_path
     else
-      @landing_pages = RapiManager.new(oauth_token: oauth_token).landing_pages
+      @landing_pages = RapiManager.new(oauth_token: oauth_token).list_landing_pages
       @promo_group = PromotionGroupHashie.build_from_rapi_hash(promotion_group_params["promotion_group"])
 
       errors_hash = JSON.parse(create_response.body)

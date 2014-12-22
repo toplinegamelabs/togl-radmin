@@ -6,18 +6,18 @@ class LandingPagesController < ApplicationController
 
   def index
     oauth_token = OauthManager.execute(client_app: @current_client_app)
-    @landing_pages = RapiManager.new(oauth_token: oauth_token).landing_pages
+    @landing_pages = RapiManager.new(oauth_token: oauth_token).list_landing_pages
   end
 
   def new
     oauth_token = OauthManager.execute(client_app: @current_client_app)
-    @landing_page_templates = RapiManager.new(oauth_token: oauth_token).landing_page_templates
+    @landing_page_templates = RapiManager.new(oauth_token: oauth_token).list_landing_page_templates
     @landing_page = LandingPageHashie.new
   end
 
   def edit
     oauth_token = OauthManager.execute(client_app: @current_client_app)
-    @landing_page_templates = RapiManager.new(oauth_token: oauth_token).landing_page_templates
+    @landing_page_templates = RapiManager.new(oauth_token: oauth_token).list_landing_page_templates
 
     landing_page_hash = RapiManager.new(oauth_token: oauth_token).show_landing_page(params[:id])
     landing_page_hash["template_variables"] = JSON.pretty_generate(landing_page_hash["template_variables"])
@@ -41,7 +41,7 @@ class LandingPagesController < ApplicationController
         flash.keep[:notice] = "Landing Page updated!"
         redirect_to landing_pages_path
       else
-        @landing_page_templates = RapiManager.new(oauth_token: oauth_token).landing_page_templates
+        @landing_page_templates = RapiManager.new(oauth_token: oauth_token).list_landing_page_templates
         @landing_page = LandingPageHashie.build_from_rapi_hash(landing_page_params["landing_page"])
 
         errors_hash = JSON.parse(update_response.body)
@@ -53,7 +53,7 @@ class LandingPagesController < ApplicationController
         render :edit
       end
     else
-      @landing_page_templates = RapiManager.new(oauth_token: oauth_token).landing_page_templates
+      @landing_page_templates = RapiManager.new(oauth_token: oauth_token).list_landing_page_templates
       @landing_page = LandingPageHashie.build_from_rapi_hash(landing_page_params["landing_page"])
       flash.now[:error] = "Variables must be valid JSON"
       render :new
@@ -78,7 +78,7 @@ class LandingPagesController < ApplicationController
         flash.keep[:notice] = "Landing Page created!"
         redirect_to landing_pages_path
       else
-        @landing_page_templates = RapiManager.new(oauth_token: oauth_token).landing_page_templates
+        @landing_page_templates = RapiManager.new(oauth_token: oauth_token).list_landing_page_templates
         @landing_page = LandingPageHashie.build_from_rapi_hash(landing_page_params["landing_page"])
 
         errors_hash = JSON.parse(create_response.body)
@@ -90,7 +90,7 @@ class LandingPagesController < ApplicationController
         render :new
       end
     else
-      @landing_page_templates = RapiManager.new(oauth_token: oauth_token).landing_page_templates
+      @landing_page_templates = RapiManager.new(oauth_token: oauth_token).list_landing_page_templates
       @landing_page = LandingPageHashie.build_from_rapi_hash(landing_page_params["landing_page"])
       flash.now[:error] = "Variables must be valid JSON"
       render :new

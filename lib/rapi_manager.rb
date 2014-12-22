@@ -4,7 +4,7 @@ class RapiManager
   end
 
 
-  def games
+  def list_games
     rapi_conn = get_connection
 
     json_response = rapi_conn.get do |req|
@@ -17,7 +17,7 @@ class RapiManager
     JSON.parse(json_response.body)
   end
   
-  def contest_templates(game_id)
+  def list_contest_templates(game_id)
     rapi_conn = get_connection
 
     json_response = rapi_conn.get do |req|
@@ -31,7 +31,7 @@ class RapiManager
   end
 
   
-  def event_participants(game_id, contest_template_id)
+  def list_event_participants(game_id, contest_template_id)
     rapi_conn = get_connection
 
     json_response = rapi_conn.get do |req|
@@ -44,7 +44,7 @@ class RapiManager
     JSON.parse(json_response.body)
   end
 
-  def user_by_username(username)
+  def show_user_by_username(username)
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|
       req.url "/admin/user_lookup.json", { username: username }
@@ -56,7 +56,7 @@ class RapiManager
     JSON.parse(json_response.body)
   end
 
-  def user_by_id(user_id)
+  def show_user_by_id(user_id)
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|
       req.url "/admin/user_lookup.json", { user_id: user_id }
@@ -108,7 +108,7 @@ class RapiManager
   end
 
 
-  def promotions
+  def list_promotions
     rapi_conn = get_connection
 
     json_response = rapi_conn.get do |req|
@@ -123,7 +123,7 @@ class RapiManager
   end
 
 
-  def promotion(identifier)
+  def show_promotion_by_identifier(identifier)
     rapi_conn = get_connection
 
     json_response = rapi_conn.get do |req|
@@ -138,7 +138,7 @@ class RapiManager
   end
 
 
-  def landing_page_templates
+  def list_landing_page_templates
     rapi_conn = get_connection
 
     json_response = rapi_conn.get do |req|
@@ -166,7 +166,7 @@ class RapiManager
     JSON.parse(json_response.body)
   end
 
-  def landing_pages
+  def list_landing_pages
     rapi_conn = get_connection
 
     json_response = rapi_conn.get do |req|

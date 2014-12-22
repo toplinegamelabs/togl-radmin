@@ -3,7 +3,7 @@ class RapiUsersController < ApplicationController
 
   def search
     oauth_token = OauthManager.execute(client_app: @current_client_app)
-    rapi_response = RapiManager.new(oauth_token: oauth_token).user_by_username(params[:username])
+    rapi_response = RapiManager.new(oauth_token: oauth_token).show_user_by_username(params[:username])
 
     rapi_response["balance"] = rapi_response["balance"]
 
