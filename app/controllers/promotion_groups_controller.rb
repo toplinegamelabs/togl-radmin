@@ -34,7 +34,7 @@ class PromotionGroupsController < ApplicationController
       "promotion_group" => {
         "identifier" => params[:identifier],
         "landing_page_id" => params[:landing_page_id],
-        "ends_at" => params[:ends_at].present? ? Time.zone.parse(params[:ends_at] + " 11:59PM").in_time_zone("America/Los_Angeles") : ""
+        "ends_at" => params[:ends_at].present? ? Time.zone.parse(params[:ends_at] + " 11:59PM") : ""
       }
     }
 
