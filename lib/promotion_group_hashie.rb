@@ -13,12 +13,13 @@ class PromotionGroupHashie < Hashie::Dash
 
 
   def self.build_from_rapi_hash(hash)
+    Time.zone = "America/Los_Angeles"
     group = self.new
     group.id = hash["id"]
     group.identifier = hash["identifier"]
     group.landing_page_id = hash["landing_page_id"]
     group.starts_at = hash["starts_at"]
-    group.ends_at = hash["ends_at"]
+    group.ends_at = Time.zone.parse(hash["ends_at"]).to_s
     group
   end
 end
