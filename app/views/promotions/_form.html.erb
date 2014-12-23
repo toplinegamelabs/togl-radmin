@@ -64,10 +64,10 @@
   <span id="entries-output"></span>
 
   <strong>Promo Basics</strong><br/>
-  <%= label_tag :promo_name, "Promo Name" %>
+  <%= label_tag :promo_name, "Displayed Name" %>
   <%= text_field_tag :promo_name, @challenge.promotion.name, onchange: "validate();" %>
   <br/>
-  <%= label_tag :promo_identifier, "Promo Identifier" %>
+  <%= label_tag :promo_identifier, "Identifier" %>
 
 <%- if @challenge.persisted? %>
   <span style="color: #BBB"><%= @challenge.promotion.identifier %></span>
@@ -85,7 +85,7 @@
   
 
 
-  <%= label_tag :promo_description, "Promo Description" %>
+  <%= label_tag :promo_description, "Description" %>
   <%= text_area_tag :promo_description, @challenge.promotion.description, onchange: "validate();" %>
   <br/>
 

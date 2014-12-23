@@ -28,11 +28,13 @@ class PromotionGroupsController < ApplicationController
     Time.zone = "America/Los_Angeles"
     oauth_token = OauthManager.execute(client_app: @current_client_app)
 
+
+
     promotion_group_params = {
       "promotion_group" => {
         "identifier" => params[:identifier],
         "landing_page_id" => params[:landing_page_id],
-        "ends_at" => Time.zone.parse(params[:ends_at])
+        "ends_at" => params[:ends_at].present? ? Time.zone.parse(params[:ends_at] + " 11:59PM").in_time_zone("America/Los_Angeles") : ""
       }
     }
 

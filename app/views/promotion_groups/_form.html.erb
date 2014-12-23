@@ -20,7 +20,7 @@
 
 <%= label_tag :ends_at, "Ends On" %>
 <%= date_field_tag :ends_at, @promo_group.ends_at.present? ? DateTime.parse(@promo_group.ends_at).strftime("%Y-%m-%d") : nil %>
-@ midnight pacific
+@ 11:59PM Pacific
 <br/>
 
 
