@@ -182,6 +182,9 @@ class PromotionsController < ApplicationController
         [game["name"], game["id"]]
       end
 
+      @promotion_groups = [[]] + RapiManager.new(oauth_token: oauth_token).list_promotion_groups.collect do |group|
+        [group["identifier"], group["id"]]
+      end
 
 
 
