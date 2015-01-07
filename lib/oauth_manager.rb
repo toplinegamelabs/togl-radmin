@@ -23,7 +23,7 @@ class OauthManager
     
     resp = conn.post do |req|
       req.url '/oauth/authorize.json?redirect_uri=urn:ietf:wg:oauth:2.0:oob&response_type=code&client_id=' + ENV["#{client_app.upcase}_CLIENT_ID"]
-      req.headers['X-Application-Token'] = "temp_#{client_app}"
+      req.headers['X-Application-Token'] = 'temp_dailymvp'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
     end
@@ -38,7 +38,7 @@ class OauthManager
     ### post step 3
     resp3 = conn.post do |req|
       req.url '/oauth/token.json'
-      req.headers['X-Application-Token'] = "temp_#{client_app}"
+      req.headers['X-Application-Token'] = 'temp_dailymvp'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.body = '{
