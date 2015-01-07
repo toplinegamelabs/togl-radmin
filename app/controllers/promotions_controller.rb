@@ -186,8 +186,6 @@ class PromotionsController < ApplicationController
         [group["identifier"], group["id"]]
       end
 
-
-
       promo_contest = {
         "persisted" => false,
         "promotion" => { },
