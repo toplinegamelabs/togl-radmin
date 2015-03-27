@@ -5,6 +5,7 @@ class ApplicationController < ActionController::Base
 
   helper_method :current_user
 
+  before_filter :enable_client_app_selector
   before_filter :current_client_app
   before_filter :require_user, only: [:update_client_app]
   
@@ -25,6 +26,10 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def enable_client_app_selector
+    @allow_client_app_selector = true
+  end
 
   def current_user_session
     return @current_user_session if defined?(@current_user_session)

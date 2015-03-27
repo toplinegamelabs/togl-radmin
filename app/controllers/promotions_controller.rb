@@ -4,7 +4,6 @@ class PromotionsController < ApplicationController
   require 'net/http'
   require 'uri'
 
-
   def index
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     @promotions = RapiManager.new(oauth_token: oauth_token).list_promotions["promotions"].select { |p| p.present? }
@@ -40,7 +39,7 @@ class PromotionsController < ApplicationController
   end
 
   def edit
-
+    @allow_client_app_selector = false
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     promo_contest = RapiManager.new(oauth_token: oauth_token).show_promotion_by_identifier(params[:id])
     user = RapiManager.new(oauth_token: oauth_token).show_user_by_id(promo_contest["creator_id"])
