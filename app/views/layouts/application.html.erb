@@ -31,11 +31,7 @@
 
   <div id="client_app_nav" style="float: right">
     <%= label_tag :client_app, "Client" %>
-    <%- if @allow_client_app_selector %>
-      <%= select_tag :client_app, options_for_select(["dailymvp", "fannation"], @current_client_app), onchange: "update_client_app();" %>
-    <%- else %> 
-      <strong><%= @current_client_app %></strong>
-    <%- end %>
+    <%= select_tag :client_app, options_for_select(["dailymvp", "fannation"], @current_client_app), onchange: "update_client_app();", disabled: !@allow_client_app_selector %>
     &nbsp;
     &nbsp;
   </div>
