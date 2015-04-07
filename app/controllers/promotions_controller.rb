@@ -94,12 +94,13 @@ class PromotionsController < ApplicationController
             }
           },
         "emails" => {
-            "layout" => params["email_layout"],
             "contest_joined" => {
+              "layout" => params["email_contest_joined_layout"],
               "subject" => params["email_contest_joined_subject"],
               "body" => params["email_contest_joined_body"]
             },
             "contest_win" => {
+              "layout" => params["email_contest_win_layout"],
               "subject" => params["email_contest_win_subject"],
               "body" => {
                 "pre" => params["email_contest_win_body_pre"],
@@ -107,6 +108,7 @@ class PromotionsController < ApplicationController
               }
             },
             "contest_loss" => {
+              "layout" => params["email_contest_loss_layout"],
               "subject" => params["email_contest_loss_subject"],
               "body" => {
                 "pre" => params["email_contest_loss_body_pre"],
@@ -114,6 +116,7 @@ class PromotionsController < ApplicationController
               }
             },
             "contest_tie" => {
+              "layout" => params["email_contest_tie_layout"],
               "subject" => params["email_contest_tie_subject"],
               "body" => {
                 "pre" => params["email_contest_tie_body_pre"],
@@ -195,11 +198,12 @@ class PromotionsController < ApplicationController
         "display_type" => params["promo_display_type"],
         "emails" => {
           "contest_joined" => {
+            "layout" => params["email_contest_joined_layout"],
             "subject" => params["email_contest_joined_subject"],
             "body" => params["email_contest_joined_body"]
           },
           "contest_win" => {
-            "layout" => params["email_layout"],
+            "layout" => params["email_contest_win_layout"],
             "subject" => params["email_contest_win_subject"],
             "body" => {
               "pre" => params["email_contest_win_body_pre"],
@@ -207,7 +211,7 @@ class PromotionsController < ApplicationController
             }
           },
           "contest_loss" => {
-            "layout" => params["email_layout"],
+            "layout" => params["email_contest_loss_layout"],
             "subject" => params["email_contest_loss_subject"],
             "body" => {
               "pre" => params["email_contest_loss_body_pre"],
@@ -215,7 +219,7 @@ class PromotionsController < ApplicationController
             }
           },
           "contest_tie" => {
-            "layout" => params["email_layout"],
+            "layout" => params["email_contest_tie_layout"],
             "subject" => params["email_contest_tie_subject"],
             "body" => {
               "pre" => params["email_contest_tie_body_pre"],

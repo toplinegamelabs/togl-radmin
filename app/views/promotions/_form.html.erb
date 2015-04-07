@@ -135,12 +135,12 @@
 
   <br/>
   <strong>Emails</strong><br/>
-  
-  <%= label_tag :email_layout, "Layout" %>
-  <%= text_field_tag :email_layout, @challenge.promotion.emails["layout"], onchange: "validate();" %>
-  <br/><br/>
+<br/>
 
-  <em>Welcome Email</em><br/>
+  <em>Welcome Email</em><br/>  
+  <%= label_tag :email_contest_joined_layout, "Layout" %>
+  <%= text_field_tag :email_contest_joined_layout, @challenge.promotion.emails["contest_joined"]["layout"], onchange: "validate();" %>
+  <br/>
   <%= label_tag :email_contest_joined_subject, "Subject" %>
   <%= text_field_tag :email_contest_joined_subject, @challenge.promotion.emails["contest_joined"]["subject"], onchange: "validate();" %>
   <br/>
@@ -148,7 +148,10 @@
   <%= text_area_tag :email_contest_joined_body, @challenge.promotion.emails["contest_joined"]["body"], onchange: "validate();" %>
   <br/><br/>
 
-  <em>Contest (Win) Email</em><br/>
+  <em>Contest (Win) Email</em><br/>  
+  <%= label_tag :email_contest_win_layout, "Layout" %>
+  <%= text_field_tag :email_contest_win_layout, @challenge.promotion.emails["contest_win"]["layout"], onchange: "validate();" %>
+  <br/>
   <%= label_tag :email_contest_win_subject, "Subject" %>
   <%= text_field_tag :email_contest_win_subject, @challenge.promotion.emails["contest_win"]["subject"], onchange: "validate();" %>
   <br/>
@@ -159,7 +162,10 @@
   <%= text_area_tag :email_contest_win_body_post, @challenge.promotion.emails["contest_win"]["body"]["post"], onchange: "validate();" %>
   <br/><br/>
 
-  <em>Contest (Loss) Email</em><br/>
+  <em>Contest (Loss) Email</em><br/>  
+  <%= label_tag :email_contest_loss_layout, "Layout" %>
+  <%= text_field_tag :email_contest_loss_layout, @challenge.promotion.emails["contest_loss"]["layout"], onchange: "validate();" %>
+  <br/>
   <%= label_tag :email_contest_loss_subject, "Subject" %>
   <%= text_field_tag :email_contest_loss_subject, @challenge.promotion.emails["contest_loss"]["subject"], onchange: "validate();" %>
   <br/>
@@ -170,7 +176,10 @@
   <%= text_area_tag :email_contest_loss_body_post, @challenge.promotion.emails["contest_loss"]["body"]["post"], onchange: "validate();" %>
   <br/><br/>
 
-  <em>Contest (Tie) Email</em><br/>
+  <em>Contest (Tie) Email</em><br/>  
+  <%= label_tag :email_contest_tie_layout, "Layout" %>
+  <%= text_field_tag :email_contest_tie_layout, @challenge.promotion.emails["contest_tie"]["layout"], onchange: "validate();" %>
+  <br/>
   <%= label_tag :email_contest_tie_subject, "Subject" %>
   <%= text_field_tag :email_contest_tie_subject, @challenge.promotion.emails["contest_tie"]["subject"], onchange: "validate();" %>
   <br/>
@@ -415,7 +424,7 @@
   
     // update entry items
     if($("#contest_template_id").val() != "") {
-
+      update_submit(false);
       //loading stuff UI
       document.getElementById('game_id').setAttribute("disabled", "disabled");
       document.getElementById('contest_template_id').setAttribute("disabled", "disabled");

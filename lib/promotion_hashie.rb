@@ -20,12 +20,13 @@ class PromotionHashie < Hashie::Dash
 
   property :emails, default:
     {
-      "layout" => "",
       "contest_joined" => {
+        "layout" => "",
         "subject" => "",
         "body" => ""
       },
       "contest_win" => {
+        "layout" => "",
         "subject" => "",
         "body" => {
           "pre" => "",
@@ -33,6 +34,7 @@ class PromotionHashie < Hashie::Dash
         }
       },
       "contest_loss" => {
+        "layout" => "",
         "subject" => "",
         "body" => {
           "pre" => "",
@@ -40,6 +42,7 @@ class PromotionHashie < Hashie::Dash
         }
       },
       "contest_tie" => {
+        "layout" => "",
         "subject" => "",
         "body" => {
           "pre" => "",
