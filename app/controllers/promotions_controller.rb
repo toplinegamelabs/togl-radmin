@@ -68,6 +68,7 @@ class PromotionsController < ApplicationController
     end
 
     put_params = {
+      "user_id" => params["user_id"],
       "contest_template_id" => params["contest_template_id"],
       "entry" => entry_hash,
       "max" => params["max"],
