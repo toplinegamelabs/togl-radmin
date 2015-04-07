@@ -15,7 +15,7 @@ class OauthManager
   end
 
   def self.execute_with_oauth(client_app: client_app)
-    conn = Faraday.new(:url => "#{ENV["URL_BASE"]}oauth.togl.io:80", :ssl => {:verify => false}) do |faraday|
+    conn = Faraday.new(:url => "#{ENV["OAUTH_URL"]}", :ssl => {:verify => false}) do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
       faraday.response :logger                  # log requests to STDOUT
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
