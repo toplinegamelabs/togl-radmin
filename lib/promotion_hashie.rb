@@ -18,7 +18,35 @@ class PromotionHashie < Hashie::Dash
       "tablet" => {}
     }
 
-
+  property :emails, default:
+    {
+      "layout" => "",
+      "contest_joined" => {
+        "subject" => "",
+        "body" => ""
+      },
+      "contest_win" => {
+        "subject" => "",
+        "body" => {
+          "pre" => "",
+          "post" => ""
+        }
+      },
+      "contest_loss" => {
+        "subject" => "",
+        "body" => {
+          "pre" => "",
+          "post" => ""
+        }
+      },
+      "contest_tie" => {
+        "subject" => "",
+        "body" => {
+          "pre" => "",
+          "post" => ""
+        }
+      }
+    }
 
 
 
@@ -31,6 +59,7 @@ class PromotionHashie < Hashie::Dash
     promo.display_type = hash["display_type"]
     promo.name_logo = hash["name_logo"]
     promo.images = hash["images"]
+    promo.emails = hash["emails"]
     promo.promotion_group_id = hash["promotion_group_id"]
     promo
   end

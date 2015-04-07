@@ -34,10 +34,6 @@
   <span style="color: #BBB"><%= "#{@challenge.contest_template.event_set.description} - #{@challenge.contest_template.buy_in["label"]} - #{@challenge.contest_template.size["label"]}" %></span>
   <%= hidden_field_tag :contest_template_id, @challenge.contest_template.id %>
   <br/>
-
-
-
-
   <%= hidden_field_tag :entry_id, @challenge.entry.id %>
 
 <%- else %>
@@ -137,18 +133,56 @@
   <%= text_field_tag :promo_desktop_badge, @challenge.promotion.images["desktop"]["badge"], onchange: "validate();" %>
   <br/>
 
+  <br/>
+  <strong>Emails</strong><br/>
+  
+  <%= label_tag :email_layout, "Layout" %>
+  <%= text_field_tag :email_layout, @challenge.promotion.emails["layout"], onchange: "validate();" %>
+  <br/><br/>
 
+  <em>Welcome Email</em><br/>
+  <%= label_tag :email_contest_joined_subject, "Subject" %>
+  <%= text_field_tag :email_contest_joined_subject, @challenge.promotion.emails["contest_joined"]["subject"], onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_joined_body, "Body" %>
+  <%= text_area_tag :email_contest_joined_body, @challenge.promotion.emails["contest_joined"]["body"], onchange: "validate();" %>
+  <br/><br/>
+
+  <em>Contest (Win) Email</em><br/>
+  <%= label_tag :email_contest_win_subject, "Subject" %>
+  <%= text_field_tag :email_contest_win_subject, @challenge.promotion.emails["contest_win"]["subject"], onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_win_body_pre, "Body (Intro)" %>
+  <%= text_area_tag :email_contest_win_body_pre, @challenge.promotion.emails["contest_win"]["body"]["pre"], onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_win_body_post, "Body (Conclusion)" %>
+  <%= text_area_tag :email_contest_win_body_post, @challenge.promotion.emails["contest_win"]["body"]["post"], onchange: "validate();" %>
+  <br/><br/>
+
+  <em>Contest (Loss) Email</em><br/>
+  <%= label_tag :email_contest_loss_subject, "Subject" %>
+  <%= text_field_tag :email_contest_loss_subject, @challenge.promotion.emails["contest_loss"]["subject"], onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_loss_body_pre, "Body (Intro)" %>
+  <%= text_area_tag :email_contest_loss_body_pre, @challenge.promotion.emails["contest_loss"]["body"]["pre"], onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_loss_body_post, "Body (Conclusion)" %>
+  <%= text_area_tag :email_contest_loss_body_post, @challenge.promotion.emails["contest_loss"]["body"]["post"], onchange: "validate();" %>
+  <br/><br/>
+
+  <em>Contest (Tie) Email</em><br/>
+  <%= label_tag :email_contest_tie_subject, "Subject" %>
+  <%= text_field_tag :email_contest_tie_subject, @challenge.promotion.emails["contest_tie"]["subject"], onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_tie_body_pre, "Body (Intro)" %>
+  <%= text_area_tag :email_contest_tie_body_pre, @challenge.promotion.emails["contest_tie"]["body"]["pre"], onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_tie_body_post, "Body (Conclusion)" %>
+  <%= text_area_tag :email_contest_tie_body_post, @challenge.promotion.emails["contest_tie"]["body"]["post"], onchange: "validate();" %>
+  <br/>
   <br/>
 
-
-  <br/>
   <%= submit_tag "Submit", id: "submitter" %>
-
-
-
-
-
-
 
 <script type="text/javascript">
   var balance;

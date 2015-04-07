@@ -93,6 +93,34 @@ class PromotionsController < ApplicationController
               "badge" => params["promo_tablet_badge"]
             }
           },
+        "emails" => {
+            "layout" => params["email_layout"],
+            "contest_joined" => {
+              "subject" => params["email_contest_joined_subject"],
+              "body" => params["email_contest_joined_body"]
+            },
+            "contest_win" => {
+              "subject" => params["email_contest_win_subject"],
+              "body" => {
+                "pre" => params["email_contest_win_body_pre"],
+                "post" => params["email_contest_win_body_post"]
+              }
+            },
+            "contest_loss" => {
+              "subject" => params["email_contest_loss_subject"],
+              "body" => {
+                "pre" => params["email_contest_loss_body_pre"],
+                "post" => params["email_contest_loss_body_post"]
+              }
+            },
+            "contest_tie" => {
+              "subject" => params["email_contest_tie_subject"],
+              "body" => {
+                "pre" => params["email_contest_tie_body_pre"],
+                "post" => params["email_contest_tie_body_post"]
+              }
+            }
+          },
         "name_logo" => {
             "unicode" => params["promo_logo_unicode"],
             "css_class" => params["promo_logo_css_class"]
@@ -121,10 +149,7 @@ class PromotionsController < ApplicationController
   end
 
   def create
-
     oauth_token = OauthManager.execute(client_app: @current_client_app)
-
-    
     entry_hash = { "entry_items" => [] }
     params["entry_item"].each_with_index do |entry_item, index|
       entry_hash["entry_items"] << {
@@ -167,7 +192,37 @@ class PromotionsController < ApplicationController
             "unicode" => params["promo_logo_unicode"],
             "css_class" => params["promo_logo_css_class"]
           },
-        "display_type" => params["promo_display_type"]
+        "display_type" => params["promo_display_type"],
+        "emails" => {
+          "contest_joined" => {
+            "subject" => params["email_contest_joined_subject"],
+            "body" => params["email_contest_joined_body"]
+          },
+          "contest_win" => {
+            "layout" => params["email_layout"],
+            "subject" => params["email_contest_win_subject"],
+            "body" => {
+              "pre" => params["email_contest_win_body_pre"],
+              "post" => params["email_contest_win_body_post"]
+            }
+          },
+          "contest_loss" => {
+            "layout" => params["email_layout"],
+            "subject" => params["email_contest_loss_subject"],
+            "body" => {
+              "pre" => params["email_contest_loss_body_pre"],
+              "post" => params["email_contest_loss_body_post"]
+            }
+          },
+          "contest_tie" => {
+            "layout" => params["email_layout"],
+            "subject" => params["email_contest_tie_subject"],
+            "body" => {
+              "pre" => params["email_contest_tie_body_pre"],
+              "post" => params["email_contest_tie_body_post"]
+            }
+          }
+        }
       }
     }
     create_response = RapiManager.new(oauth_token: oauth_token).create_promo_challenge(post_params.to_json)
