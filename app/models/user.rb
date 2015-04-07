@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
     config.crypto_provider = Authlogic::CryptoProviders::Sha512
     config.transition_from_crypto_providers = Authlogic::CryptoProviders::BCrypt
     config.require_password_confirmation = true
+    config.login_field = :email
   end
 
   def self.find_by_email_or_persistence_token(login)
