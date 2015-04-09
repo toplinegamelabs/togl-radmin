@@ -25,6 +25,7 @@ class RapiManager
       req.headers['Authorization'] = 'Bearer ' + @oauth_token
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
     end
 
     JSON.parse(json_response.body)
