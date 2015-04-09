@@ -21,7 +21,7 @@ class RapiManager
     rapi_conn = get_connection
 
     json_response = rapi_conn.get do |req|
-      req.url "/games/#{game_id}/contest_templates.json"
+      req.url "admin/games/#{game_id}/contest_templates.json"
       req.headers['Authorization'] = 'Bearer ' + @oauth_token
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
