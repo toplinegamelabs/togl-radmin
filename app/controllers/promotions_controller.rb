@@ -272,7 +272,6 @@ class PromotionsController < ApplicationController
 
 
   def identifier_check
-
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     rapi_response = RapiManager.new(oauth_token: oauth_token).list_promotions.select { |p| p.present? }
 
