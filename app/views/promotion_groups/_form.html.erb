@@ -9,9 +9,6 @@
 
 <br/>
 
-
-
-
 <%= label_tag :landing_page_id, "Landing Page"%> 
 <%= select_tag :landing_page_id, 
   options_for_select(@landing_pages.collect { |page| [page["name"], page["id"]] }, @promo_group.landing_page_id) %> 
@@ -22,20 +19,8 @@
 <%= date_field_tag :ends_at, @promo_group.ends_at.present? ? DateTime.parse(@promo_group.ends_at).strftime("%Y-%m-%d") : nil %>
 @ 11:59PM Pacific
 <br/>
-
-
-Schedule<br/>
-
-<%= select_datetime Date.today %> <%= check_box_tag 'datetime_tbd' %> <%= check_box_tag 'time_tbd' %>
-
-
-
-
-
 <br/>
 <%= submit_tag "Submit", id: "submitter" %>
-
-
 
 <script type="text/javascript">
   function update_client_app() {

@@ -1,0 +1,23 @@
+Edit Schedule
+<%= form_tag "/promotion_groups/#{@promotion_group_id}/promotion_group_schedules/#{@schedule.id}", method: :put do %>
+  <%= label_tag :opens_at_date, "Opens at" %>
+  <%= date_field_tag :opens_at_date, Time.zone.parse(@schedule.opens_at).strftime("%Y-%m-%d") %> 
+  <%= time_field_tag :opens_at_time, Time.zone.parse(@schedule.opens_at).strftime("%H:%M") %> pacific
+  <br/>
+  <%= label_tag :starts_at_date, "Starts at" %>
+  <%= date_field_tag :starts_at_date, Time.zone.parse(@schedule.starts_at).strftime("%Y-%m-%d") %> 
+  <%= time_field_tag :starts_at_time, Time.zone.parse(@schedule.starts_at).strftime("%H:%M") %> pacific
+  <br/>
+  <%= check_box_tag :date_tbd, :picked, @schedule.date_tbd %>
+  <%= label_tag :date_tbd, "date tbd" %>
+  <%= check_box_tag :time_tbd, :picked, @schedule.time_tbd %>
+  <%= label_tag :time_tbd, "time tbd" %>
+  <br/>
+  <%= select_tag :league, options_for_select(["NFL","MLB","NBA","NHL"], @schedule.league) %>
+
+
+
+  <br/>
+  <%= submit_tag "Submit", id: "submitter" %>
+  
+<% end %>

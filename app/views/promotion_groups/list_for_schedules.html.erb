@@ -1,0 +1,16 @@
+<table>
+  <tr>
+    <th>Identifier</th>
+    <th>&nbsp;</th>
+  </tr>
+<%- @promotion_groups.each do |group| %>
+  <tr>
+    <td>
+      <%= group["identifier"] %>
+    </td>
+    <td>
+      <%= link_to "Edit Schedules", { controller: :promotion_group_schedules, action: :index, promotion_group_id: group["id"] } %>
+    </td>
+  </tr>
+<%- end %>
+</table>

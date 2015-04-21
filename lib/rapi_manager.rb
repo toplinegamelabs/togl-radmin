@@ -275,6 +275,74 @@ class RapiManager
     end
   end
 
+  def create_promotion_group_schedule(promotion_group_id, params)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.post do |req|
+      req.url "/admin/promotion_groups/#{promotion_group_id}/promotion_group_schedules.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+      req.body = params
+    end
+  end
+
+  def put_promotion_group_schedule(promotion_group_id, id, params)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.put do |req|
+      req.url "/admin/promotion_groups/#{promotion_group_id}/promotion_group_schedules/#{id}.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+      req.body = params
+    end
+  end
+
+  def list_promotion_group_schedules(promotion_group_id)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/promotion_groups/#{promotion_group_id}/promotion_group_schedules.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)    
+  end
+  def destroy_promotion_group_schedule(promotion_group_id, id)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.delete do |req|
+      req.url "/admin/promotion_groups/#{promotion_group_id}/promotion_group_schedules/#{id}.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)    
+  end
+  def show_promotion_group_schedule(promotion_group_id, id)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/promotion_groups/#{promotion_group_id}/promotion_group_schedules/#{id}.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)    
+  end
+
+
+
 private
 
   def admin_token

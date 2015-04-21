@@ -9,6 +9,11 @@ class PromotionGroupsController < ApplicationController
     @promotion_groups = RapiManager.new(oauth_token: oauth_token).list_promotion_groups
   end
 
+  def list_for_schedules
+    oauth_token = OauthManager.execute(client_app: @current_client_app)
+    @promotion_groups = RapiManager.new(oauth_token: oauth_token).list_promotion_groups
+  end
+
   def edit
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     @landing_pages = RapiManager.new(oauth_token: oauth_token).list_landing_pages

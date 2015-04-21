@@ -1,0 +1,29 @@
+New Schedule
+<%= form_tag "/promotion_groups/#{@promotion_group_id}/promotion_group_schedules", method: :post do %>
+  <%= label_tag :starts_at_date, "Starts at" %>
+  <%= date_field_tag :starts_at_date %> <%= time_field_tag :starts_at_time %> pacific
+  &nbsp;
+  <%= check_box_tag :date_tbd %>
+  <%= label_tag :date_tbd, "date tbd" %>
+  <%= check_box_tag :time_tbd %>
+  <%= label_tag :time_tbd, "time tbd" %>
+  <%= select_tag :league, options_for_select(["NFL","MLB","NBA","NHL"]) %>
+  &nbsp;
+  <%= submit_tag "Add", id: "submitter" %>
+  
+<% end %>
+
+<br/>
+<br/>
+Schedules<br/>
+<%- @promotion_group_schedules.sort_by { |schedule| schedule.starts_at }.each do |schedule| %>
+  Starts At: <%= Time.zone.parse(schedule.starts_at).strftime("%m/%d/%Y %l:%M%p") %> pacific
+  &nbsp;
+  <%= link_to "edit", "promotion_group_schedules/#{schedule.id}/edit", method: :get %>
+  &nbsp;
+  <%= link_to "delete", "promotion_group_schedules/#{schedule.id}", confirm: "sure?", method: :delete %>
+  <br/>
+<%- end%>
+
+<br/>
+<br/>

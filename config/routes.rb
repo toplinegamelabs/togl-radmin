@@ -25,8 +25,12 @@ ToglAdmin::Application.routes.draw do
   resources :landing_pages, only: [:new, :index, :show, :edit, :create, :update]
   resources :landing_page_templates, only: [:show]
   resources :promotion_groups, only: [:new, :index, :show, :edit, :create, :update] do
-    resources :promotion_group_schedules, only: [:index, :create, :destroy]
+    resources :promotion_group_schedules, only: [:index, :edit, :update, :create, :destroy]
+    collection do
+      get "list_for_schedules"
+    end
   end
+
 
 
   put "/client_apps" => "application#update_client_app"
