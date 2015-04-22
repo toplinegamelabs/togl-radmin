@@ -39,7 +39,7 @@ class PromotionGroupSchedulesController < ApplicationController
     create_response = RapiManager.new(oauth_token: oauth_token).create_promotion_group_schedule(@promotion_group_id, schedule_params.to_json)
 
     if create_response.status == 200
-      flash.keep[:notice] = "Promotion group created!"
+      flash.keep[:notice] = "Schedule created!"
     else
       errors_hash = JSON.parse(create_response.body)
       errors_text = errors_hash.keys.collect { |key|
@@ -75,7 +75,7 @@ class PromotionGroupSchedulesController < ApplicationController
     put_response = RapiManager.new(oauth_token: oauth_token).put_promotion_group_schedule(@promotion_group_id, params[:id], schedule_params.to_json)
 
     if put_response.status == 200
-      flash.keep[:notice] = "Promotion group updated!"
+      flash.keep[:notice] = "Schedule updated!"
     else
       errors_hash = JSON.parse(put_response.body)
       errors_text = errors_hash.keys.collect { |key|
