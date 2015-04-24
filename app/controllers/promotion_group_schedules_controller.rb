@@ -88,7 +88,7 @@ class PromotionGroupSchedulesController < ApplicationController
     @promotion_group_schedules = RapiManager.new(oauth_token: oauth_token).list_promotion_group_schedules(@promotion_group_id).collect do |s|
       PromotionGroupScheduleHashie.build_from_rapi_hash(s)
     end
-    redirect_to :back
+    redirect_to promotion_group_promotion_group_schedules_path(promotion_group_id: params[:promotion_group_id])
   end
 
   def destroy
