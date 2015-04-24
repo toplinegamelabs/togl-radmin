@@ -137,6 +137,10 @@
   <strong>Emails</strong><br/>
 <br/>
 
+  <%- 
+    default_header = "<tr><td align=\"center\" valign=\"top\" style=\"background-color: #0161c5;border-collapse:separate!important;border-top-left-radius:4px;border-top-right-radius:4px;padding:10px 0;\"><a href=\"www.dailymvp.com\" style=\"text-decoration:none\" target=\"_blank\" title=\"DailyMVP\"><img src=\"http://di3648ok8zows.cloudfront.net/public-images/emails/DailyMVP-Logo.png\" style=\"border:0;min-height:auto!important;line-height:100%;outline:none;text-align:center;text-decoration:none\" alt=\"DailyMVP\"></a></td></tr>"
+  %>
+
   <em>Welcome Email</em><br/>  
   <%= label_tag :email_contest_joined_layout, "Layout" %>
   <%= text_field_tag :email_contest_joined_layout, @challenge.promotion.emails["contest_joined"]["layout"], onchange: "validate();" %>
@@ -145,7 +149,7 @@
   <%= text_field_tag :email_contest_joined_subject, @challenge.promotion.emails["contest_joined"]["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header, "Header" %>
-  <%= text_area_tag :email_contest_joined_header, @challenge.promotion.emails["contest_joined"]["header"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_joined_header, @challenge.promotion.emails["contest_joined"]["header"] || default_header, onchange: "validate();" %>
   <br/><br/>
   <%= label_tag :email_contest_joined_body, "Body" %>
   <%= text_area_tag :email_contest_joined_body, @challenge.promotion.emails["contest_joined"]["body"], onchange: "validate();" %>
@@ -159,7 +163,7 @@
   <%= text_field_tag :email_contest_win_subject, @challenge.promotion.emails["contest_win"]["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header, "Header" %>
-  <%= text_area_tag :email_contest_win_header, @challenge.promotion.emails["contest_win"]["header"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_win_header, @challenge.promotion.emails["contest_win"]["header"] || default_header, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_body_pre, "Body (Intro)" %>
   <%= text_area_tag :email_contest_win_body_pre, @challenge.promotion.emails["contest_win"]["body"]["pre"], onchange: "validate();" %>
@@ -176,7 +180,7 @@
   <%= text_field_tag :email_contest_loss_subject, @challenge.promotion.emails["contest_loss"]["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header, "Header" %>
-  <%= text_area_tag :email_contest_loss_header, @challenge.promotion.emails["contest_loss"]["header"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_loss_header, @challenge.promotion.emails["contest_loss"]["header"] || default_header, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_body_pre, "Body (Intro)" %>
   <%= text_area_tag :email_contest_loss_body_pre, @challenge.promotion.emails["contest_loss"]["body"]["pre"], onchange: "validate();" %>
@@ -193,7 +197,7 @@
   <%= text_field_tag :email_contest_tie_subject, @challenge.promotion.emails["contest_tie"]["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header, "Header" %>
-  <%= text_area_tag :email_contest_tie_header, @challenge.promotion.emails["contest_tie"]["header"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_tie_header, @challenge.promotion.emails["contest_tie"]["header"] || default_header, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_body_pre, "Body (Intro)" %>
   <%= text_area_tag :email_contest_tie_body_pre, @challenge.promotion.emails["contest_tie"]["body"]["pre"], onchange: "validate();" %>
