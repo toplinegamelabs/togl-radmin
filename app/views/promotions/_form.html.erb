@@ -138,72 +138,98 @@
 <br/>
 
   <%- 
-    default_header = "<tr><td align=\"center\" valign=\"top\" style=\"background-color: #0161c5;border-collapse:separate!important;border-top-left-radius:4px;border-top-right-radius:4px;padding:10px 0;\"><a href=\"www.dailymvp.com\" style=\"text-decoration:none\" target=\"_blank\" title=\"DailyMVP\"><img src=\"http://di3648ok8zows.cloudfront.net/public-images/emails/DailyMVP-Logo.png\" style=\"border:0;min-height:auto!important;line-height:100%;outline:none;text-align:center;text-decoration:none\" alt=\"DailyMVP\"></a></td></tr>"
+    default_header_image_url = "di3648ok8zows.cloudfront.net/public-images/emails/DailyMVP-Logo.png"
+    default_header_color_code = "0161c5"
+    default_header_target_url = "www.dailymvp.com"
   %>
 
   <em>Welcome Email</em><br/>  
   <%= label_tag :email_contest_joined_layout, "Layout" %>
-  <%= text_field_tag :email_contest_joined_layout, @challenge.promotion.emails["contest_joined"]["layout"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_layout, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_subject, "Subject" %>
-  <%= text_field_tag :email_contest_joined_subject, @challenge.promotion.emails["contest_joined"]["subject"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_subject, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
-  <%= label_tag :email_contest_joined_header, "Header" %>
-  <%= text_area_tag :email_contest_joined_header, @challenge.promotion.emails["contest_joined"]["header"] || default_header, onchange: "validate();" %>
+  <%= label_tag :email_contest_joined_header_image_url, "Header Image URL" %>
+  <small>http://</small><%= text_field_tag :email_contest_joined_header_image_url, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_joined_header_color_code, "Header Color Hex" %>
+  <small>#</small><%= text_field_tag :email_contest_joined_header_color_code, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_joined_header_target_url, "Header Link Target URL" %>
+  <small>http://</small><%= text_field_tag :email_contest_joined_header_target_url, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/><br/>
   <%= label_tag :email_contest_joined_body, "Body" %>
-  <%= text_area_tag :email_contest_joined_body, @challenge.promotion.emails["contest_joined"]["body"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_joined_body, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("body", {}), onchange: "validate();" %>
   <br/><br/>
 
   <em>Contest (Win) Email</em><br/>  
   <%= label_tag :email_contest_win_layout, "Layout" %>
-  <%= text_field_tag :email_contest_win_layout, @challenge.promotion.emails["contest_win"]["layout"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_layout, @challenge.promotion.emails.fetch("contest_win", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_subject, "Subject" %>
-  <%= text_field_tag :email_contest_win_subject, @challenge.promotion.emails["contest_win"]["subject"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_subject, @challenge.promotion.emails.fetch("contest_win", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
-  <%= label_tag :email_contest_win_header, "Header" %>
-  <%= text_area_tag :email_contest_win_header, @challenge.promotion.emails["contest_win"]["header"] || default_header, onchange: "validate();" %>
+  <%= label_tag :email_contest_win_header_image_url, "Header Image URL" %>
+  <small>http://</small><%= text_field_tag :email_contest_win_header_image_url, @challenge.promotion.emails.fetch("contest_win", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_win_header_color_code, "Header Color Hex" %>
+  <small>#</small><%= text_field_tag :email_contest_win_header_color_code, @challenge.promotion.emails.fetch("contest_win", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_win_header_target_url, "Header Link Target URL" %>
+  <small>http://</small><%= text_field_tag :email_contest_win_header_target_url, @challenge.promotion.emails.fetch("contest_win", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_body_pre, "Body (Intro)" %>
-  <%= text_area_tag :email_contest_win_body_pre, @challenge.promotion.emails["contest_win"]["body"]["pre"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_win_body_pre, @challenge.promotion.emails.fetch("contest_win", {}).fetch("body", {})["pre"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_body_post, "Body (Conclusion)" %>
-  <%= text_area_tag :email_contest_win_body_post, @challenge.promotion.emails["contest_win"]["body"]["post"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_win_body_post, @challenge.promotion.emails.fetch("contest_win", {}).fetch("body", {})["post"], onchange: "validate();" %>
   <br/><br/>
 
   <em>Contest (Loss) Email</em><br/>  
   <%= label_tag :email_contest_loss_layout, "Layout" %>
-  <%= text_field_tag :email_contest_loss_layout, @challenge.promotion.emails["contest_loss"]["layout"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_layout, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_subject, "Subject" %>
-  <%= text_field_tag :email_contest_loss_subject, @challenge.promotion.emails["contest_loss"]["subject"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_subject, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
-  <%= label_tag :email_contest_loss_header, "Header" %>
-  <%= text_area_tag :email_contest_loss_header, @challenge.promotion.emails["contest_loss"]["header"] || default_header, onchange: "validate();" %>
+  <%= label_tag :email_contest_loss_header_image_url, "Header Image URL" %>
+  <small>http://</small><%= text_field_tag :email_contest_loss_header_image_url, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_loss_header_color_code, "Header Color Hex" %>
+  <small>#</small><%= text_field_tag :email_contest_loss_header_color_code, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_loss_header_target_url, "Header Link Target URL" %>
+  <small>http://</small><%= text_field_tag :email_contest_loss_header_target_url, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_body_pre, "Body (Intro)" %>
-  <%= text_area_tag :email_contest_loss_body_pre, @challenge.promotion.emails["contest_loss"]["body"]["pre"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_loss_body_pre, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("body", {})["pre"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_body_post, "Body (Conclusion)" %>
-  <%= text_area_tag :email_contest_loss_body_post, @challenge.promotion.emails["contest_loss"]["body"]["post"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_loss_body_post, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("body", {})["post"], onchange: "validate();" %>
   <br/><br/>
 
   <em>Contest (Tie) Email</em><br/>  
   <%= label_tag :email_contest_tie_layout, "Layout" %>
-  <%= text_field_tag :email_contest_tie_layout, @challenge.promotion.emails["contest_tie"]["layout"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_layout, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_subject, "Subject" %>
-  <%= text_field_tag :email_contest_tie_subject, @challenge.promotion.emails["contest_tie"]["subject"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_subject, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
-  <%= label_tag :email_contest_tie_header, "Header" %>
-  <%= text_area_tag :email_contest_tie_header, @challenge.promotion.emails["contest_tie"]["header"] || default_header, onchange: "validate();" %>
+  <%= label_tag :email_contest_tie_header_image_url, "Header Image URL" %>
+  <small>http://</small><%= text_field_tag :email_contest_tie_header_image_url, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_tie_header_color_code, "Header Color Hex" %>
+  <small>#</small><%= text_field_tag :email_contest_tie_header_color_code, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <br/>
+  <%= label_tag :email_contest_tie_header_target_url, "Header Link Target URL" %>
+  <small>http://</small><%= text_field_tag :email_contest_tie_header_target_url, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_body_pre, "Body (Intro)" %>
-  <%= text_area_tag :email_contest_tie_body_pre, @challenge.promotion.emails["contest_tie"]["body"]["pre"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_tie_body_pre, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("body", {})["pre"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_body_post, "Body (Conclusion)" %>
-  <%= text_area_tag :email_contest_tie_body_post, @challenge.promotion.emails["contest_tie"]["body"]["post"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_tie_body_post, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("body", {})["post"], onchange: "validate();" %>
   <br/>
   <br/>
 

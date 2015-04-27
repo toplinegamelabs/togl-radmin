@@ -23,7 +23,12 @@ class PromotionHashie < Hashie::Dash
       "contest_joined" => {
         "layout" => "",
         "subject" => "",
-        "body" => ""
+        "body" => "",
+        "header" => {
+          "image_url" => "",
+          "target_url" => "",
+          "color_code" => ""
+        }
       },
       "contest_win" => {
         "layout" => "",
@@ -31,6 +36,11 @@ class PromotionHashie < Hashie::Dash
         "body" => {
           "pre" => "",
           "post" => ""
+        },
+        "header" => {
+          "image_url" => "",
+          "target_url" => "",
+          "color_code" => ""
         }
       },
       "contest_loss" => {
@@ -39,6 +49,11 @@ class PromotionHashie < Hashie::Dash
         "body" => {
           "pre" => "",
           "post" => ""
+        },
+        "header" => {
+          "image_url" => "",
+          "target_url" => "",
+          "color_code" => ""
         }
       },
       "contest_tie" => {
@@ -47,6 +62,11 @@ class PromotionHashie < Hashie::Dash
         "body" => {
           "pre" => "",
           "post" => ""
+        },
+        "header" => {
+          "image_url" => "",
+          "target_url" => "",
+          "color_code" => ""
         }
       }
     }
