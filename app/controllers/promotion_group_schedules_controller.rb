@@ -14,7 +14,6 @@ class PromotionGroupSchedulesController < ApplicationController
   end
 
   def edit
-
     Time.zone = "America/Los_Angeles"
     @promotion_group_id = params[:promotion_group_id]
     oauth_token = OauthManager.execute(client_app: @current_client_app)
@@ -31,8 +30,10 @@ class PromotionGroupSchedulesController < ApplicationController
         "promotion_group_id" => @promotion_group_id,
         "league" => params[:league],
         "starts_at" => Time.zone.parse(params[:starts_at_date] + " " + params[:starts_at_time]),
-        "starts_at_date_tbd" => params[:date_tbd].present?,
-        "starts_at_time_tbd" => params[:time_tbd].present?
+        "starts_at_date_tbd" => params[:starts_at_date_tbd].present?,
+        "starts_at_time_tbd" => params[:starts_at_time_tbd].present?,
+        "opens_at_date_tbd" => params[:opens_at_date_tbd].present?,
+        "opens_at_time_tbd" => params[:opens_at_time_tbd].present?
       }
     }
 
@@ -67,8 +68,10 @@ class PromotionGroupSchedulesController < ApplicationController
         "league" => params[:league],
         "starts_at" => Time.zone.parse(params[:starts_at_date] + " " + params[:starts_at_time]),
         "opens_at" => Time.zone.parse(params[:opens_at_date] + " " + params[:opens_at_time]),
-        "starts_at_date_tbd" => params[:date_tbd].present?,
-        "starts_at_time_tbd" => params[:time_tbd].present?
+        "starts_at_date_tbd" => params[:starts_at_date_tbd].present?,
+        "starts_at_time_tbd" => params[:starts_at_time_tbd].present?,
+        "opens_at_date_tbd" => params[:opens_at_date_tbd].present?,
+        "opens_at_time_tbd" => params[:opens_at_time_tbd].present?
       }
     }
 

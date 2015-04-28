@@ -3,10 +3,14 @@ New Schedule
   <%= label_tag :starts_at_date, "Starts at" %>
   <%= date_field_tag :starts_at_date %> <%= time_field_tag :starts_at_time %> pacific
   &nbsp;
-  <%= check_box_tag :date_tbd %>
-  <%= label_tag :date_tbd, "date tbd" %>
-  <%= check_box_tag :time_tbd %>
-  <%= label_tag :time_tbd, "time tbd" %>
+  <%= check_box_tag :starts_at_date_tbd %>
+  <%= label_tag :starts_at_date_tbd, "starts at date tbd" %>
+  <%= check_box_tag :starts_at_time_tbd %>
+  <%= label_tag :starts_at_time_tbd, "starts at time tbd" %>
+  <%= check_box_tag :opens_at_date_tbd %>
+  <%= label_tag :opens_at_date_tbd, "opens at date tbd" %>
+  <%= check_box_tag :opens_at_time_tbd %>
+  <%= label_tag :opens_at_time_tbd, "opens at time tbd" %>
   <%= select_tag :league, options_for_select(["NFL","MLB","NBA","NHL"]) %>
   &nbsp;
   <%= submit_tag "Add", id: "submitter" %>

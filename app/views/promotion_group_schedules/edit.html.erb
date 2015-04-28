@@ -14,12 +14,15 @@
   <%= time_field_tag :starts_at_time, Time.zone.parse(@schedule.starts_at).strftime("%H:%M") %> pacific
   <br/>
   <br/>
-  <%= check_box_tag :date_tbd, :picked, @schedule.date_tbd %>
-  <%= label_tag :date_tbd, "date tbd" %>
-  &nbsp;
-  <%= check_box_tag :time_tbd, :picked, @schedule.time_tbd %>
-  <%= label_tag :time_tbd, "time tbd" %>
-
+  <%= check_box_tag :starts_at_date_tbd, :picked, @schedule.starts_at_date_tbd %>
+  <%= label_tag :starts_at_date_tbd, "starts at date tbd" %>
+  <%= check_box_tag :starts_at_time_tbd, :picked, @schedule.starts_at_time_tbd %>
+  <%= label_tag :starts_at_time_tbd, "starts at time tbd" %>
+  <br/>
+  <%= check_box_tag :opens_at_date_tbd, :picked, @schedule.opens_at_date_tbd %>
+  <%= label_tag :opens_at_date_tbd, "opens at date tbd" %>
+  <%= check_box_tag :opens_at_time_tbd, :picked, @schedule.opens_at_time_tbd %>
+  <%= label_tag :opens_at_time_tbd, "opens at time tbd" %>
 
 
   <br/>
