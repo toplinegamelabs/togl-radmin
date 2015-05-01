@@ -143,7 +143,10 @@
     default_header_target_url = "www.dailymvp.com"
   %>
 
-  <em>Welcome Email</em><br/>  
+  <em>Welcome Email</em><br/>
+  <%= check_box_tag :email_contest_joined_layout_configurable, :picked, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
+  <%= label_tag :email_contest_joined_layout_configurable, "Use Configurable Layout" %>
+  <br/>
   <%= label_tag :email_contest_joined_layout, "Layout" %>
   <%= text_field_tag :email_contest_joined_layout, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
@@ -163,7 +166,10 @@
   <%= text_area_tag :email_contest_joined_body, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("body", {}), onchange: "validate();" %>
   <br/><br/>
 
-  <em>Contest (Win) Email</em><br/>  
+  <em>Contest (Win) Email</em><br/>
+  <%= check_box_tag :email_contest_win_layout_configurable, :picked, @challenge.promotion.emails.fetch("contest_win", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
+  <%= label_tag :email_contest_win_layout_configurable, "Use Configurable Layout" %>
+  <br/>
   <%= label_tag :email_contest_win_layout, "Layout" %>
   <%= text_field_tag :email_contest_win_layout, @challenge.promotion.emails.fetch("contest_win", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
@@ -187,6 +193,9 @@
   <br/><br/>
 
   <em>Contest (Loss) Email</em><br/>  
+  <%= check_box_tag :email_contest_loss_layout_configurable, :picked, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
+  <%= label_tag :email_contest_loss_layout_configurable, "Use Configurable Layout" %>
+  <br/>
   <%= label_tag :email_contest_loss_layout, "Layout" %>
   <%= text_field_tag :email_contest_loss_layout, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
@@ -210,6 +219,9 @@
   <br/><br/>
 
   <em>Contest (Tie) Email</em><br/>  
+  <%= check_box_tag :email_contest_tie_layout_configurable, :picked, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
+  <%= label_tag :email_contest_tie_layout_configurable, "Use Configurable Layout" %>
+  <br/>
   <%= label_tag :email_contest_tie_layout, "Layout" %>
   <%= text_field_tag :email_contest_tie_layout, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
@@ -363,6 +375,43 @@
     }
     
   <%- end %>
+
+    //email layouts
+    if($("#email_contest_joined_layout_configurable").prop("checked")) {
+      $("#email_contest_joined_layout").val("configurable");
+      $("#email_contest_joined_layout").prop("readonly", true);
+      $("[id^=email_contest_joined_header").prop( "readonly", false);
+    } else {
+      $("#email_contest_joined_layout").prop("readonly", false);
+      $("[id^=email_contest_joined_header").prop( "readonly", true);
+    }
+
+    if($("#email_contest_win_layout_configurable").prop("checked")) {
+      $("#email_contest_win_layout").val("configurable");
+      $("#email_contest_win_layout").prop("readonly", true);
+      $("[id^=email_contest_win_header").prop( "readonly", false);
+    } else {
+      $("#email_contest_win_layout").prop("readonly", false);
+      $("[id^=email_contest_win_header").prop( "readonly", true);
+    }
+
+    if($("#email_contest_loss_layout_configurable").prop("checked")) {
+      $("#email_contest_loss_layout").val("configurable");
+      $("#email_contest_loss_layout").prop("readonly", true);
+      $("[id^=email_contest_loss_header").prop( "readonly", false);
+    } else {
+      $("#email_contest_loss_layout").prop("readonly", false);
+      $("[id^=email_contest_loss_header").prop( "readonly", true);
+    }
+
+    if($("#email_contest_tie_layout_configurable").prop("checked")) {
+      $("#email_contest_tie_layout").val("configurable");
+      $("#email_contest_tie_layout").prop("readonly", true);
+      $("[id^=email_contest_tie_header").prop( "readonly", false);
+    } else {
+      $("#email_contest_tie_layout").prop("readonly", false);
+      $("[id^=email_contest_tie_header").prop( "readonly", true);
+    }
 
     // are we valid?
     update_submit(valid);

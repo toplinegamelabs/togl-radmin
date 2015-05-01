@@ -75,7 +75,6 @@ class PromotionHashie < Hashie::Dash
 
   def self.build_from_rapi_hash(hash)
     promo = self.new
-
     promo.name = hash["name"]
     promo.identifier = hash["identifier"]
     promo.description = hash["description"].join("\n")
