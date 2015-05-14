@@ -1,5 +1,4 @@
 class PromotionHashie < Hashie::Dash
-
   property :name
   property :identifier
   property :description

@@ -31,12 +31,38 @@ class RapiManager
     JSON.parse(json_response.body)
   end
 
+  def list_event_sets(game_id)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/games/#{game_id}/event_sets.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)
+  end
+
   
-  def list_event_participants(game_id, contest_template_id)
+  def list_event_participants_by_contest_template(game_id, contest_template_id)
     rapi_conn = get_connection
 
     json_response = rapi_conn.get do |req|
       req.url "/games/#{game_id}/contest_templates/#{contest_template_id}/event_participants.json"
+      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+    end
+
+    JSON.parse(json_response.body)
+  end
+  def list_event_participants_by_event_set(game_id, event_set_id)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/games/#{game_id}/event_sets/#{event_set_id}/event_participants.json"
       req.headers['Authorization'] = 'Bearer ' + @oauth_token
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
@@ -82,10 +108,10 @@ class RapiManager
   end
 
 
-  def create_promo_challenge(params)
+  def create_promo(params)
     rapi_conn = get_connection
     json_response = rapi_conn.post do |req|
-      req.url '/admin/promotional_challenge.json'
+      req.url '/admin/promotions.json'
       req.headers['Authorization'] = 'Bearer ' + @oauth_token
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
@@ -135,7 +161,7 @@ class RapiManager
       req.headers['ADMIN-TOKEN'] = admin_token
     end
 
-    JSON.parse(json_response.body)["challenge"]
+    JSON.parse(json_response.body)["challenge"] || JSON.parse(json_response.body)["contest"]
   end
 
 

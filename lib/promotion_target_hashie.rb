@@ -1,10 +1,11 @@
-class ChallengeHashie < Hashie::Dash
+class PromotionTargetHashie < Hashie::Dash
   property :persisted, default: false
   property :username
   property :max, default: 500
   property :contest_template, default: ContestTemplateHashie.new
   property :promotion, default: PromotionHashie.new
   property :entry, default: EntryHashie.new
+
 
 
   def persisted?

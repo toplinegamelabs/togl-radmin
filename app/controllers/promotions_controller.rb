@@ -16,14 +16,16 @@ class PromotionsController < ApplicationController
       promo_contest = RapiManager.new(oauth_token: oauth_token).show_promotion_by_identifier(params[:id])
       user = RapiManager.new(oauth_token: oauth_token).show_user_by_id(promo_contest["creator_id"])
       promo_contest["username"] = user["username"]
-      @challenge = ChallengeHashie.build_from_rapi_hash(promo_contest)
+
+      @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
+      @promotion_target.persisted = true
 
       original_contest_template = @challenge.contest_template
-      @challenge.contest_template = ContestTemplateHashie.new
-      @challenge.contest_template.game = original_contest_template.game
-      @challenge.entry = EntryHashie.new
+      @promotion_target.contest_template = ContestTemplateHashie.new
+      @promotion_target.contest_template.game = original_contest_template.game
+      @promotion_target.entry = EntryHashie.new
     else
-      @challenge = ChallengeHashie.new
+      @promotion_target = PromotionTargetHashie.new
     end
 
     oauth_token = OauthManager.execute(client_app: @current_client_app)
@@ -45,8 +47,8 @@ class PromotionsController < ApplicationController
     user = RapiManager.new(oauth_token: oauth_token).show_user_by_id(promo_contest["creator_id"])
     promo_contest["username"] = user["username"]
 
-    @challenge = ChallengeHashie.build_from_rapi_hash(promo_contest)
-    @challenge.persisted = true
+    @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
+    @promotion_target.persisted = true
 
     @promotion_groups = [[]] + RapiManager.new(oauth_token: oauth_token).list_promotion_groups.collect do |group|
       [group["identifier"], group["id"]]
@@ -187,7 +189,23 @@ class PromotionsController < ApplicationController
 
     post_params = {
       "user_id" => params["user_id"],
-      "contest_template_id" => params[:contest_template_id],
+      "contest_template_settings" => {
+        "game_id"               => params["game_id"],
+        "buy_in"                => params["buy_in"],
+        "size"                  => params["size"],
+        "is_publicly_joinable"  => params["is_publicly_joinable"] == "picked",
+        "event_set_id"          => params["event_set_id"],
+        "rewards"               => [
+          {
+            "start_place" => 1,
+            "end_place" => 1,
+            "item" => {
+              "type" => "balance",
+              "value" => 1500
+            }
+          }
+        ]
+      },
       "max" => params[:max],
       "entry" => entry_hash,
       "promotion" => {
@@ -270,7 +288,7 @@ class PromotionsController < ApplicationController
         }
       }
     }
-    create_response = RapiManager.new(oauth_token: oauth_token).create_promo_challenge(post_params.to_json)
+    create_response = RapiManager.new(oauth_token: oauth_token).create_promo(post_params.to_json)
 
     if create_response.status == 201
       flash.keep[:notice] = "Promotion created!"
@@ -300,7 +318,7 @@ class PromotionsController < ApplicationController
       promo_contest["max"] = params["max"]
       promo_contest["entry"] = entry_hash
       
-      @challenge = ChallengeHashie.build_from_rapi_hash(promo_contest)
+      @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
 
 
 

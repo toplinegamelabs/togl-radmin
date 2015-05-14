@@ -9,6 +9,10 @@ ToglAdmin::Application.routes.draw do
     resources :contest_templates, only: [:index] do
       resources :event_participants, only: [:index]
     end
+
+    resources :event_sets, only: [:index] do
+      resources :event_participants, only: [:index]
+    end
   end
 
 

@@ -4,11 +4,11 @@
   <%= label_tag :username, "Username" %>
 
 
-<%- if @challenge.persisted? %>
-  <span style="color: #BBB"><%= @challenge.username %></span>
-  <%= hidden_field_tag :username, @challenge.username %>
+<%- if @promotion_target.persisted? %>
+  <span style="color: #BBB"><%= @promotion_target.username %></span>
+  <%= hidden_field_tag :username, @promotion_target.username %>
 <%- else %>
-  <%= text_field_tag :username, @challenge.username, onchange: "user_lookup();" %>
+  <%= text_field_tag :username, @promotion_target.username, onchange: "user_lookup();" %>
   <span id="username-output"></span>
 <%- end %>
   <br/>
@@ -17,38 +17,69 @@
 
 
 
-  <strong>Challenge Settings</strong><br/>
+  <strong>Contest/Challenge Settings</strong><br/>
 
-  <%= label_tag :max, "Max Challengers" %>
-  <%= number_field_tag :max, @challenge.max, min: 2, onchange: "validate();" %>
-  <span id="max-output"></span>
-  <br/>
 
-<%- if @challenge.persisted? %>
+<%- if @promotion_target.persisted? %>
   
   <%= label_tag :game_id, "Game" %>
-  <span style="color: #BBB"><%= @challenge.contest_template.game.name %></span>
-  <%= hidden_field_tag :game_id, @challenge.contest_template.game.id %>
+  <span style="color: #BBB"><%= @promotion_target.contest_template.game.name %></span>
+  <%= hidden_field_tag :game_id, @promotion_target.contest_template.game.id %>
   <br/>
   <%= label_tag :contest_template_id, "Contest Template" %>
-  <span style="color: #BBB"><%= "#{@challenge.contest_template.event_set.description} - #{@challenge.contest_template.buy_in["label"]} - #{@challenge.contest_template.size["label"]}" %></span>
-  <%= hidden_field_tag :contest_template_id, @challenge.contest_template.id %>
+  <span style="color: #BBB"><%= "#{@promotion_target.contest_template.event_set.description} - #{@promotion_target.contest_template.buy_in["label"]} - #{@promotion_target.contest_template.size["label"]}" %></span>
+  <%= hidden_field_tag :contest_template_id, @promotion_target.contest_template.id %>
   <br/>
-  <%= hidden_field_tag :entry_id, @challenge.entry.id %>
+  <%= hidden_field_tag :entry_id, @promotion_target.entry.id %>
 
+  <%= label_tag :max, "Max Challengers" %>
+  <%- if @promotion_target.max %>
+    <%= number_field_tag :max, @promotion_target.max, min: 2, size: "4", onchange: "validate();" %>
+    <span id="max-output"></span>
+    <br/>
+  <%- end %>
 <%- else %>
 
   <%= label_tag :game_id, "Game" %>
-  <%= select_tag :game_id, options_for_select(@games, @challenge.contest_template.game.id), onchange: "game_changed();" %>
+  <%= select_tag :game_id, options_for_select(@games, @promotion_target.contest_template.game.id), onchange: "game_changed();" %>
   <span id="game-output"></span>
   <br/>
+<div id="contest_config">
+
+  <%= radio_button_tag :c_or_c, :challenge, true, onchange: "c_or_c_changed();" %>
+  <%= label_tag :c_or_c_challenge, "Challenge" %>
+  &nbsp;
+  <%= radio_button_tag :c_or_c, :contest, false, onchange: "c_or_c_changed();" %>
+  <%= label_tag :c_or_c_contest, "Contest" %>
 
 
-  <%= label_tag :contest_template_id, "Contest Template" %>
-  <%= select_tag :contest_template_id, @challenge.contest_template.id, onchange: "contest_template_changed();" %>
-  <span id="ct-output"></span>
+  <br/>
+  <%= label_tag :max, "Max Challengers" %>
+  <%= number_field_tag :max, @promotion_target.max, min: 2, size: "4", onchange: "validate();" %>
+  <span id="max-output"></span>
   <br/>
 
+  <%= label_tag :event_set_id, "Event Set" %>
+  <%= select_tag :event_set_id, "", onchange: "event_set_changed();" %>
+  <span id="es-output"></span>
+  <br/>
+
+
+  <%= label_tag :size, "Contest Size" %>
+  <%= number_field_tag :size, 2, min: 2, onchange: "validate();" %>
+  <span id="size-output"></span>
+  <br/>
+
+
+  <%= label_tag :buy_in, "Buy In" %>
+  $<%= number_field_tag :buy_in, 0, min: 0, onchange: "validate();" %>
+  <span id="buy-in-output"></span>
+  <br/>
+
+  <%= check_box_tag :is_publicly_joinable, :picked, true, onchange: "validate();" %>
+  <%= label_tag :is_publicly_joinable, "Publicly Joinable" %>
+  <span id="publicly-joinable-output"></span>
+</div>
 <%- end %>
 
 
@@ -61,76 +92,76 @@
 
   <strong>Promo Basics</strong><br/>
   <%= label_tag :promo_name, "Displayed Name" %>
-  <%= text_field_tag :promo_name, @challenge.promotion.name, onchange: "validate();" %>
+  <%= text_field_tag :promo_name, @promotion_target.promotion.name, onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_identifier, "Identifier" %>
 
-<%- if @challenge.persisted? %>
-  <span style="color: #BBB"><%= @challenge.promotion.identifier %></span>
-  <%= hidden_field_tag :promo_identifier, @challenge.promotion.identifier %>
+<%- if @promotion_target.persisted? %>
+  <span style="color: #BBB"><%= @promotion_target.promotion.identifier %></span>
+  <%= hidden_field_tag :promo_identifier, @promotion_target.promotion.identifier %>
 <%- else %>
-  <%= text_field_tag :promo_identifier, @challenge.promotion.identifier, onchange: "promo_identifier_changed();" %>
+  <%= text_field_tag :promo_identifier, @promotion_target.promotion.identifier, onchange: "promo_identifier_changed();" %>
 <%- end %>
   <span id="identifier-output"></span>
   <br/>
   
   <%= label_tag :promotion_group_id, "Promotion Group" %>
-  <%= select_tag :promotion_group_id, options_for_select(@promotion_groups, @challenge.promotion.promotion_group_id), onchange: "validate();" %>
+  <%= select_tag :promotion_group_id, options_for_select(@promotion_groups, @promotion_target.promotion.promotion_group_id), onchange: "validate();" %>
   <span id="pg-output"></span>
   <br/>
   
 
 
   <%= label_tag :promo_description, "Description" %>
-  <%= text_area_tag :promo_description, @challenge.promotion.description, onchange: "validate();" %>
+  <%= text_area_tag :promo_description, @promotion_target.promotion.description, onchange: "validate();" %>
   <br/>
 
   <br/>
   <strong>Promo Visuals</strong><br/>
   <%= label_tag :promo_display_type, "Display Type" %>
-  <%= text_field_tag :promo_display_type, @challenge.promotion.display_type, onchange: "validate();" %>
+  <%= text_field_tag :promo_display_type, @promotion_target.promotion.display_type, onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_logo_css_class, "Logo Css" %>
-  <%= text_field_tag :promo_logo_css_class, @challenge.promotion.name_logo["css_class"], onchange: "validate();" %>
+  <%= text_field_tag :promo_logo_css_class, @promotion_target.promotion.name_logo["css_class"], onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_logo_unicode, "Logo Unicode" %>
-  <%= text_field_tag :promo_logo_unicode, @challenge.promotion.name_logo["unicode"], onchange: "validate();" %>
+  <%= text_field_tag :promo_logo_unicode, @promotion_target.promotion.name_logo["unicode"], onchange: "validate();" %>
   <br/>
 
   <br/>
   <strong>Promo Mobile Images</strong><br/>
   <%= label_tag :promo_mobile_background, "Background" %>
-  <%= text_field_tag :promo_mobile_background, @challenge.promotion.images["mobile"]["background"], onchange: "validate();" %>
+  <%= text_field_tag :promo_mobile_background, @promotion_target.promotion.images["mobile"]["background"], onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_mobile_banner, "Banner" %>
-  <%= text_field_tag :promo_mobile_banner, @challenge.promotion.images["mobile"]["banner"], onchange: "validate();" %>
+  <%= text_field_tag :promo_mobile_banner, @promotion_target.promotion.images["mobile"]["banner"], onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_mobile_badge, "Badge" %>
-  <%= text_field_tag :promo_mobile_badge, @challenge.promotion.images["mobile"]["badge"], onchange: "validate();" %>
+  <%= text_field_tag :promo_mobile_badge, @promotion_target.promotion.images["mobile"]["badge"], onchange: "validate();" %>
   <br/>
 
   <br/>
   <strong>Promo Tablet Images</strong><br/>
   <%= label_tag :promo_tablet_background, "Background" %>
-  <%= text_field_tag :promo_tablet_background, @challenge.promotion.images["tablet"]["background"], onchange: "validate();" %>
+  <%= text_field_tag :promo_tablet_background, @promotion_target.promotion.images["tablet"]["background"], onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_tablet_banner, "Banner" %>
-  <%= text_field_tag :promo_tablet_banner, @challenge.promotion.images["tablet"]["banner"], onchange: "validate();" %>
+  <%= text_field_tag :promo_tablet_banner, @promotion_target.promotion.images["tablet"]["banner"], onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_tablet_badge, "Badge" %>
-  <%= text_field_tag :promo_tablet_badge, @challenge.promotion.images["tablet"]["badge"], onchange: "validate();" %>
+  <%= text_field_tag :promo_tablet_badge, @promotion_target.promotion.images["tablet"]["badge"], onchange: "validate();" %>
   <br/>
 
   <br/>
   <strong>Promo Desktop Images</strong><br/>
   <%= label_tag :promo_desktop_background, "Background" %>
-  <%= text_field_tag :promo_desktop_background, @challenge.promotion.images["desktop"]["background"], onchange: "validate();" %>
+  <%= text_field_tag :promo_desktop_background, @promotion_target.promotion.images["desktop"]["background"], onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_desktop_banner, "Banner" %>
-  <%= text_field_tag :promo_desktop_banner, @challenge.promotion.images["desktop"]["banner"], onchange: "validate();" %>
+  <%= text_field_tag :promo_desktop_banner, @promotion_target.promotion.images["desktop"]["banner"], onchange: "validate();" %>
   <br/>
   <%= label_tag :promo_desktop_badge, "Badge" %>
-  <%= text_field_tag :promo_desktop_badge, @challenge.promotion.images["desktop"]["badge"], onchange: "validate();" %>
+  <%= text_field_tag :promo_desktop_badge, @promotion_target.promotion.images["desktop"]["badge"], onchange: "validate();" %>
   <br/>
 
   <br/>
@@ -144,104 +175,104 @@
   %>
 
   <em>Welcome Email</em><br/>
-  <%= check_box_tag :email_contest_joined_layout_configurable, :picked, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
+  <%= check_box_tag :email_contest_joined_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
   <%= label_tag :email_contest_joined_layout_configurable, "Use Configurable Layout" %>
   <br/>
   <%= label_tag :email_contest_joined_layout, "Layout" %>
-  <%= text_field_tag :email_contest_joined_layout, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_layout, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_subject, "Subject" %>
-  <%= text_field_tag :email_contest_joined_subject, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_subject, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header_image_url, "Header Image URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_joined_header_image_url, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <small>http://</small><%= text_field_tag :email_contest_joined_header_image_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header_color_code, "Header Color Hex" %>
-  <small>#</small><%= text_field_tag :email_contest_joined_header_color_code, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <small>#</small><%= text_field_tag :email_contest_joined_header_color_code, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header_target_url, "Header Link Target URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_joined_header_target_url, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <small>http://</small><%= text_field_tag :email_contest_joined_header_target_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/><br/>
   <%= label_tag :email_contest_joined_body, "Body" %>
-  <%= text_area_tag :email_contest_joined_body, @challenge.promotion.emails.fetch("contest_joined", {}).fetch("body", {}), onchange: "validate();" %>
+  <%= text_area_tag :email_contest_joined_body, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("body", {}), onchange: "validate();" %>
   <br/><br/>
 
   <em>Contest (Win) Email</em><br/>
-  <%= check_box_tag :email_contest_win_layout_configurable, :picked, @challenge.promotion.emails.fetch("contest_win", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
+  <%= check_box_tag :email_contest_win_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
   <%= label_tag :email_contest_win_layout_configurable, "Use Configurable Layout" %>
   <br/>
   <%= label_tag :email_contest_win_layout, "Layout" %>
-  <%= text_field_tag :email_contest_win_layout, @challenge.promotion.emails.fetch("contest_win", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_layout, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_subject, "Subject" %>
-  <%= text_field_tag :email_contest_win_subject, @challenge.promotion.emails.fetch("contest_win", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_subject, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header_image_url, "Header Image URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_win_header_image_url, @challenge.promotion.emails.fetch("contest_win", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <small>http://</small><%= text_field_tag :email_contest_win_header_image_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header_color_code, "Header Color Hex" %>
-  <small>#</small><%= text_field_tag :email_contest_win_header_color_code, @challenge.promotion.emails.fetch("contest_win", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <small>#</small><%= text_field_tag :email_contest_win_header_color_code, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header_target_url, "Header Link Target URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_win_header_target_url, @challenge.promotion.emails.fetch("contest_win", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <small>http://</small><%= text_field_tag :email_contest_win_header_target_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_body_pre, "Body (Intro)" %>
-  <%= text_area_tag :email_contest_win_body_pre, @challenge.promotion.emails.fetch("contest_win", {}).fetch("body", {})["pre"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_win_body_pre, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("body", {})["pre"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_body_post, "Body (Conclusion)" %>
-  <%= text_area_tag :email_contest_win_body_post, @challenge.promotion.emails.fetch("contest_win", {}).fetch("body", {})["post"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_win_body_post, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("body", {})["post"], onchange: "validate();" %>
   <br/><br/>
 
   <em>Contest (Loss) Email</em><br/>  
-  <%= check_box_tag :email_contest_loss_layout_configurable, :picked, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
+  <%= check_box_tag :email_contest_loss_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
   <%= label_tag :email_contest_loss_layout_configurable, "Use Configurable Layout" %>
   <br/>
   <%= label_tag :email_contest_loss_layout, "Layout" %>
-  <%= text_field_tag :email_contest_loss_layout, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_layout, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_subject, "Subject" %>
-  <%= text_field_tag :email_contest_loss_subject, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_subject, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header_image_url, "Header Image URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_loss_header_image_url, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <small>http://</small><%= text_field_tag :email_contest_loss_header_image_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header_color_code, "Header Color Hex" %>
-  <small>#</small><%= text_field_tag :email_contest_loss_header_color_code, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <small>#</small><%= text_field_tag :email_contest_loss_header_color_code, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header_target_url, "Header Link Target URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_loss_header_target_url, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <small>http://</small><%= text_field_tag :email_contest_loss_header_target_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_body_pre, "Body (Intro)" %>
-  <%= text_area_tag :email_contest_loss_body_pre, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("body", {})["pre"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_loss_body_pre, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("body", {})["pre"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_body_post, "Body (Conclusion)" %>
-  <%= text_area_tag :email_contest_loss_body_post, @challenge.promotion.emails.fetch("contest_loss", {}).fetch("body", {})["post"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_loss_body_post, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("body", {})["post"], onchange: "validate();" %>
   <br/><br/>
 
   <em>Contest (Tie) Email</em><br/>  
-  <%= check_box_tag :email_contest_tie_layout_configurable, :picked, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
+  <%= check_box_tag :email_contest_tie_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
   <%= label_tag :email_contest_tie_layout_configurable, "Use Configurable Layout" %>
   <br/>
   <%= label_tag :email_contest_tie_layout, "Layout" %>
-  <%= text_field_tag :email_contest_tie_layout, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_layout, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("layout", "configurable"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_subject, "Subject" %>
-  <%= text_field_tag :email_contest_tie_subject, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_subject, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header_image_url, "Header Image URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_tie_header_image_url, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <small>http://</small><%= text_field_tag :email_contest_tie_header_image_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header_color_code, "Header Color Hex" %>
-  <small>#</small><%= text_field_tag :email_contest_tie_header_color_code, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <small>#</small><%= text_field_tag :email_contest_tie_header_color_code, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header_target_url, "Header Link Target URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_tie_header_target_url, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <small>http://</small><%= text_field_tag :email_contest_tie_header_target_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_body_pre, "Body (Intro)" %>
-  <%= text_area_tag :email_contest_tie_body_pre, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("body", {})["pre"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_tie_body_pre, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("body", {})["pre"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_body_post, "Body (Conclusion)" %>
-  <%= text_area_tag :email_contest_tie_body_post, @challenge.promotion.emails.fetch("contest_tie", {}).fetch("body", {})["post"], onchange: "validate();" %>
+  <%= text_area_tag :email_contest_tie_body_post, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("body", {})["post"], onchange: "validate();" %>
   <br/>
   <br/>
 
@@ -270,6 +301,7 @@
     if($("#game_id").val() != "" && $("#game_id").val() != null) {
       game_changed();
     }
+    c_or_c_changed();
   }
 
   function validate() {
@@ -305,6 +337,7 @@
 
     // max it out
     if($("#max").val() > 1) {
+      // is a challenge
       if($("#max").val() * buy_ins[$("#contest_template_id").val()] > balance) { 
         $("[for=max]").css("color", "red");
         $("#max-output").css("color", "red");
@@ -321,12 +354,15 @@
           $("#max-output").text("Total Buy In: $" + ($("#max").val() * buy_ins[$("#contest_template_id").val()] / 100).toFixed(2));
         }
       }
-
     } else {
-      valid = false;
-      $("[for=max]").css("color", "red");
+      if($("input[name=c_or_c]:checked").val() == "challenge") {
+        valid = false;
+        $("[for=max]").css("color", "red");
+      }
     }
 
+
+    // size
 
     if($("#promotion_group_id").val() != "" && $("#promotion_group_id").val() != null) {
       $("[for=promotion_group_id]").css("color", "black");
@@ -335,7 +371,9 @@
       $("[for=promotion_group_id]").css("color", "red");
     }
 
-  <%- if !@challenge.persisted? %>
+
+
+  <%- if !@promotion_target.persisted? %>
 
     // gots a user
     if($("#user_id").val() != "") {
@@ -362,17 +400,19 @@
     // game it
     if($("#game_id").val() != "") {
       $("[for=game_id]").css("color", "black");
+      $("#contest_config").show();
     } else {
       valid = false;
       $("[for=game_id]").css("color", "red");
+      $("#contest_config").hide();
     }
     // template it
-    if($("#contest_template_id").val() != "" && $("#contest_template_id").val() != null) {
-      $("[for=contest_template_id]").css("color", "black");
-    } else {
-      valid = false;
-      $("[for=contest_template_id]").css("color", "red");
-    }
+    // if($("#contest_template_id").val() != "" && $("#contest_template_id").val() != null) {
+    //   $("[for=contest_template_id]").css("color", "black");
+    // } else {
+    //   valid = false;
+    //   $("[for=contest_template_id]").css("color", "red");
+    // }
     
   <%- end %>
 
@@ -440,7 +480,7 @@
     });
   }
 
-<%- if !@challenge.persisted? %>
+<%- if !@promotion_target.persisted? %>
   function promo_identifier_changed() {
     if($("#promo_identifier").val() != "") {
       $.getJSON( "/promotions/identifier_check?identifier=" + $("#promo_identifier").val(), function(data) {
@@ -458,12 +498,34 @@
 <%- end %>
 
 
+  function c_or_c_changed() {
+    if($("input[name=c_or_c]:checked").val() == "challenge") {
+      // set max stuff
+      document.getElementById('max').setAttribute("min", 2);
+      document.getElementById('max').setAttribute("max", null);
+      document.getElementById('size').setAttribute("max", 2);
+      if($("#max").val() < 2) {
+        $("#max").val(2);  
+      }
+      // set size stuff
+      $("#size").val(2);
+    } else if($("input[name=c_or_c]:checked").val() == "contest") {
+      // set max stuff
+      document.getElementById('max').setAttribute("min", 1);
+      document.getElementById('max').setAttribute("max", 1);
+      document.getElementById('size').setAttribute("max", null);
+      $("#max").val(1);
+      // set size stuff
+    }
+  }
+
+
   function game_changed() {
     $("#entries-sub-form").empty();
-    $('#contest_template_id').empty();
+    
     if($("#game_id").val() != "") {
 
-<%- if @challenge.persisted? %>
+<%- if @promotion_target.persisted? %>
       $.getJSON( "/games/" + $("#game_id").val() + "/contest_templates.json", function(data) {
         if (data.length == 0) {
           $("#game-output").text("No contest templates open for this game.");
@@ -479,31 +541,118 @@
         validate();
       });
 <%- else %>
-      $.getJSON( "/games/" + $("#game_id").val() + "/contest_templates.json", function(data) {
+
+      $('#event_set_id').empty();
+      document.getElementById('event_set_id').setAttribute("disabled", "disabled");
+   
+      $.getJSON( "/games/" + $("#game_id").val() + "/event_sets.json", function(data) {
         if (data.length == 0) {
-          $("#game-output").text("No contest templates open for this game.");
+          $("#game-output").text("No open event sets for this game.");
         } else {
           $("#game-output").text("");
-          $('#contest_template_id').append("<option value=\"\"></option>");
+
+          $('#event_set_id').append("<option value=\"\"></option>");
           $.each(data, function(index, option) {
-            buy_ins[option[0]] = option[3];
-            $('#contest_template_id').append("<option value=\"" + option[0] + "\">" + option[1] + " - " + option[2] + " - " + option[4] + " - " + option[5] + "</option>");
+            $('#event_set_id').append("<option value=\"" + option[0] + "\">" + option[1] + "</option>");
           });
 
-          $("#contest_template_id").val("<%= @challenge.contest_template.id %>");
-          contest_template_changed();
+          document.getElementById('event_set_id').removeAttribute("disabled");
+          event_set_changed();
         }
         validate();
       });
-<%- end %>
 
+      // $.getJSON( "/games/" + $("#game_id").val() + "/contest_templates.json", function(data) {
+      //   if (data.length == 0) {
+      //     $("#game-output").text("No contest templates open for this game.");
+      //   } else {
+      //     $("#game-output").text("");
+      //     $('#contest_template_id').append("<option value=\"\"></option>");
+      //     $.each(data, function(index, option) {
+      //       buy_ins[option[0]] = option[3];
+      //       $('#contest_template_id').append("<option value=\"" + option[0] + "\">" + option[1] + " - " + option[2] + " - " + option[4] + " - " + option[5] + "</option>");
+      //     });
+
+      //     $("#contest_template_id").val("<%= @promotion_target.contest_template.id %>");
+      //     contest_template_changed();
+      //   }
+      //   validate();
+      // });
+<%- end %>
     }
   }
 
-  function contest_template_changed() {
-<%- if @challenge.entry.entry_items.present? %>
+  function event_set_changed() {
+<%- if @promotion_target.entry.entry_items.present? %>
     entry_selections = {
-  <%= @challenge.entry.entry_items.collect { |item| "#{item.slot_id}: #{item.event_participant_id}" }.join(",") %>
+  <%= @promotion_target.entry.entry_items.collect { |item| "#{item.slot_id}: #{item.event_participant_id}" }.join(",") %>
+    }
+<%- end %>
+    // todo validate balance yo
+    // $("[id^='entry_item_label_']").remove();
+    // $("[id^='entry_item_drop_']").remove();
+    
+    $("#entries-sub-form").empty();
+  
+    // update entry items
+    if($("#event_set_id").val() != "") {
+      update_submit(false);
+      //loading stuff UI
+      document.getElementById('game_id').setAttribute("disabled", "disabled");
+      document.getElementById('event_set_id').setAttribute("disabled", "disabled");
+      document.getElementById('submitter').setAttribute("disabled", "disabled");
+      $("#entries-output").text("Loading entry items...");
+      $("#entries-output").append("<br/><br/>");
+      $("#entries-output").css("color", "blue");
+
+
+      $.getJSON( "/games/" + $("#game_id").val() + "/event_sets/" + $("#event_set_id").val() + "/event_participants.json", function(data) {
+        if (data.length == 0) {
+          $("#ct-output").text("No event participants are available for this contest template.");
+        } else {
+          $("#ct-output").text("");
+          $.each(data, function(index, slot) {
+
+            var drop = $("#entry_item").clone();
+            var label = $("#entry_item_label").clone();
+            drop.attr("id", "entry_item_drop_" + index);
+            label.attr("id", "entry_item_label_" + index);
+            label.attr("for", "entry_item_drop_" + index);
+            label.append(slot.display_name);
+
+            $.each(slot.event_participants, function(index, event_participant) {
+              drop.append("<option value=\"" + event_participant[1] + "\">" + event_participant[0] + "</option>");
+            });
+
+            $("#entries-sub-form").append(label);
+            $("#entries-sub-form").append(drop);
+            $("#entries-sub-form").append("<br/>");
+            label.show();
+            drop.show();
+
+  <%- if @promotion_target.entry.entry_items.present? %>
+            drop.val(entry_selections[index+1]);
+  <%- end %>
+            //$('#contest_template_id').append("<option value=\"" + option[1] + "\">" + option[0] + "</option>");
+          });
+
+        }
+        validate();
+      }).always(function() {
+        document.getElementById('event_set_id').removeAttribute("disabled");
+        document.getElementById('game_id').removeAttribute("disabled");
+        $("#entries-output").empty();
+      });
+    }
+  }
+
+
+
+
+  function contest_template_changed() {
+<%- if @promotion_target.entry.entry_items.present? %>
+    entry_selections = {
+  <%= @promotion_target.entry.entry_items.collect { |item| "#{item.slot_id}: #{item.event_participant_id}" }.join(",") %>
     }
 <%- end %>
 
@@ -549,7 +698,7 @@
             label.show();
             drop.show();
 
-  <%- if @challenge.entry.entry_items.present? %>
+  <%- if @promotion_target.entry.entry_items.present? %>
             drop.val(entry_selections[index+1]);
   <%- end %>
             //$('#contest_template_id').append("<option value=\"" + option[1] + "\">" + option[0] + "</option>");
