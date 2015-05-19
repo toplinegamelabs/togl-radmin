@@ -352,7 +352,7 @@ private
     # put together prize hash
     (0...prize_params["start_place"].size).each do |index|
       if ["Ticket","Balance"].include?(prize_params["prize_type"][index])
-        value = prize_params["prize_num_value"][index]
+        value = prize_params["prize_num_value"][index].to_i * 100
       else
         value = prize_params["prize_txt_value"][index]
       end

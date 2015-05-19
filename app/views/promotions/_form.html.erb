@@ -45,146 +45,147 @@
   <%- end %>
 <%- else %>
 
-  <strong>Contest/Challenge Settings</strong><br/>
+  <div id="target_settings">
+    <strong>Contest/Challenge Settings</strong><br/>
 
 
-  <%= label_tag :game_id, "Game" %>
-  <%= select_tag :game_id, options_for_select(@games, @promotion_target.contest_template.game.id), onchange: "game_changed();" %>
-  <span id="game-output"></span>
-  <br/>
-<div id="contest_config">
+    <%= label_tag :game_id, "Game" %>
+    <%= select_tag :game_id, options_for_select(@games, @promotion_target.contest_template.game.id), onchange: "game_changed();" %>
+    <span id="game-output"></span>
+    <br/>
+    <div id="contest_config">
 
-  <%= radio_button_tag :c_or_c, :challenge, @promotion_target.contest_type == "Challenge", onchange: "c_or_c_changed();" %>
-  <%= label_tag :c_or_c_challenge, "Challenge" %>
-  &nbsp;
-  <%= radio_button_tag :c_or_c, :contest, @promotion_target.contest_type == "Contest", onchange: "c_or_c_changed();" %>
-  <%= label_tag :c_or_c_contest, "Contest" %>
-
-
-  <br/>
-  <%= label_tag :max, "Max Challengers" %>
-  <%= number_field_tag :max, @promotion_target.max, min: 2, size: "4", onchange: "validate();" %>
-  <span id="max-output"></span>
-  <br/>
-
-  <%= label_tag :event_set_id, "Event Set" %>
-  <%= select_tag :event_set_id, "", onchange: "event_set_changed();" %>
-  <span id="es-output"></span>
-  <br/>
+      <%= radio_button_tag :c_or_c, :challenge, @promotion_target.contest_type == "Challenge", onchange: "c_or_c_changed();" %>
+      <%= label_tag :c_or_c_challenge, "Challenge" %>
+      &nbsp;
+      <%= radio_button_tag :c_or_c, :contest, @promotion_target.contest_type == "Contest", onchange: "c_or_c_changed();" %>
+      <%= label_tag :c_or_c_contest, "Contest" %>
 
 
-  <%= label_tag :size, "Contest Size" %>
-  <%= number_field_tag :size, @promotion_target.contest_template.size["value"], min: 2, onchange: "validate();update_prize_end_places();" %>
-  <span id="size-output"></span>
-  <br/>
+      <br/>
+      <%= label_tag :max, "Max Challengers" %>
+      <%= number_field_tag :max, @promotion_target.max, min: 2, size: "4", onchange: "validate();" %>
+      <span id="max-output"></span>
+      <br/>
+
+      <%= label_tag :event_set_id, "Event Set" %>
+      <%= select_tag :event_set_id, "", onchange: "event_set_changed();" %>
+      <span id="es-output"></span>
+      <br/>
 
 
-  <%= label_tag :buy_in, "Buy In" %>
-  $<%= number_field_tag :buy_in, @promotion_target.contest_template.buy_in["value"].to_i / 100, min: 0, onchange: "validate();" %>
-  <span id="buy-in-output"></span>
-  <br/>
-
-  <%= check_box_tag :is_publicly_joinable, :picked, @promotion_target.contest_template.is_publicly_joinable, onchange: "validate();" %>
-  <%= label_tag :is_publicly_joinable, "Publicly Joinable" %>
-  <span id="publicly-joinable-output"></span>
+      <%= label_tag :size, "Contest Size" %>
+      <%= number_field_tag :size, @promotion_target.contest_template.size["value"], min: 2, onchange: "validate();update_prize_end_places();" %>
+      <span id="size-output"></span>
+      <br/>
 
 
+      <%= label_tag :buy_in, "Buy In" %>
+      $<%= number_field_tag :buy_in, @promotion_target.contest_template.buy_in["value"].to_i / 100, min: 0, onchange: "validate();" %>
+      <span id="buy-in-output"></span>
+      <br/>
+
+      <%= check_box_tag :is_publicly_joinable, :picked, @promotion_target.contest_template.is_publicly_joinable, onchange: "validate();" %>
+      <%= label_tag :is_publicly_joinable, "Publicly Joinable" %>
+      <span id="publicly-joinable-output"></span>
 
 
-
-</div>
-<%- end %>
-
-
-  <br/>
-
-  <div id="prize-table" style="display:none;">
-    <strong>Prizes</strong><br/>
-    <div id="prize-rows">
-
-<%- if @promotion_target.contest_template.prize_table.blank? %>
-      <div class="prize-row">
-        Start Place
-        <%= number_field_tag "prize_table[start_place][]", 1, min: 1, onchange: "update_prize_end_places();" %>
-        &nbsp;
-        End Place
-        <%= number_field_tag "prize_table[end_place][]", 1, min: 1, onchange: "update_prize_end_places();" %>
-        &nbsp;
-        <%= select_tag "prize_table[prize_type][]", options_for_select(["Balance","Ticket","Other"],"Balance"), onchange: "prize_type_changed(this);" %>
-        &nbsp;
-        Value
-        <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", 1, min: 1, size: "3" %></span>
-        <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", "" %></span>
-        &nbsp;
-        Icon Hash
-        <%= text_area_tag "prize_table[icon][]", '{ "css_class": "", "unicode": "", "url": "" }' %>
-        &nbsp;
-        <span class="delete-prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete</a></span>
-      </div>
-<%- else %>
-  <%- @promotion_target.contest_template.prize_table.each do |prize_row| %>
-    <%- prize_row["prizes"].each do |prize| %>
-      <%- if prize["type"].present?
-            prize_type = prize["type"]
-            value = prize["value"]
-          else
-            if (prize["label"] =~ /\$\d* Ticket/).present?
-              prize_type = "Ticket"
-              value = prize["label"].delete("$Ticket").strip
-            elsif prize["value"].present?
-              prize_type = "Balance"
-              value = prize["value"]
-            else
-              prize_type = "Other"
-              value = prize["label"]
-            end 
-          end
-      %>
-
-    
-      <div class="prize-row">
-        Start Place
-        <%= number_field_tag "prize_table[start_place][]", prize_row["start_place"], min: 1, onchange: "update_prize_end_places();" %>
-        &nbsp;
-        End Place
-        <%= number_field_tag "prize_table[end_place][]", prize_row["end_place"], min: 1, onchange: "update_prize_end_places();" %>
-        &nbsp;
-        <%= select_tag "prize_table[prize_type][]", options_for_select(["Balance","Ticket","Other"],prize_type), onchange: "prize_type_changed(this);" %>
-        &nbsp;
-        Value
-        <%- if prize_type == "Other" %>
-          <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", 1, min: 1, size: "3" %></span>
-          <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", value.to_s %></span>
-        <%- else %>
-          <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", value.to_i, min: 1, size: "3" %></span>
-          <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", "" %></span>
-        <%- end %>
-        &nbsp;
-        Icon Hash
-        <%= text_area_tag "prize_table[icon][]", prize["icon"] %>
-        &nbsp;
-        <span class="delete-prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete</a></span>
-      </div>
-    <%- end %>
-  <%- end %>
-<%- end %>
 
 
 
     </div>
+  <%- end %>
 
 
-    <span class="add-prize"><a href="javascript:void(0)" onclick="add_prize();">add</a></span>
+    <br/>
+
+    <div id="prize-table" style="display:none;">
+      <strong>Prizes</strong><br/>
+      <div id="prize-rows">
+
+  <%- if @promotion_target.contest_template.prize_table.blank? %>
+        <div class="prize-row">
+          Start Place
+          <%= number_field_tag "prize_table[start_place][]", 1, min: 1, onchange: "update_prize_end_places();" %>
+          &nbsp;
+          End Place
+          <%= number_field_tag "prize_table[end_place][]", 1, min: 1, onchange: "update_prize_end_places();" %>
+          &nbsp;
+          <%= select_tag "prize_table[prize_type][]", options_for_select(["Balance","Ticket","Other"],"Balance"), onchange: "prize_type_changed(this);" %>
+          &nbsp;
+          Value
+          <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", 1, min: 1, size: "3" %></span>
+          <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", "" %></span>
+          &nbsp;
+          Icon Hash
+          <%= text_area_tag "prize_table[icon][]", '{ "css_class": "", "unicode": "", "url": "" }' %>
+          &nbsp;
+          <span class="delete-prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete</a></span>
+        </div>
+  <%- else %>
+    <%- @promotion_target.contest_template.prize_table.each do |prize_row| %>
+      <%- prize_row["prizes"].each do |prize| %>
+        <%- if prize["type"].present?
+              prize_type = prize["type"]
+              value = prize["value"]
+            else
+              if (prize["label"] =~ /\$\d* Ticket/).present?
+                prize_type = "Ticket"
+                value = prize["label"].delete("$Ticket").strip
+              elsif prize["value"].present?
+                prize_type = "Balance"
+                value = prize["value"]
+              else
+                prize_type = "Other"
+                value = prize["label"]
+              end 
+            end
+        %>
+
+      
+        <div class="prize-row">
+          Start Place
+          <%= number_field_tag "prize_table[start_place][]", prize_row["start_place"], min: 1, onchange: "update_prize_end_places();" %>
+          &nbsp;
+          End Place
+          <%= number_field_tag "prize_table[end_place][]", prize_row["end_place"], min: 1, onchange: "update_prize_end_places();" %>
+          &nbsp;
+          <%= select_tag "prize_table[prize_type][]", options_for_select(["Balance","Ticket","Other"],prize_type), onchange: "prize_type_changed(this);" %>
+          &nbsp;
+          Value
+          <%- if prize_type == "Other" %>
+            <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", 1, min: 1, size: "3" %></span>
+            <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", value.to_s %></span>
+          <%- else %>
+            <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", value.to_i, min: 1, size: "3" %></span>
+            <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", "" %></span>
+          <%- end %>
+          &nbsp;
+          Icon Hash
+          <%= text_area_tag "prize_table[icon][]", prize["icon"] %>
+          &nbsp;
+          <span class="delete-prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete</a></span>
+        </div>
+      <%- end %>
+    <%- end %>
+  <%- end %>
+
+
+
+      </div>
+
+
+      <span class="add-prize"><a href="javascript:void(0)" onclick="add_prize();">add</a></span>
+    </div>
+
+
+
+    <%= label_tag :entry_item, "", id: "entry_item_label", style: "display: none;" %>
+    <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display: none;" %>
+    <br/>
+    <div id="entries-sub-form"></div><br/>
+    <span id="entries-output"></span>
   </div>
-
-
-
-  <%= label_tag :entry_item, "", id: "entry_item_label", style: "display: none;" %>
-  <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display: none;" %>
-  <br/>
-  <div id="entries-sub-form"></div><br/>
-  <span id="entries-output"></span>
-
   <strong>Promo Basics</strong><br/>
   <%= label_tag :promo_name, "Displayed Name" %>
   <%= text_field_tag :promo_name, @promotion_target.promotion.name, onchange: "validate();" %>
@@ -390,8 +391,7 @@
     buy_in = <%= @promotion_target.contest_template.buy_in["value"] %>;
 
   <%- else %>
-    $("[for=game_id]").hide();
-    $("#game_id").hide();
+    $("#target_settings").hide();
   <%- end %>
     unique_identifier = true;
   
@@ -486,9 +486,7 @@
     // gots a user
     if($("#user_id").val() != "") {
       $("[for=username]").css("color", "black");
-
-      $("[for=game_id]").show();
-      $("#game_id").show();
+      $("#target_settings").show();
     } else {
       valid = false;
       $("[for=username]").css("color", "red");
