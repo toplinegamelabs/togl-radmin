@@ -69,11 +69,14 @@ class PromotionsController < ApplicationController
       }
     end
 
+
+    prize_hash = generate_prize_hash
+
     put_params = {
       "user_id" => params["user_id"],
-      "contest_template_id" => params["contest_template_id"],
       "entry" => entry_hash,
       "max" => params["max"],
+      "prizes" => prize_hash,
       "promotion" => {
         "name" => params["promo_name"],
         "identifier" => params["promo_identifier"],
@@ -154,7 +157,7 @@ class PromotionsController < ApplicationController
         "display_type" => params["promo_display_type"]
       }
     }
-    update_response = RapiManager.new(oauth_token: oauth_token).update_promo_challenge(put_params.to_json)
+    update_response = RapiManager.new(oauth_token: oauth_token).update_promotion(put_params.to_json)
 
     if update_response.status == 204
       flash.keep[:notice] = "Promotion updated!"
@@ -166,9 +169,10 @@ class PromotionsController < ApplicationController
       promo_contest["promotion"].merge!(put_params["promotion"])
       promo_contest["max"] = params["max"]
       promo_contest["entry"] = entry_hash
-      @challenge = ChallengeHashie.build_from_rapi_hash(promo_contest)
-      @challenge.persisted = true
-    
+
+      @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
+      @promotion_target.persisted = true
+
       flash.now[:error] = JSON.parse(update_response.body).values.flatten.join("\n")
       render :edit
     end
@@ -187,24 +191,17 @@ class PromotionsController < ApplicationController
       }
     end
 
+    prize_hash = generate_prize_hash
+
     post_params = {
       "user_id" => params["user_id"],
       "contest_template_settings" => {
         "game_id"               => params["game_id"],
-        "buy_in"                => params["buy_in"],
+        "buy_in"                => params["buy_in"]["value"].to_i * 100,
         "size"                  => params["size"],
         "is_publicly_joinable"  => params["is_publicly_joinable"] == "picked",
         "event_set_id"          => params["event_set_id"],
-        "rewards"               => [
-          {
-            "start_place" => 1,
-            "end_place" => 1,
-            "item" => {
-              "type" => "balance",
-              "value" => 1500
-            }
-          }
-        ]
+        "prizes"                => prize_hash
       },
       "max" => params[:max],
       "entry" => entry_hash,
@@ -306,21 +303,30 @@ class PromotionsController < ApplicationController
       promo_contest = {
         "persisted" => false,
         "promotion" => { },
-        "contest_template" => { "id" => params[:contest_template_id] },
-        "event_set" => { },
+        "contest_template" => {
+          "buy_in"                => {
+            "value" => params["buy_in"].to_i * 100
+          },
+          "size"                  => {
+            "value" => params["size"]
+          },
+          "is_publicly_joinable"  => params["is_publicly_joinable"] == "picked",
+          "prize_table"           => prize_hash
+        },
+        "event_set" => { "id" => params["event_set_id"]},
         "game" => {
           "id" => params[:game_id]
-        }
+        },
+        "max" => params[:max],
+        "contest_type" => (params[:max].to_i > 1) ? "Challenge" : "Contest"
       }
       promo_contest["username"] = params[:username]
       post_params["promotion"]["description"] = post_params["promotion"]["description"].split("\r\n")
       promo_contest["promotion"].merge!(post_params["promotion"])
-      promo_contest["max"] = params["max"]
       promo_contest["entry"] = entry_hash
-      
+
       @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
-
-
+      # failed create on rapi would lose some info so filling it back in      
 
       flash.now[:error] = JSON.parse(create_response.body).values.flatten.join("\n")
       render :new
@@ -336,5 +342,31 @@ class PromotionsController < ApplicationController
     exists = rapi_response.select { |promo_contest| promo_contest["promotion"]["identifier"].to_s.downcase == params[:identifier].to_s.downcase }.present?
 
     render json: { exists: exists }
+  end
+
+
+private
+  def generate_prize_hash
+    prize_params = params["prize_table"]
+    prizes = []
+    # put together prize hash
+    (0...prize_params["start_place"].size).each do |index|
+      if ["Ticket","Balance"].include?(prize_params["prize_type"][index])
+        value = prize_params["prize_num_value"][index]
+      else
+        value = prize_params["prize_txt_value"][index]
+      end
+
+      prizes << {
+        "start_place" => prize_params["start_place"][index],
+        "end_place" => prize_params["end_place"][index],
+        "prizes" => [{
+          "type" => prize_params["prize_type"][index],
+          "value" => value
+        }],
+        "icon" => prize_params["icon"][index]
+      }
+    end
+    prizes
   end
 end

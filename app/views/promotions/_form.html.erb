@@ -9,36 +9,44 @@
   <%= hidden_field_tag :username, @promotion_target.username %>
 <%- else %>
   <%= text_field_tag :username, @promotion_target.username, onchange: "user_lookup();" %>
-  <span id="username-output"></span>
 <%- end %>
+  <span id="username-output"></span>
   <br/>
   <br/>
 
 
 
 
-  <strong>Contest/Challenge Settings</strong><br/>
 
 
 <%- if @promotion_target.persisted? %>
+
+  <strong><%= @promotion_target.contest_type %> Settings</strong><br/>
+  
   
   <%= label_tag :game_id, "Game" %>
   <span style="color: #BBB"><%= @promotion_target.contest_template.game.name %></span>
   <%= hidden_field_tag :game_id, @promotion_target.contest_template.game.id %>
   <br/>
   <%= label_tag :contest_template_id, "Contest Template" %>
-  <span style="color: #BBB"><%= "#{@promotion_target.contest_template.event_set.description} - #{@promotion_target.contest_template.buy_in["label"]} - #{@promotion_target.contest_template.size["label"]}" %></span>
+  <span style="color: #BBB"><%= "#{@promotion_target.contest_template.event_set.description} - #{@promotion_target.contest_template.buy_in["label"]} - #{@promotion_target.contest_template.size["label"]} - #{@promotion_target.contest_template.is_publicly_joinable ? "Public" : "Private"}" %></span>
   <%= hidden_field_tag :contest_template_id, @promotion_target.contest_template.id %>
   <br/>
   <%= hidden_field_tag :entry_id, @promotion_target.entry.id %>
+  <%= hidden_field_tag :event_set_id, @promotion_target.contest_template.event_set.id %>
 
-  <%= label_tag :max, "Max Challengers" %>
+
   <%- if @promotion_target.max %>
+    <%= label_tag :max, "Max Challengers" %>
+  
     <%= number_field_tag :max, @promotion_target.max, min: 2, size: "4", onchange: "validate();" %>
     <span id="max-output"></span>
     <br/>
   <%- end %>
 <%- else %>
+
+  <strong>Contest/Challenge Settings</strong><br/>
+
 
   <%= label_tag :game_id, "Game" %>
   <%= select_tag :game_id, options_for_select(@games, @promotion_target.contest_template.game.id), onchange: "game_changed();" %>
@@ -46,10 +54,10 @@
   <br/>
 <div id="contest_config">
 
-  <%= radio_button_tag :c_or_c, :challenge, true, onchange: "c_or_c_changed();" %>
+  <%= radio_button_tag :c_or_c, :challenge, @promotion_target.contest_type == "Challenge", onchange: "c_or_c_changed();" %>
   <%= label_tag :c_or_c_challenge, "Challenge" %>
   &nbsp;
-  <%= radio_button_tag :c_or_c, :contest, false, onchange: "c_or_c_changed();" %>
+  <%= radio_button_tag :c_or_c, :contest, @promotion_target.contest_type == "Contest", onchange: "c_or_c_changed();" %>
   <%= label_tag :c_or_c_contest, "Contest" %>
 
 
@@ -66,21 +74,108 @@
 
 
   <%= label_tag :size, "Contest Size" %>
-  <%= number_field_tag :size, 2, min: 2, onchange: "validate();" %>
+  <%= number_field_tag :size, @promotion_target.contest_template.size["value"], min: 2, onchange: "validate();update_prize_end_places();" %>
   <span id="size-output"></span>
   <br/>
 
 
   <%= label_tag :buy_in, "Buy In" %>
-  $<%= number_field_tag :buy_in, 0, min: 0, onchange: "validate();" %>
+  $<%= number_field_tag :buy_in, @promotion_target.contest_template.buy_in["value"].to_i / 100, min: 0, onchange: "validate();" %>
   <span id="buy-in-output"></span>
   <br/>
 
-  <%= check_box_tag :is_publicly_joinable, :picked, true, onchange: "validate();" %>
+  <%= check_box_tag :is_publicly_joinable, :picked, @promotion_target.contest_template.is_publicly_joinable, onchange: "validate();" %>
   <%= label_tag :is_publicly_joinable, "Publicly Joinable" %>
   <span id="publicly-joinable-output"></span>
+
+
+
+
+
 </div>
 <%- end %>
+
+
+  <br/>
+
+  <div id="prize-table" style="display:none;">
+    <strong>Prizes</strong><br/>
+    <div id="prize-rows">
+
+<%- if @promotion_target.contest_template.prize_table.blank? %>
+      <div class="prize-row">
+        Start Place
+        <%= number_field_tag "prize_table[start_place][]", 1, min: 1, onchange: "update_prize_end_places();" %>
+        &nbsp;
+        End Place
+        <%= number_field_tag "prize_table[end_place][]", 1, min: 1, onchange: "update_prize_end_places();" %>
+        &nbsp;
+        <%= select_tag "prize_table[prize_type][]", options_for_select(["Balance","Ticket","Other"],"Balance"), onchange: "prize_type_changed(this);" %>
+        &nbsp;
+        Value
+        <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", 1, min: 1, size: "3" %></span>
+        <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", "" %></span>
+        &nbsp;
+        Icon Hash
+        <%= text_area_tag "prize_table[icon][]", '{ "css_class": "", "unicode": "", "url": "" }' %>
+        &nbsp;
+        <span class="delete-prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete</a></span>
+      </div>
+<%- else %>
+  <%- @promotion_target.contest_template.prize_table.each do |prize_row| %>
+    <%- prize_row["prizes"].each do |prize| %>
+      <%- if prize["type"].present?
+            prize_type = prize["type"]
+            value = prize["value"]
+          else
+            if (prize["label"] =~ /\$\d* Ticket/).present?
+              prize_type = "Ticket"
+              value = prize["label"].delete("$Ticket").strip
+            elsif prize["value"].present?
+              prize_type = "Balance"
+              value = prize["value"]
+            else
+              prize_type = "Other"
+              value = prize["label"]
+            end 
+          end
+      %>
+
+    
+      <div class="prize-row">
+        Start Place
+        <%= number_field_tag "prize_table[start_place][]", prize_row["start_place"], min: 1, onchange: "update_prize_end_places();" %>
+        &nbsp;
+        End Place
+        <%= number_field_tag "prize_table[end_place][]", prize_row["end_place"], min: 1, onchange: "update_prize_end_places();" %>
+        &nbsp;
+        <%= select_tag "prize_table[prize_type][]", options_for_select(["Balance","Ticket","Other"],prize_type), onchange: "prize_type_changed(this);" %>
+        &nbsp;
+        Value
+        <%- if prize_type == "Other" %>
+          <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", 1, min: 1, size: "3" %></span>
+          <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", value.to_s %></span>
+        <%- else %>
+          <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", value.to_i, min: 1, size: "3" %></span>
+          <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", "" %></span>
+        <%- end %>
+        &nbsp;
+        Icon Hash
+        <%= text_area_tag "prize_table[icon][]", prize["icon"] %>
+        &nbsp;
+        <span class="delete-prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete</a></span>
+      </div>
+    <%- end %>
+  <%- end %>
+<%- end %>
+
+
+
+    </div>
+
+
+    <span class="add-prize"><a href="javascript:void(0)" onclick="add_prize();">add</a></span>
+  </div>
 
 
 
@@ -280,7 +375,7 @@
 
 <script type="text/javascript">
   var balance;
-  var buy_ins;
+  var buy_in;
   var unique_identifier; 
   $(document).ready(function() {
     initialize();
@@ -291,7 +386,13 @@
     document.getElementById('submitter').setAttribute("disabled", "disabled");
     //document.getElementById('contest_template_id').setAttribute("disabled", "disabled");
     balance = 0;
-    buy_ins = new Object();
+  <%- if @promotion_target.persisted? %>
+    buy_in = <%= @promotion_target.contest_template.buy_in["value"] %>;
+
+  <%- else %>
+    $("[for=game_id]").hide();
+    $("#game_id").hide();
+  <%- end %>
     unique_identifier = true;
   
 
@@ -302,13 +403,11 @@
       game_changed();
     }
     c_or_c_changed();
+    init_prizes();
   }
 
   function validate() {
     valid = true;
-
-
-
     // gotta have promo name
     if($("#promo_name").val() != "") {
       $("[for=promo_name]").css("color", "black");
@@ -336,29 +435,38 @@
     }
 
     // max it out
-    if($("#max").val() > 1) {
-      // is a challenge
-      if($("#max").val() * buy_ins[$("#contest_template_id").val()] > balance) { 
+    if($("#max").val() >= 1) {
+
+      var working_buy_in;
+      if(buy_in != null && buy_in != "") {
+        working_buy_in = buy_in;
+      } else {
+        working_buy_in = $("#buy_in").val();
+      }
+      if($("#max").val() * (working_buy_in * 100) > balance) { 
         $("[for=max]").css("color", "red");
         $("#max-output").css("color", "red");
-        if($("#contest_template_id").val() != null && $("#contest_template_id").val() != "") {
-          $("#max-output").text("Total Buy In: $" + ($("#max").val() * buy_ins[$("#contest_template_id").val()] / 100).toFixed(2) + " - this is over budget");
-        }
+        valid = false;
+        $("#max-output").text("Total Buy In: $" + ($("#max").val() * working_buy_in).toFixed(2) + " - this is over budget");
+
       } else {
         $("[for=max]").css("color", "black");
         $("#max-output").css("color", "black");
-        if($("#contest_template_id").val() != null && 
-          $("#contest_template_id").val() != "" &&
-          buy_ins[$("#contest_template_id").val()] != null &&
-          buy_ins[$("#contest_template_id").val()] != "") {
-          $("#max-output").text("Total Buy In: $" + ($("#max").val() * buy_ins[$("#contest_template_id").val()] / 100).toFixed(2));
+        if(working_buy_in != null && working_buy_in != "") {
+          $("#max-output").text("Total Buy In: $" + ($("#max").val() * working_buy_in).toFixed(2));
         }
       }
     } else {
+
+  <%- if !@promotion_target.persisted? %>
       if($("input[name=c_or_c]:checked").val() == "challenge") {
         valid = false;
         $("[for=max]").css("color", "red");
       }
+  <%- elsif @promotion_target.contest_type == "Contest" %>
+      // valid = false;
+      // $("[for=max]").css("color", "red");
+  <%- end %>
     }
 
 
@@ -378,6 +486,9 @@
     // gots a user
     if($("#user_id").val() != "") {
       $("[for=username]").css("color", "black");
+
+      $("[for=game_id]").show();
+      $("#game_id").show();
     } else {
       valid = false;
       $("[for=username]").css("color", "red");
@@ -406,6 +517,16 @@
       $("[for=game_id]").css("color", "red");
       $("#contest_config").hide();
     }
+
+    // EVENT SET
+    if($("#event_set_id").val() != "") {
+      $("[for=event_set_id]").css("color", "black");
+    } else {
+      valid = false;
+      $("[for=event_set_id]").css("color", "red");
+    }
+
+
     // template it
     // if($("#contest_template_id").val() != "" && $("#contest_template_id").val() != null) {
     //   $("[for=contest_template_id]").css("color", "black");
@@ -517,30 +638,16 @@
       $("#max").val(1);
       // set size stuff
     }
+    $("#max-output").empty();
+    validate();
   }
 
 
   function game_changed() {
     $("#entries-sub-form").empty();
-    
+
+<%- if !@promotion_target.persisted? %>
     if($("#game_id").val() != "") {
-
-<%- if @promotion_target.persisted? %>
-      $.getJSON( "/games/" + $("#game_id").val() + "/contest_templates.json", function(data) {
-        if (data.length == 0) {
-          $("#game-output").text("No contest templates open for this game.");
-        } else {
-          $("#game-output").text("");
-          
-          $.each(data, function(index, option) {
-            buy_ins[option[0]] = option[3];
-          });
-
-          contest_template_changed();
-        }
-        validate();
-      });
-<%- else %>
 
       $('#event_set_id').empty();
       document.getElementById('event_set_id').setAttribute("disabled", "disabled");
@@ -557,29 +664,17 @@
           });
 
           document.getElementById('event_set_id').removeAttribute("disabled");
+          $("#event_set_id").val(<%= @promotion_target.contest_template.event_set.id %>);
           event_set_changed();
         }
         validate();
+        reveal_prize_section();
+
       });
-
-      // $.getJSON( "/games/" + $("#game_id").val() + "/contest_templates.json", function(data) {
-      //   if (data.length == 0) {
-      //     $("#game-output").text("No contest templates open for this game.");
-      //   } else {
-      //     $("#game-output").text("");
-      //     $('#contest_template_id').append("<option value=\"\"></option>");
-      //     $.each(data, function(index, option) {
-      //       buy_ins[option[0]] = option[3];
-      //       $('#contest_template_id').append("<option value=\"" + option[0] + "\">" + option[1] + " - " + option[2] + " - " + option[4] + " - " + option[5] + "</option>");
-      //     });
-
-      //     $("#contest_template_id").val("<%= @promotion_target.contest_template.id %>");
-      //     contest_template_changed();
-      //   }
-      //   validate();
-      // });
-<%- end %>
     }
+<%- else %>
+  event_set_changed();
+<%- end %>
   }
 
   function event_set_changed() {
@@ -593,17 +688,23 @@
     // $("[id^='entry_item_drop_']").remove();
     
     $("#entries-sub-form").empty();
+    $("#entries-output").empty();
   
     // update entry items
     if($("#event_set_id").val() != "") {
       update_submit(false);
       //loading stuff UI
+
+<%- if !@promotion_target.persisted? %>      
       document.getElementById('game_id').setAttribute("disabled", "disabled");
       document.getElementById('event_set_id').setAttribute("disabled", "disabled");
       document.getElementById('submitter').setAttribute("disabled", "disabled");
+<%- end %>
       $("#entries-output").text("Loading entry items...");
       $("#entries-output").append("<br/><br/>");
       $("#entries-output").css("color", "blue");
+
+
 
 
       $.getJSON( "/games/" + $("#game_id").val() + "/event_sets/" + $("#event_set_id").val() + "/event_participants.json", function(data) {
@@ -637,84 +738,18 @@
           });
 
         }
-        validate();
       }).always(function() {
+
+<%- if !@promotion_target.persisted? %>
         document.getElementById('event_set_id').removeAttribute("disabled");
         document.getElementById('game_id').removeAttribute("disabled");
-        $("#entries-output").empty();
-      });
-    }
-  }
-
-
-
-
-  function contest_template_changed() {
-<%- if @promotion_target.entry.entry_items.present? %>
-    entry_selections = {
-  <%= @promotion_target.entry.entry_items.collect { |item| "#{item.slot_id}: #{item.event_participant_id}" }.join(",") %>
-    }
 <%- end %>
-
-    // todo validate balance yo
-    // $("[id^='entry_item_label_']").remove();
-    // $("[id^='entry_item_drop_']").remove();
-    
-    $("#entries-sub-form").empty();
-  
-    // update entry items
-    if($("#contest_template_id").val() != "") {
-      update_submit(false);
-      //loading stuff UI
-      document.getElementById('game_id').setAttribute("disabled", "disabled");
-      document.getElementById('contest_template_id').setAttribute("disabled", "disabled");
-      document.getElementById('submitter').setAttribute("disabled", "disabled");
-      $("#entries-output").text("Loading entry items...");
-      $("#entries-output").append("<br/><br/>");
-      $("#entries-output").css("color", "blue");
-
-
-      $.getJSON( "/games/" + $("#game_id").val() + "/contest_templates/" + $("#contest_template_id").val() + "/event_participants.json", function(data) {
-        if (data.length == 0) {
-          $("#ct-output").text("No event participants are available for this contest template.");
-        } else {
-          $("#ct-output").text("");
-          $.each(data, function(index, slot) {
-
-            var drop = $("#entry_item").clone();
-            var label = $("#entry_item_label").clone();
-            drop.attr("id", "entry_item_drop_" + index);
-            label.attr("id", "entry_item_label_" + index);
-            label.attr("for", "entry_item_drop_" + index);
-            label.append(slot.display_name);
-
-            $.each(slot.event_participants, function(index, event_participant) {
-              drop.append("<option value=\"" + event_participant[1] + "\">" + event_participant[0] + "</option>");
-            });
-
-            $("#entries-sub-form").append(label);
-            $("#entries-sub-form").append(drop);
-            $("#entries-sub-form").append("<br/>");
-            label.show();
-            drop.show();
-
-  <%- if @promotion_target.entry.entry_items.present? %>
-            drop.val(entry_selections[index+1]);
-  <%- end %>
-            //$('#contest_template_id').append("<option value=\"" + option[1] + "\">" + option[0] + "</option>");
-          });
-
-        }
-        validate();
-      }).always(function() {
-        document.getElementById('contest_template_id').removeAttribute("disabled");
-        document.getElementById('game_id').removeAttribute("disabled");
         $("#entries-output").empty();
+
+        validate();
       });
     }
   }
-
-
 
   function update_client_app() {
     $.ajax({
@@ -727,5 +762,109 @@
       }
     });
   }
+
+
+
+
+
+
+
+// *****************************************************************************
+// *****************************************************************************
+// PRIZES
+// *****************************************************************************
+// *****************************************************************************
+
+  function init_prizes() {
+
+    // hide/show initially
+<%- if !@promotion_target.persisted? %> 
+    $("#prize-table").hide();
+<%- else %>
+    $("#prize-table").show();
+<%- end %> 
+
+
+    // prize types
+    $("select[id=prize_table_prize_type_]").each(function() { 
+      prize_type_changed(this);
+    });
+
+    // hide/show delete buttons
+    cleanup_prize_add_delete();
+
+    // min/maxes
+    update_prize_end_places();
+
+
+  }
+
+  function prize_type_changed(element) {
+    if($(element).val() == "Other") {
+      $(element).siblings(".text-prize-value").show();
+      $(element).siblings(".dollar-prize-value").hide();
+    } else {
+      $(element).siblings(".text-prize-value").hide();
+      $(element).siblings(".dollar-prize-value").show();
+    }
+  }
+
+  function add_prize() {
+    $(".prize-row").last().clone().appendTo($("#prize-rows"));
+    cleanup_prize_add_delete();
+  }
+
+  function delete_prize(element) {
+    $(element).parent().parent().remove();
+    cleanup_prize_add_delete();
+  }
+
+  function update_prize_end_places() {
+    $("input[id=prize_table_start_place_]").attr("max",$("#size").val());
+    $("input[id=prize_table_end_place_]").attr("max",$("#size").val());
+
+    $("input[id=prize_table_start_place_]").each(function() {
+      if(parseInt($(this).val()) > parseInt($("#size").val())) {
+        $(this).val($("#size").val());
+      }
+    });
+    $("input[id=prize_table_end_place_]").each(function() {
+      if(parseInt($(this).val()) > parseInt($("#size").val())) {
+        $(this).val($("#size").val());
+      }
+
+      min_val = parseInt($(this).siblings().val());
+      $(this).attr("min",min_val);
+      if(min_val > ($(this).val())) {
+        $(this).val(min_val);
+      }
+
+    });
+  }
+
+  function cleanup_prize_add_delete() {
+    if($(".prize-row").size() == 1) {
+      $(".delete-prize").hide();
+    } else {
+      $(".delete-prize").show();
+    }
+  }
+
+  function reveal_prize_section() {
+    update_prize_end_places();    
+<%- if !@promotion_target.persisted? %> 
+    $("#prize-table").show();
+<%- end %> 
+  }
+
+
+
+
+
+
+
+
+
+
 </script>
 

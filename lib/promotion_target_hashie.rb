@@ -5,7 +5,7 @@ class PromotionTargetHashie < Hashie::Dash
   property :contest_template, default: ContestTemplateHashie.new
   property :promotion, default: PromotionHashie.new
   property :entry, default: EntryHashie.new
-
+  property :contest_type, default: "Contest"
 
 
   def persisted?
@@ -14,17 +14,17 @@ class PromotionTargetHashie < Hashie::Dash
 
 
   def self.build_from_rapi_hash(hash)
-    challenge = self.new
+    target = self.new
 
-    challenge.username = hash["username"]
-    challenge.max = hash["max"]
+    target.username = hash["username"]
+    target.max = hash["max"]
+    target.contest_type = hash["contest_type"]
+    target.contest_template = ContestTemplateHashie.build_from_rapi_hash(hash["contest_template"])
+    target.contest_template.game = GameHashie.build_from_rapi_hash(hash["game"])
+    target.contest_template.event_set = EventSetHashie.build_from_rapi_hash(hash["event_set"])
+    target.promotion = PromotionHashie.build_from_rapi_hash(hash["promotion"])
+    target.entry = EntryHashie.build_from_rapi_hash(hash["entry"])
     
-    challenge.contest_template = ContestTemplateHashie.build_from_rapi_hash(hash["contest_template"])
-    challenge.contest_template.game = GameHashie.build_from_rapi_hash(hash["game"])
-    challenge.contest_template.event_set = EventSetHashie.build_from_rapi_hash(hash["event_set"])
-    challenge.promotion = PromotionHashie.build_from_rapi_hash(hash["promotion"])
-    challenge.entry = EntryHashie.build_from_rapi_hash(hash["entry"])
-
-    challenge
+    target
   end
 end

@@ -8,6 +8,7 @@
   <tr>
     <th>Name</th>
     <th>Identifier</th>
+    <th>Type</th>
     <th>State</th>
     <th>Lock Time</th>
     <th>Size</th>
@@ -22,6 +23,9 @@
       <%= promotional_contest["promotion"]["identifier"] %>
     </td>
     <td>
+      <%= promotional_contest["contest_type"] %>
+    </td>
+    <td>
       <%= promotional_contest["state"] %>
     </td>
     <td>
@@ -30,6 +34,8 @@
     <td>
       <%- if promotional_contest["contest_type"] == "Challenge" %>
         <%= promotional_contest["num_accepted_contests"] %>/<%= promotional_contest["max"] %>
+      <%- else %>
+        <%= promotional_contest["num_entries"] %>/<%= promotional_contest["contest_template"]["size"]["value"] %>
       <%- end %>
     </td>
     <td>
