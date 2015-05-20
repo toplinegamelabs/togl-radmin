@@ -200,9 +200,9 @@ class PromotionsController < ApplicationController
         "buy_in"                => params["buy_in"]["value"].to_i * 100,
         "size"                  => params["size"],
         "is_publicly_joinable"  => params["is_publicly_joinable"] == "picked",
-        "event_set_id"          => params["event_set_id"],
-        "prizes"                => prize_hash
+        "event_set_id"          => params["event_set_id"]
       },
+      "prizes" => prize_hash,
       "max" => params[:max],
       "entry" => entry_hash,
       "promotion" => {
@@ -353,19 +353,31 @@ private
     (0...prize_params["start_place"].size).each do |index|
       if ["Ticket","Balance"].include?(prize_params["prize_type"][index])
         value = prize_params["prize_num_value"][index].to_i * 100
+        label = "$#{prize_params["prize_num_value"][index].to_i}"
       else
-        value = prize_params["prize_txt_value"][index]
+        value = 0
+        label = prize_params["prize_txt_value"][index]
       end
 
-      prizes << {
+
+
+      prize_hash = {
         "start_place" => prize_params["start_place"][index],
         "end_place" => prize_params["end_place"][index],
+        "total_value_label" => "Estimated total value: $1250.00",
         "prizes" => [{
           "type" => prize_params["prize_type"][index],
+          "label" => label,
           "value" => value
-        }],
-        "icon" => prize_params["icon"][index]
+        }]
       }
+      if prize_params["prize_type"][index] == "Other"
+        prize_hash["icon"] = prize_params["icon"][index]
+      else
+        prize_hash["icon"] = nil
+      end
+
+      prizes << prize_hash
     end
     prizes
   end
