@@ -1,19 +1,4 @@
 
-  <strong>Creator</strong><br/>
-  <%= hidden_field_tag :user_id, "" %>
-  <%= label_tag :username, "Username" %>
-
-
-<%- if @promotion_target.persisted? %>
-  <span style="color: #BBB"><%= @promotion_target.username %></span>
-  <%= hidden_field_tag :username, @promotion_target.username %>
-<%- else %>
-  <%= text_field_tag :username, @promotion_target.username, onchange: "user_lookup();" %>
-<%- end %>
-  <span id="username-output"></span>
-  <br/>
-  <br/>
-
 
 
 
@@ -23,26 +8,41 @@
 
   <strong><%= @promotion_target.contest_type %> Settings</strong><br/>
   
+  <%= hidden_field_tag :user_id, "" %>
+  <%= label_tag :username, "Username" %>
+  <span style="color: #BBB"><%= @promotion_target.username || "No Featured User" %></span>
+  <%= hidden_field_tag :username, @promotion_target.username %>
+  <br/>
   
   <%= label_tag :game_id, "Game" %>
   <span style="color: #BBB"><%= @promotion_target.contest_template.game.name %></span>
   <%= hidden_field_tag :game_id, @promotion_target.contest_template.game.id %>
   <br/>
+
   <%= label_tag :contest_template_id, "Contest Template" %>
   <span style="color: #BBB"><%= "#{@promotion_target.contest_template.event_set.description} - #{@promotion_target.contest_template.buy_in["label"]} - #{@promotion_target.contest_template.size["label"]} - #{@promotion_target.contest_template.is_publicly_joinable ? "Public" : "Private"}" %></span>
   <%= hidden_field_tag :contest_template_id, @promotion_target.contest_template.id %>
   <br/>
   <%= hidden_field_tag :entry_id, @promotion_target.entry.id %>
   <%= hidden_field_tag :event_set_id, @promotion_target.contest_template.event_set.id %>
-
+  <%= hidden_field_tag :size, @promotion_target.contest_template.size["value"] %>
 
   <%- if @promotion_target.max %>
     <%= label_tag :max, "Max Challengers" %>
   
     <%= number_field_tag :max, @promotion_target.max, min: 2, size: "4", onchange: "validate();" %>
-    <span id="max-output"></span>
+    <span id="max_output"></span>
     <br/>
   <%- end %>
+
+  <%= label_tag :entry_item, "", id: "entry_item_label", style: "display: none;" %>
+  <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display: none;" %>
+  <br/>
+  <br/>
+  <span id="entry_title" style=""><strong>Entries</strong></span>
+  <div id="entries_sub_form"></div>
+  <span id="entries_output"></span>
+
 <%- else %>
 
   <div id="target_settings">
@@ -51,9 +51,9 @@
 
     <%= label_tag :game_id, "Game" %>
     <%= select_tag :game_id, options_for_select(@games, @promotion_target.contest_template.game.id), onchange: "game_changed();" %>
-    <span id="game-output"></span>
+    <span id="game_output"></span>
     <br/>
-    <div id="contest_config">
+    <div id="cc_config">
 
       <%= radio_button_tag :c_or_c, :challenge, @promotion_target.contest_type == "Challenge", onchange: "c_or_c_changed();" %>
       <%= label_tag :c_or_c_challenge, "Challenge" %>
@@ -63,129 +63,151 @@
 
 
       <br/>
-      <%= label_tag :max, "Max Challengers" %>
-      <%= number_field_tag :max, @promotion_target.max, min: 2, size: "4", onchange: "validate();" %>
-      <span id="max-output"></span>
       <br/>
+
+      <strong>Featured User</strong><br/>
+      <%= hidden_field_tag :user_id, "" %>
+      <%= label_tag :username, "Username" %>
+      <%= text_field_tag :username, @promotion_target.username, onchange: "user_lookup();" %>
+      <span id="username_output"></span>
+
+      <div id="challenge_config" style="display:none;">
+        <%= label_tag :max, "Max Challengers" %>
+        <%= number_field_tag :max, @promotion_target.max, min: 2, size: "4", onchange: "validate();" %>
+        <span id="max_output"></span>
+        <br/>
+      </div>
+
+      <div id="contest_config" style="display:none;">
+
+        <%= label_tag :size, "Contest Size" %>
+        <%= number_field_tag :size, @promotion_target.contest_template.size["value"], min: 2, onchange: "validate();update_prize_places();" %>
+        <span id="size_output"></span>
+        <br/>
+      </div>
 
       <%= label_tag :event_set_id, "Event Set" %>
       <%= select_tag :event_set_id, "", onchange: "event_set_changed();" %>
-      <span id="es-output"></span>
+      <span id="es_output"></span>
       <br/>
 
-
-      <%= label_tag :size, "Contest Size" %>
-      <%= number_field_tag :size, @promotion_target.contest_template.size["value"], min: 2, onchange: "validate();update_prize_end_places();" %>
-      <span id="size-output"></span>
-      <br/>
 
 
       <%= label_tag :buy_in, "Buy In" %>
       $<%= number_field_tag :buy_in, @promotion_target.contest_template.buy_in["value"].to_i / 100, min: 0, onchange: "validate();" %>
-      <span id="buy-in-output"></span>
+      <span id="buy_in_output"></span>
       <br/>
 
       <%= check_box_tag :is_publicly_joinable, :picked, @promotion_target.contest_template.is_publicly_joinable, onchange: "validate();" %>
       <%= label_tag :is_publicly_joinable, "Publicly Joinable" %>
-      <span id="publicly-joinable-output"></span>
+      <span id="publicly_joinable_output"></span>
 
 
 
+      <%= label_tag :entry_item, "", id: "entry_item_label", style: "display: none;" %>
+      <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display: none;" %>
+      <br/>
+      <br/>
+      <span id="entry_title" style=""><strong>Entries</strong></span>
+      <div id="entries_sub_form"></div>
+      <span id="entries_output"></span>
 
 
     </div>
+
+
+
   <%- end %>
 
 
     <br/>
-
     <div id="prize-table" style="display:none;">
-      <strong>Prizes</strong><br/>
-      <div id="prize-rows">
+      <strong>Prizes</strong>
+      <div id="prize_rows">
 
   <%- if @promotion_target.contest_template.prize_table.blank? %>
-        <div class="prize-row">
+        <div class="prize_row">
           Start Place
-          <%= number_field_tag "prize_table[start_place][]", 1, min: 1, onchange: "update_prize_end_places();" %>
+          <%= number_field_tag "prize_table[start_place][]", 1, min: 1, onchange: "update_prize_places();" %>
           &nbsp;
           End Place
-          <%= number_field_tag "prize_table[end_place][]", 1, min: 1, onchange: "update_prize_end_places();" %>
+          <%= number_field_tag "prize_table[end_place][]", 1, min: 1, onchange: "update_prize_places();" %>
           &nbsp;
-          <%= select_tag "prize_table[prize_type][]", options_for_select(["Balance","Ticket","Other"],"Balance"), onchange: "prize_type_changed(this);" %>
+          <%= select_tag "prize_table[prize_type][]", options_for_select(["Cash","Ticket","Other"],"Cash"), onchange: "prize_type_changed(this);" %>
           &nbsp;
           Value
-          <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", 1, min: 1, size: "3" %></span>
-          <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", "" %></span>
+          <span class="dollar_prize_value">$<%= number_field_tag "prize_table[prize_num_value][]", 1, min: 1, size: "3" %></span>
+          <span class="text_prize_value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", "" %></span>
           &nbsp;
           Icon Hash
           <%= text_area_tag "prize_table[icon][]", '{ "css_class": "", "unicode": "", "url": "" }' %>
           &nbsp;
-          <span class="delete-prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete</a></span>
+          <span class="delete_prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete</a></span>
         </div>
   <%- else %>
-    <%- @promotion_target.contest_template.prize_table.each do |prize_row| %>
-      <%- prize_row["prizes"].each do |prize| %>
-        <%- if prize["type"].present?
-              prize_type = prize["type"]
-              value = prize["value"]
-            else
-              if (prize["label"] =~ /\$\d* Ticket/).present?
-                prize_type = "Ticket"
-                value = prize["label"].delete("$Ticket").strip
-              elsif prize["value"].present?
-                prize_type = "Balance"
-                value = prize["value"]
-              else
-                prize_type = "Other"
-                value = prize["label"]
-              end 
-            end
-        %>
+    <%- @promotion_target.contest_template.prize_table.each_with_index do |prize_row, row_index| %>
+        <div class="prize_row">
+          <div class="prize_range" style="float: left;">
+            <br/>
+            Start Place
+            <%= number_field_tag "prize_table[][start_place]", prize_row["start_place"], min: 1, onchange: "update_prize_places();" %>
+            &nbsp;
+            End Place
+            <%= number_field_tag "prize_table[][end_place]", prize_row["end_place"], min: 1, onchange: "update_prize_places();" %>
+            &nbsp;
+          </div>
 
-      
-        <div class="prize-row">
-          Start Place
-          <%= number_field_tag "prize_table[start_place][]", prize_row["start_place"], min: 1, onchange: "update_prize_end_places();" %>
-          &nbsp;
-          End Place
-          <%= number_field_tag "prize_table[end_place][]", prize_row["end_place"], min: 1, onchange: "update_prize_end_places();" %>
-          &nbsp;
-          <%= select_tag "prize_table[prize_type][]", options_for_select(["Balance","Ticket","Other"],prize_type), onchange: "prize_type_changed(this);" %>
-          &nbsp;
-          Value
-          <%- if prize_type == "Other" %>
-            <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", 1, min: 1, size: "3" %></span>
-            <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", value.to_s %></span>
-          <%- else %>
-            <span class="dollar-prize-value">$<%= number_field_tag "prize_table[prize_num_value][]", value.to_i, min: 1, size: "3" %></span>
-            <span class="text-prize-value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", "" %></span>
+          <div class="prize_options" style="float: left;">
+
+          <%- prize_row["prizes"].each_with_index do |option_row, option_index| %>
+
+              <div class="prize_option">
+                <span class="add_prize_option"><a href="javascript:void(0)" onclick="add_prize_option(this);">+</a></span>
+                /
+                <span class="delete_prize_option"><a href="javascript:void(0)" onclick="alert('we should keep at least one prize around');">-</a></span>
+                
+                &nbsp;
+                <%= select_tag "prize_table[]options[][prize_type]", options_for_select(["Cash","Ticket","Other"],option_row["type"]), onchange: "prize_type_changed(this);" %>
+                &nbsp;
+                <%- if option_row["type"] == "Other" %>
+
+                  <span class="dollar_value_label" style="text-align: right;width: 60px;display: inline-block;">Value</span>
+                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", option_row["value"] / 100, min: 1, size: "3" %></span>
+                  <span class="text_value_label">Label</span>
+                  <span class="text_prize_value"><%= text_field_tag "prize_table[]options[][prize_txt_value]", option_row["label"] %></span>
+
+                <%- else %>
+
+                  <span class="dollar_value_label" style="text-align: right;width: 60px;display: inline-block;">Value</span>
+                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", option_row["value"].to_i / 100, min: 1, size: "3" %></span>
+
+                  <span class="text_value_label">Label</span>
+                  <span class="text_prize_value"><%= text_field_tag "prize_table[]options[][prize_txt_value]", "" %></span>
+                <%- end %>
+                &nbsp;
+                Icon Hash
+                <%= text_area_tag "prize_table[]options[][icon]", option_row["icon"] %>
+                &nbsp;
+                <span class="delete_prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete prize range</a></span>
+              </div>
           <%- end %>
-          &nbsp;
-          Icon Hash
-          <%= text_area_tag "prize_table[icon][]", prize["icon"] %>
-          &nbsp;
-          <span class="delete-prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete</a></span>
+          </div>
+          <div class="prize_option_output" style="float: left; color: red;"></div>
+          <div style="clear: both;"></div>
         </div>
-      <%- end %>
     <%- end %>
   <%- end %>
 
 
 
       </div>
-
-
-      <span class="add-prize"><a href="javascript:void(0)" onclick="add_prize();">add</a></span>
+        <div style="clear: both;"></div>
+      <span class="add-prize"><a href="javascript:void(0)" onclick="add_prize();">add prize range</a></span>
     </div>
 
 
-
-    <%= label_tag :entry_item, "", id: "entry_item_label", style: "display: none;" %>
-    <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display: none;" %>
-    <br/>
-    <div id="entries-sub-form"></div><br/>
-    <span id="entries-output"></span>
   </div>
+  <br/>
   <strong>Promo Basics</strong><br/>
   <%= label_tag :promo_name, "Displayed Name" %>
   <%= text_field_tag :promo_name, @promotion_target.promotion.name, onchange: "validate();" %>
@@ -198,7 +220,7 @@
 <%- else %>
   <%= text_field_tag :promo_identifier, @promotion_target.promotion.identifier, onchange: "promo_identifier_changed();" %>
 <%- end %>
-  <span id="identifier-output"></span>
+  <span id="identifier_output"></span>
   <br/>
   
   <%= label_tag :promotion_group_id, "Promotion Group" %>
@@ -378,6 +400,7 @@
   var balance;
   var buy_in;
   var unique_identifier; 
+  var user_found;
   $(document).ready(function() {
     initialize();
     validate();
@@ -389,9 +412,6 @@
     balance = 0;
   <%- if @promotion_target.persisted? %>
     buy_in = <%= @promotion_target.contest_template.buy_in["value"] %>;
-
-  <%- else %>
-    $("#target_settings").hide();
   <%- end %>
     unique_identifier = true;
   
@@ -417,57 +437,79 @@
     }
 
     // entriesss
-    entry_count = $("[id^=entry_item_drop]").length;
-    unique_entry_count = $.unique($.map($("[id^=entry_item_drop_]"), function( i ) { return $(i).val(); })).length;
-    valid_entries = (entry_count > 0 && entry_count == unique_entry_count);
+    if($("input[name=c_or_c]:checked").val() == "challenge" || user_found) {
+      entry_count = $("[id^=entry_item_drop]").length;
+      unique_entry_count = $.unique($.map($("[id^=entry_item_drop_]"), function( i ) { return $(i).val(); })).length;
+      valid_entries = (entry_count > 0 && entry_count == unique_entry_count);
 
-    if(valid_entries) {
-      $("#entries-output").empty();
-      $("[id^=entry_item_label_").css("color", "black");
-    } else {
-      valid = false;
-      if(entry_count != unique_entry_count) {
-        $("#entries-output").css("color", "red");
-        $("#entries-output").text("Duplicate entry item selection detected!");
-        $("#entries-output").append("<br/><br/>");
-      }
-      $("[id^=entry_item_label_]").css("color", "red");
-    }
-
-    // max it out
-    if($("#max").val() >= 1) {
-
-      var working_buy_in;
-      if(buy_in != null && buy_in != "") {
-        working_buy_in = buy_in;
+      if(valid_entries) {
+        $("#entries_output").empty();
+        $("[id^=entry_item_label_").css("color", "black");
       } else {
-        working_buy_in = $("#buy_in").val();
-      }
-      if($("#max").val() * (working_buy_in * 100) > balance) { 
-        $("[for=max]").css("color", "red");
-        $("#max-output").css("color", "red");
         valid = false;
-        $("#max-output").text("Total Buy In: $" + ($("#max").val() * working_buy_in).toFixed(2) + " - this is over budget");
-
-      } else {
-        $("[for=max]").css("color", "black");
-        $("#max-output").css("color", "black");
-        if(working_buy_in != null && working_buy_in != "") {
-          $("#max-output").text("Total Buy In: $" + ($("#max").val() * working_buy_in).toFixed(2));
+        if(entry_count != unique_entry_count) {
+          $("#entries_output").css("color", "red");
+          $("#entries_output").text("Duplicate entry item selection detected!");
+          $("#entries_output").append("<br/><br/>");
         }
+        $("[id^=entry_item_label_]").css("color", "red");
       }
-    } else {
-
-  <%- if !@promotion_target.persisted? %>
-      if($("input[name=c_or_c]:checked").val() == "challenge") {
-        valid = false;
-        $("[for=max]").css("color", "red");
-      }
-  <%- elsif @promotion_target.contest_type == "Contest" %>
-      // valid = false;
-      // $("[for=max]").css("color", "red");
-  <%- end %>
     }
+
+
+// *****************************************************************************
+// Challenge specific
+// *****************************************************************************
+    
+      // max it out
+      if($("#max").val() >= 1) {
+        if($("input[name=c_or_c]:checked").val() == "challenge" || user_found) {
+          var working_buy_in;
+          if(buy_in != null && buy_in != "") {
+            working_buy_in = buy_in;
+          } else {
+            working_buy_in = $("#buy_in").val();
+          }
+          if($("#max").val() * (working_buy_in * 100) > balance) { 
+            $("[for=buy_in]").css("color", "red");
+            $("#buy_in_output").css("color", "red");
+            valid = false;
+            $("#buy_in_output").text("Total Buy In: $" + ($("#max").val() * working_buy_in).toFixed(2) + " - this is over budget");
+
+          } else {
+            $("[for=buy_in]").css("color", "black");
+            $("#buy_in_output").css("color", "black");
+            if(working_buy_in != null && working_buy_in != "") {
+              $("#buy_in_output").text("Total Buy In: $" + ($("#max").val() * working_buy_in).toFixed(2));
+            }
+          }
+        }
+      } else {
+
+    <%- if !@promotion_target.persisted? %>
+          valid = false;
+          $("[for=max]").css("color", "red");
+    <%- end %>
+      }
+
+
+// ******************************************************************************
+// USERS
+// ******************************************************************************
+  <%- if !@promotion_target.persisted? %>
+      // User validating
+      if($("input[name=c_or_c]:checked").val() == "challenge") {
+        if($("#user_id").val() != "") {
+          $("[for=username]").css("color", "black");
+        } else {
+          valid = false;
+          $("[for=username]").css("color", "red");
+        }
+      } else {
+        $("[for=username]").css("color", "black");
+      }
+  <%- end %>
+    
 
 
     // size
@@ -479,25 +521,46 @@
       $("[for=promotion_group_id]").css("color", "red");
     }
 
+// *****************************************************************************
+// Prize ranges overlap
+// *****************************************************************************
+    
+    $(".prize_option_output").text("");
+    // mark if anything overlaps
+    $("#prize_rows").children().each(function(index_upper) {
 
+      my_row = $(this);
+      my_start = my_row.children(".prize_range").children("#prize_table__start_place").val();
+      my_end = my_row.children(".prize_range").children("#prize_table__end_place").val();
+      // loop through every other row and check that our ranges don't overlap
+      $("#prize_rows").children().each(function(index_lower) {
+        if(index_upper != index_lower) {
+          some_row = $(this);
+          some_start = some_row.children(".prize_range").children("#prize_table__start_place").val();
+          some_end = some_row.children(".prize_range").children("#prize_table__start_place").val();
+          if((my_start >= some_start && my_start <= some_end) ||
+              (my_end >= some_start && my_end <= some_end)) {
+            valid = false;
+            my_row.children(".prize_option_output").text("range overlaps");
+
+          }
+        }
+      });
+    });
+
+// *****************************************************************************
+// General validating
+// *****************************************************************************
 
   <%- if !@promotion_target.persisted? %>
 
-    // gots a user
-    if($("#user_id").val() != "") {
-      $("[for=username]").css("color", "black");
-      $("#target_settings").show();
-    } else {
-      valid = false;
-      $("[for=username]").css("color", "red");
-    }
     // show promo identifier some love
-    $("#identifier-output").text("");
+    $("#identifier_output").text("");
     if($("#promo_identifier").val() != "") {
       if(unique_identifier) {
         $("[for=promo_identifier]").css("color", "black");
       } else {
-        $("#identifier-output").text("not unique!");
+        $("#identifier_output").text("not unique!");
         $("[for=promo_identifier]").css("color", "red");
         valid = false;
       } 
@@ -509,11 +572,11 @@
     // game it
     if($("#game_id").val() != "") {
       $("[for=game_id]").css("color", "black");
-      $("#contest_config").show();
+      $("#cc_config").show();
     } else {
       valid = false;
       $("[for=game_id]").css("color", "red");
-      $("#contest_config").hide();
+      $("#cc_config").hide();
     }
 
     // EVENT SET
@@ -525,17 +588,15 @@
     }
 
 
-    // template it
-    // if($("#contest_template_id").val() != "" && $("#contest_template_id").val() != null) {
-    //   $("[for=contest_template_id]").css("color", "black");
-    // } else {
-    //   valid = false;
-    //   $("[for=contest_template_id]").css("color", "red");
-    // }
-    
-  <%- end %>
+ 
 
-    //email layouts
+
+   <%- end %>
+
+// *****************************************************************************
+// Emails
+// *****************************************************************************
+
     if($("#email_contest_joined_layout_configurable").prop("checked")) {
       $("#email_contest_joined_layout").val("configurable");
       $("#email_contest_joined_layout").prop("readonly", true);
@@ -589,12 +650,15 @@
       if (data.username == undefined) {
         balance = 0;
         $("#user_id").val("");
-        $("#username-output").text("User not found.");
+        user_found = false;
+        $("#username_output").text("User not found.");
       } else { 
         balance = data.balance;
         $("#user_id").val(data.id);
-        $("#username-output").text("User found: " + data.username + " // Balance: $" + (data.balance / 100).toFixed(2));
+        user_found = true;
+        $("#username_output").text("User found: " + data.username + " // Balance: $" + (data.balance / 100).toFixed(2));
       }
+      populate_entries();
       validate();
     });
   }
@@ -619,6 +683,8 @@
 
   function c_or_c_changed() {
     if($("input[name=c_or_c]:checked").val() == "challenge") {
+      $("#challenge_config").show();
+      $("#contest_config").hide();
       // set max stuff
       document.getElementById('max').setAttribute("min", 2);
       document.getElementById('max').setAttribute("max", null);
@@ -629,6 +695,8 @@
       // set size stuff
       $("#size").val(2);
     } else if($("input[name=c_or_c]:checked").val() == "contest") {
+      $("#challenge_config").hide();
+      $("#contest_config").show();
       // set max stuff
       document.getElementById('max').setAttribute("min", 1);
       document.getElementById('max').setAttribute("max", 1);
@@ -636,15 +704,17 @@
       $("#max").val(1);
       // set size stuff
     }
-    $("#max-output").empty();
+    $("#max_output").empty();
     validate();
   }
 
 
   function game_changed() {
-    $("#entries-sub-form").empty();
+    $("#entries_sub_form").empty();
 
-<%- if !@promotion_target.persisted? %>
+<%- if @promotion_target.persisted? %>
+    event_set_changed();
+<%- else %>
     if($("#game_id").val() != "") {
 
       $('#event_set_id').empty();
@@ -652,9 +722,9 @@
    
       $.getJSON( "/games/" + $("#game_id").val() + "/event_sets.json", function(data) {
         if (data.length == 0) {
-          $("#game-output").text("No open event sets for this game.");
+          $("#game_output").text("No open event sets for this game.");
         } else {
-          $("#game-output").text("");
+          $("#game_output").text("");
 
           $('#event_set_id').append("<option value=\"\"></option>");
           $.each(data, function(index, option) {
@@ -669,83 +739,103 @@
         reveal_prize_section();
 
       });
+    } else {
+      validate();
+      $("#prize-table").hide();
     }
-<%- else %>
-  event_set_changed();
 <%- end %>
   }
 
   function event_set_changed() {
-<%- if @promotion_target.entry.entry_items.present? %>
-    entry_selections = {
-  <%= @promotion_target.entry.entry_items.collect { |item| "#{item.slot_id}: #{item.event_participant_id}" }.join(",") %>
-    }
-<%- end %>
-    // todo validate balance yo
-    // $("[id^='entry_item_label_']").remove();
-    // $("[id^='entry_item_drop_']").remove();
-    
-    $("#entries-sub-form").empty();
-    $("#entries-output").empty();
-  
-    // update entry items
-    if($("#event_set_id").val() != "") {
-      update_submit(false);
-      //loading stuff UI
+    populate_entries();
+    validate();
+  }
 
-<%- if !@promotion_target.persisted? %>      
-      document.getElementById('game_id').setAttribute("disabled", "disabled");
-      document.getElementById('event_set_id').setAttribute("disabled", "disabled");
-      document.getElementById('submitter').setAttribute("disabled", "disabled");
-<%- end %>
-      $("#entries-output").text("Loading entry items...");
-      $("#entries-output").append("<br/><br/>");
-      $("#entries-output").css("color", "blue");
+  function populate_entries() {
+    $("#entries_sub_form").empty();
+    $("#entries_output").empty();
+    if(user_found) {
 
-
-
-
-      $.getJSON( "/games/" + $("#game_id").val() + "/event_sets/" + $("#event_set_id").val() + "/event_participants.json", function(data) {
-        if (data.length == 0) {
-          $("#ct-output").text("No event participants are available for this contest template.");
-        } else {
-          $("#ct-output").text("");
-          $.each(data, function(index, slot) {
-
-            var drop = $("#entry_item").clone();
-            var label = $("#entry_item_label").clone();
-            drop.attr("id", "entry_item_drop_" + index);
-            label.attr("id", "entry_item_label_" + index);
-            label.attr("for", "entry_item_drop_" + index);
-            label.append(slot.display_name);
-
-            $.each(slot.event_participants, function(index, event_participant) {
-              drop.append("<option value=\"" + event_participant[1] + "\">" + event_participant[0] + "</option>");
-            });
-
-            $("#entries-sub-form").append(label);
-            $("#entries-sub-form").append(drop);
-            $("#entries-sub-form").append("<br/>");
-            label.show();
-            drop.show();
 
   <%- if @promotion_target.entry.entry_items.present? %>
-            drop.val(entry_selections[index+1]);
+      entry_selections = {
+    <%= @promotion_target.entry.entry_items.collect { |item| "#{item.slot_id}: #{item.event_participant_id}" }.join(",") %>
+      }
   <%- end %>
-            //$('#contest_template_id').append("<option value=\"" + option[1] + "\">" + option[0] + "</option>");
-          });
+      // todo validate balance yo
+      // $("[id^='entry_item_label_']").remove();
+      // $("[id^='entry_item_drop_']").remove();
+      
+    
+      // update entry items
+      if($("#event_set_id").val() != "") {
+        update_submit(false);
+        //loading stuff UI
 
-        }
-      }).always(function() {
+  <%- if !@promotion_target.persisted? %>      
+        document.getElementById('game_id').setAttribute("disabled", "disabled");
+        document.getElementById('event_set_id').setAttribute("disabled", "disabled");
+        document.getElementById('submitter').setAttribute("disabled", "disabled");
+  <%- end %>
+        $("#entries_output").text("Loading entry items...");
+        $("#entries_output").append("<br/><br/>");
+        $("#entries_output").css("color", "blue");
 
-<%- if !@promotion_target.persisted? %>
-        document.getElementById('event_set_id').removeAttribute("disabled");
-        document.getElementById('game_id').removeAttribute("disabled");
-<%- end %>
-        $("#entries-output").empty();
 
-        validate();
-      });
+
+
+        $.getJSON( "/games/" + $("#game_id").val() + "/event_sets/" + $("#event_set_id").val() + "/event_participants.json", function(data) {
+          if (data.length == 0) {
+            $("#es_output").text("No event participants are available for this event set.");
+
+          } else {
+            $("#es_output").text("");
+            $.each(data, function(index, slot) {
+
+              var drop = $("#entry_item").clone();
+              var label = $("#entry_item_label").clone();
+              drop.attr("id", "entry_item_drop_" + index);
+              label.attr("id", "entry_item_label_" + index);
+              label.attr("for", "entry_item_drop_" + index);
+              label.append(slot.display_name);
+
+              $.each(slot.event_participants, function(index, event_participant) {
+                drop.append("<option value=\"" + event_participant[1] + "\">" + event_participant[0] + "</option>");
+              });
+
+              $("#entries_sub_form").append(label);
+              $("#entries_sub_form").append(drop);
+              $("#entries_sub_form").append("<br/>");
+              label.show();
+              drop.show();
+
+    <%- if @promotion_target.entry.entry_items.present? %>
+              drop.val(entry_selections[index+1]);
+    <%- end %>
+              //$('#contest_template_id').append("<option value=\"" + option[1] + "\">" + option[0] + "</option>");
+            });
+
+          }
+        }).always(function() {
+
+  <%- if !@promotion_target.persisted? %>
+          document.getElementById('event_set_id').removeAttribute("disabled");
+          document.getElementById('game_id').removeAttribute("disabled");
+  <%- end %>
+          $("#entries_output").empty();
+
+          validate();
+        });
+      } else {
+        $("#entries_output").text("No Event Set Selected");
+        $("#entries_output").append("<br/><br/>");
+        $("#entries_output").css("color", "black");
+      }
+    } else {
+
+      $("#entries_output").text("No User Selected");
+      $("#entries_output").append("<br/><br/>");
+      $("#entries_output").css("color", "black");
     }
   }
 
@@ -782,9 +872,14 @@
     $("#prize-table").show();
 <%- end %> 
 
+    // allow options
+    $(".prize_options").each(function() {
+      update_prize_option($(this));
+    });
+
 
     // prize types
-    $("select[id=prize_table_prize_type_]").each(function() { 
+    $("select[id=prize_table_options__prize_type]").each(function() { 
       prize_type_changed(this);
     });
 
@@ -792,64 +887,182 @@
     cleanup_prize_add_delete();
 
     // min/maxes
-    update_prize_end_places();
-
-
+    update_prize_places();
   }
 
   function prize_type_changed(element) {
     if($(element).val() == "Other") {
-      $(element).siblings(".text-prize-value").show();
-      $(element).siblings(".dollar-prize-value").hide();
-    } else {
-      $(element).siblings(".text-prize-value").hide();
-      $(element).siblings(".dollar-prize-value").show();
+      // $(element).siblings(".text_value_label").show();
+      // $(element).siblings(".text_prize_value").show();
+      // $(element).siblings(".dollar_prize_value").show();
+      $(element).siblings(".dollar_value_label").text("Value");
+      $(element).siblings(".text_value_label").css("color", "black");
+      $(element).siblings(".text_prize_value").children().attr("disabled", null);
+    } else if ($(element).val() == "Ticket") {
+      // $(element).siblings(".text_prize_value").hide();
+      // $(element).siblings(".text_value_label").hide();
+      // $(element).siblings(".dollar_prize_value").show();
+      $(element).siblings(".dollar_value_label").text("Value");
+      $(element).siblings(".text_prize_value").children().val("");
+      $(element).siblings(".text_value_label").css("color", "grey");
+      $(element).siblings(".text_prize_value").children().attr("disabled", "disabled");
+    } else if ($(element).val() == "Cash") {
+      // $(element).siblings(".text_prize_value").hide();
+      // $(element).siblings(".text_value_label").hide();
+      // $(element).siblings(".dollar_prize_value").show();
+      $(element).siblings(".dollar_value_label").text("Amount");
+      $(element).siblings(".text_value_label").css("color", "grey");
+      $(element).siblings(".text_prize_value").children().val("");
+      $(element).siblings(".text_prize_value").children().attr("disabled", "disabled");
     }
   }
-
   function add_prize() {
-    $(".prize-row").last().clone().appendTo($("#prize-rows"));
+    // only add if last range is below current contest size
+    size = parseInt($("#size").val());
+    end = parseInt($("#prize_rows").children().last().children(".prize_range").children("#prize_table__start_place").val());
+
+    prev_row = $(".prize_row").last()
+    cloned_row = $(".prize_row").last().clone();
+
+    // start place is based on prev row
+    prev_end_place = parseInt(prev_row.children(".prize_range").children("#prize_table__start_place").val());
+    cloned_row.children(".prize_range").children("#prize_table__start_place").val(prev_end_place+1);
+
+    prev_row.children(".prize_options").children().each(function(index) {
+      selection = $(prev_row.children(".prize_options").children()[index]).children("#prize_table_prize_type_").val();
+      $(cloned_row.children(".prize_options").children()[index]).children("#prize_table_prize_type_").val(selection);
+    });
+    cloned_row.appendTo($("#prize_rows"));
+
+
+    increment_prize_row_index(cloned_row);
+
+    update_prize_places();
     cleanup_prize_add_delete();
   }
 
   function delete_prize(element) {
+    $(element).parent().parent().parent().parent().remove();
+    cleanup_prize_add_delete();
+
+  }
+
+  function add_prize_option(element) {
+    container = $(element).parent().parent().parent();
+    prev_val = $(element).parent().parent().children("#prize_table_prize_type_").val();
+    cloned = $(element).parent().parent().clone();
+    cloned.appendTo($(element).parent().parent().parent());
+    cloned.children("#prize_table_prize_type_").val(prev_val);
+
+
+    increment_prize_row_index(cloned.parent());
+    option_index = cloned.index();
+
+    update_prize_option(container);
+  }
+
+  function delete_prize_option(element) {
+    container = $(element).parent().parent().parent();
     $(element).parent().parent().remove();
+    update_prize_option(container);
+  }
+
+
+  // assumed current object index is what my name should reflect
+  function increment_prize_row_index(row) {
+    row_index = row.index();
+    row.children().each(function() {
+      row_contents = $(this);
+      row_contents.children().each(function() {
+        element = $(this);
+        if(element.attr("name")) {
+          element.attr("name", element.attr("name").replace("prize_table[" + (row_index-1) + "]", "prize_table[" + (row_index) + "]"));
+        }
+        // go one level deeper
+        element.children().each(function() {
+          sub_element = $(this);
+          if(sub_element.attr("name")) {
+            sub_element.attr("name", sub_element.attr("name").replace("prize_table[" + (row_index-1) + "]", "prize_table[" + (row_index) + "]"));
+          } 
+
+          // go one level deeper
+          sub_element.children().each(function() {
+            sub_sub_element = $(this);
+            if(sub_sub_element.attr("name")) {
+              sub_sub_element.attr("name", sub_sub_element.attr("name").replace("prize_table[" + (row_index-1) + "]", "prize_table[" + (row_index) + "]"));
+            } 
+          });
+        });
+      });
+    });
+  }
+
+  // allow/disallow deleting a prize option based on # of prize options
+  function update_prize_option(options) {
+    if(options.children().size() == 1) {
+      options.children().first().children(".delete_prize_option").children().attr("onclick","alert('we should keep at least one prize around');");
+    } else {
+      options.children().children(".delete_prize_option").children().attr("onclick","delete_prize_option(this);");
+    }
     cleanup_prize_add_delete();
   }
 
-  function update_prize_end_places() {
-    $("input[id=prize_table_start_place_]").attr("max",$("#size").val());
-    $("input[id=prize_table_end_place_]").attr("max",$("#size").val());
+  function update_prize_places() {
+    // max is the contest size
+    $("input[id=prize_table__start_place]").attr("max",$("#size").val());
+    $("input[id=prize_table__end_place]").attr("max",$("#size").val());
 
-    $("input[id=prize_table_start_place_]").each(function() {
+    // force start to be less than max
+    $("input[id=prize_table__start_place]").each(function() {
       if(parseInt($(this).val()) > parseInt($("#size").val())) {
         $(this).val($("#size").val());
       }
     });
-    $("input[id=prize_table_end_place_]").each(function() {
+
+
+    $("input[id=prize_table__end_place]").each(function() {
+      // force end place to not be smaller than the start
+      if(parseInt($(this).val()) < $(this).parent().children("#prize_table__start_place").val()) { 
+        $(this).val($(this).parent().children("#prize_table__start_place").val())
+      }
+
+      // force end place to be less than max
       if(parseInt($(this).val()) > parseInt($("#size").val())) {
         $(this).val($("#size").val());
       }
-
-      min_val = parseInt($(this).siblings().val());
-      $(this).attr("min",min_val);
-      if(min_val > ($(this).val())) {
-        $(this).val(min_val);
-      }
-
     });
+    validate();
+
   }
 
+
+
+  // allow/disallow deleting an entire prize row based on # of prize rows
   function cleanup_prize_add_delete() {
-    if($(".prize-row").size() == 1) {
-      $(".delete-prize").hide();
+    if($(".prize_row").size() == 1) {
+      $(".delete_prize").hide();
     } else {
-      $(".delete-prize").show();
+      $(".delete_prize").show();
     }
+
+
+
+    $(".prize_options").each(function() {
+      row = $(this)
+      row.children().each(function(index) {
+        if(index == 0) {
+          $(this).children(".delete_prize").show();
+        } else {
+          $(this).children(".delete_prize").hide();
+        }
+      });
+    });
+
+
   }
 
   function reveal_prize_section() {
-    update_prize_end_places();    
+    update_prize_places();    
 <%- if !@promotion_target.persisted? %> 
     $("#prize-table").show();
 <%- end %> 

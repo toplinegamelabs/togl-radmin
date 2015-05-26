@@ -44,8 +44,10 @@ class PromotionsController < ApplicationController
     @allow_client_app_selector = false
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     promo_contest = RapiManager.new(oauth_token: oauth_token).show_promotion_by_identifier(params[:id])
-    user = RapiManager.new(oauth_token: oauth_token).show_user_by_id(promo_contest["creator_id"])
-    promo_contest["username"] = user["username"]
+    if promo_contest["creator_id"]
+      user = RapiManager.new(oauth_token: oauth_token).show_user_by_id(promo_contest["creator_id"])
+      promo_contest["username"] = user["username"] 
+    end
 
     @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
     @promotion_target.persisted = true
@@ -59,7 +61,7 @@ class PromotionsController < ApplicationController
     oauth_token = OauthManager.execute(client_app: @current_client_app)
   
     entry_hash = { "id" => params[:entry_id], "entry_items" => [] }
-    params["entry_item"].each_with_index do |entry_item, index|
+    (params["entry_item"] || []).each_with_index do |entry_item, index|
       entry_hash["entry_items"] << {
         "event_participant_id" => entry_item.to_i,
         "event_participant" => {
@@ -69,8 +71,7 @@ class PromotionsController < ApplicationController
       }
     end
 
-
-    prize_hash = generate_prize_hash
+    prize_hash = generate_prizes_hash
 
     put_params = {
       "user_id" => params["user_id"],
@@ -181,7 +182,7 @@ class PromotionsController < ApplicationController
   def create
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     entry_hash = { "entry_items" => [] }
-    params["entry_item"].each_with_index do |entry_item, index|
+    (params["entry_item"] || []).each_with_index do |entry_item, index|
       entry_hash["entry_items"] << {
         "event_participant_id" => entry_item.to_i,
         "event_participant" => {
@@ -191,7 +192,7 @@ class PromotionsController < ApplicationController
       }
     end
 
-    prize_hash = generate_prize_hash
+    prize_hash = generate_prizes_hash
 
     post_params = {
       "user_id" => params["user_id"],
@@ -346,39 +347,50 @@ class PromotionsController < ApplicationController
 
 
 private
-  def generate_prize_hash
+  def generate_prizes_hash
     prize_params = params["prize_table"]
     prizes = []
-    # put together prize hash
-    (0...prize_params["start_place"].size).each do |index|
-      if ["Ticket","Balance"].include?(prize_params["prize_type"][index])
-        value = prize_params["prize_num_value"][index].to_i * 100
-        label = "$#{prize_params["prize_num_value"][index].to_i}"
-      else
-        value = 0
-        label = prize_params["prize_txt_value"][index]
-      end
+    params["prize_table"].each do |prize_row|
+      prizes_hash = []
+      prize_row["options"].each do |option_row|
+        if ["Ticket","Cash"].include?(option_row["prize_type"])
+          value = option_row["prize_num_value"].to_i * 100
+          label = "$#{option_row["prize_num_value"].to_i}"
+        else
+          value = option_row["prize_num_value"].to_i * 100
+          label = option_row["prize_txt_value"]
+        end
 
-
-
-      prize_hash = {
-        "start_place" => prize_params["start_place"][index],
-        "end_place" => prize_params["end_place"][index],
-        "total_value_label" => "Estimated total value: $1250.00",
-        "prizes" => [{
-          "type" => prize_params["prize_type"][index],
+        option_row_hash = {
+          "type" => option_row["prize_type"],
           "label" => label,
           "value" => value
-        }]
-      }
-      if prize_params["prize_type"][index] == "Other"
-        prize_hash["icon"] = prize_params["icon"][index]
-      else
-        prize_hash["icon"] = nil
+        }
+
+
+        # TODO - looping through prizes should fix this... it's currently one level too high
+        if option_row["prize_type"] == "Other"
+          option_row_hash["icon"] = option_row["icon"]
+        else
+          option_row_hash["icon"] = nil
+        end
+
+        prizes_hash << option_row_hash
       end
 
-      prizes << prize_hash
+
+
+      prize_row_hash = {
+        "start_place" => prize_row["start_place"],
+        "end_place" => prize_row["end_place"],
+        "total_value_label" => "Estimated total value: $1250.00",
+        "prizes" => prizes_hash
+      }
+
+
+      prizes << prize_row_hash
     end
+
     prizes
   end
 end

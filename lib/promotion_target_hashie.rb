@@ -23,7 +23,7 @@ class PromotionTargetHashie < Hashie::Dash
     target.contest_template.game = GameHashie.build_from_rapi_hash(hash["game"])
     target.contest_template.event_set = EventSetHashie.build_from_rapi_hash(hash["event_set"])
     target.promotion = PromotionHashie.build_from_rapi_hash(hash["promotion"])
-    target.entry = EntryHashie.build_from_rapi_hash(hash["entry"])
+    target.entry = EntryHashie.build_from_rapi_hash(hash["entry"]) if hash["entry"]
     
     target
   end
