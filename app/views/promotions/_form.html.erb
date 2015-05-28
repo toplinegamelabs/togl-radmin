@@ -51,13 +51,40 @@
 
 <%- end %>
 
-
-
-  <%= label_tag :entry_item, "", id: "entry_item_label", style: "display: none;" %>
-  <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display: none;" %>
   <br/>
-  <div id="entries-sub-form"></div><br/>
+  <%= check_box_tag :skip_entry, :picked, @challenge.promotion.activation_deadline.present?, onchange: "skip_entry_changed();" %>
+  <%= label_tag :skip_entry, "Pending Promotion (wait for user to fill out own entry)" %>
+ 
+
+  <div id="entry_select">
+    <br/>
+    <strong>Entry</strong><br/>
+    <%= label_tag :entry_item, "", id: "entry_item_label", style: "display:none;" %>
+    <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display:none;" %>
+    <br/>
+    <div id="entries-sub-form"></div><br/>
+  </div>
+  <br/>
   <span id="entries-output"></span>
+
+  <div id="activation_deadline" style="display:none;">
+    <br/>
+    <strong>Activation Deadline Date/Time (Pacific timezone)</strong><br/>
+    <%- 
+      if @challenge.promotion.activation_deadline
+        activation_date_string = DateTime.parse(@challenge.promotion.activation_deadline).strftime("%Y-%m-%d")
+        activation_time_string = DateTime.parse(@challenge.promotion.activation_deadline).strftime("%H:%M")
+      else
+        activation_date_string = ""
+        activation_time_string = ""
+      end
+    %>
+    <%= date_field_tag :activation_deadline_date, activation_date_string, onchange: "validate();" %>
+    <%= time_field_tag :activation_deadline_time, activation_time_string, onchange: "validate();" %>
+  </div>
+
+  <br/>
+<br/>
 
   <strong>Promo Basics</strong><br/>
   <%= label_tag :promo_name, "Displayed Name" %>
@@ -84,6 +111,12 @@
   <%= label_tag :promo_description, "Description" %>
   <%= text_area_tag :promo_description, @challenge.promotion.description, onchange: "validate();" %>
   <br/>
+  
+  <%= label_tag :invitation_hashtag, "Invitation Hashtag" %>
+  #<%= text_field_tag :invitation_hashtag, @challenge.promotion.invitation_hashtag %>
+  <br/>
+  
+
 
   <br/>
   <strong>Promo Visuals</strong><br/>
@@ -270,6 +303,7 @@
     if($("#game_id").val() != "" && $("#game_id").val() != null) {
       game_changed();
     }
+    skip_entry_changed();
   }
 
   function validate() {
@@ -285,22 +319,36 @@
       $("[for=promo_name]").css("color", "red");
     }
 
-    // entriesss
-    entry_count = $("[id^=entry_item_drop]").length;
-    unique_entry_count = $.unique($.map($("[id^=entry_item_drop_]"), function( i ) { return $(i).val(); })).length;
-    valid_entries = (entry_count > 0 && entry_count == unique_entry_count);
+    // *************************************************************************
+    // entry or activation deadline
+    // *************************************************************************
 
-    if(valid_entries) {
-      $("#entries-output").empty();
-      $("[id^=entry_item_label_").css("color", "black");
-    } else {
-      valid = false;
-      if(entry_count != unique_entry_count) {
-        $("#entries-output").css("color", "red");
-        $("#entries-output").text("Duplicate entry item selection detected!");
-        $("#entries-output").append("<br/><br/>");
+    if($("#skip_entry").prop("checked")) {
+      if($("#activation_deadline_date").val() != null && $("#activation_deadline_date").val() != ""
+        && $("#activation_deadline_time").val() != null && $("#activation_deadline_time").val() != "") {
+        $("#activation_deadline").css("color", "black");
+      } else {
+        $("#activation_deadline").css("color", "red");
+        valid = false;
       }
-      $("[id^=entry_item_label_]").css("color", "red");
+    } else {
+      // entriesss
+      entry_count = $("[id^=entry_item_drop]").length;
+      unique_entry_count = $.unique($.map($("[id^=entry_item_drop_]"), function( i ) { return $(i).val(); })).length;
+      valid_entries = (entry_count > 0 && entry_count == unique_entry_count);
+
+      if(valid_entries) {
+        $("#entries-output").empty();
+        $("[id^=entry_item_label_").css("color", "black");
+      } else {
+        valid = false;
+        if(entry_count != unique_entry_count) {
+          $("#entries-output").css("color", "red");
+          $("#entries-output").text("Duplicate entry item selection detected!");
+          $("#entries-output").append("<br/><br/>");
+        }
+        $("[id^=entry_item_label_]").css("color", "red");
+      }
     }
 
     // max it out
@@ -418,6 +466,7 @@
   }
 
   function update_submit(valid) {
+    console.log(valid)
     if(valid) {
       document.getElementById('submitter').removeAttribute("disabled");
     } else {
@@ -467,6 +516,7 @@
       $.getJSON( "/games/" + $("#game_id").val() + "/contest_templates.json", function(data) {
         if (data.length == 0) {
           $("#game-output").text("No contest templates open for this game.");
+          validate();
         } else {
           $("#game-output").text("");
           
@@ -476,12 +526,12 @@
 
           contest_template_changed();
         }
-        validate();
       });
 <%- else %>
       $.getJSON( "/games/" + $("#game_id").val() + "/contest_templates.json", function(data) {
         if (data.length == 0) {
           $("#game-output").text("No contest templates open for this game.");
+          validate();
         } else {
           $("#game-output").text("");
           $('#contest_template_id').append("<option value=\"\"></option>");
@@ -493,7 +543,6 @@
           $("#contest_template_id").val("<%= @challenge.contest_template.id %>");
           contest_template_changed();
         }
-        validate();
       });
 <%- end %>
 
@@ -515,8 +564,12 @@
   
     // update entry items
     if($("#contest_template_id").val() != "") {
-      update_submit(false);
+      if(!$("#skip_entry").prop("checked")) {
+        $("#entry_select").show();
+      }
+
       //loading stuff UI
+      document.getElementById('skip_entry').setAttribute("disabled", "disabled");
       document.getElementById('game_id').setAttribute("disabled", "disabled");
       document.getElementById('contest_template_id').setAttribute("disabled", "disabled");
       document.getElementById('submitter').setAttribute("disabled", "disabled");
@@ -546,9 +599,9 @@
             $("#entries-sub-form").append(label);
             $("#entries-sub-form").append(drop);
             $("#entries-sub-form").append("<br/>");
+
             label.show();
             drop.show();
-
   <%- if @challenge.entry.entry_items.present? %>
             drop.val(entry_selections[index+1]);
   <%- end %>
@@ -556,13 +609,25 @@
           });
 
         }
-        validate();
       }).always(function() {
+        document.getElementById('skip_entry').removeAttribute("disabled");
         document.getElementById('contest_template_id').removeAttribute("disabled");
         document.getElementById('game_id').removeAttribute("disabled");
+        validate();
         $("#entries-output").empty();
       });
     }
+  }
+
+  function skip_entry_changed() {
+    if($("#skip_entry").prop("checked")) {
+      $("#activation_deadline").show();
+      $("#entry_select").hide();
+    } else {
+      $("#activation_deadline").hide();
+      $("#entry_select").show();
+    }
+    validate();
   }
 
 

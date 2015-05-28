@@ -54,17 +54,26 @@ class PromotionsController < ApplicationController
   end
 
   def update_by_identifier
+    Time.zone = "America/Los_Angeles"
     oauth_token = OauthManager.execute(client_app: @current_client_app)
   
     entry_hash = { "id" => params[:entry_id], "entry_items" => [] }
-    params["entry_item"].each_with_index do |entry_item, index|
-      entry_hash["entry_items"] << {
-        "event_participant_id" => entry_item.to_i,
-        "event_participant" => {
-          "id" => entry_item.to_i
-        },
-        "slot_id" => index + 1
-      }
+    unless params["skip_entry"]
+      (params["entry_item"] || []).each_with_index do |entry_item, index|
+        entry_hash["entry_items"] << {
+          "event_participant_id" => entry_item.to_i,
+          "event_participant" => {
+            "id" => entry_item.to_i
+          },
+          "slot_id" => index + 1
+        }
+      end
+    end
+
+    if params["skip_entry"]
+      activation_deadline = Time.zone.parse(params["activation_deadline_date"] + " " + params["activation_deadline_time"])
+    else
+      activation_deadline = nil
     end
 
     put_params = {
@@ -77,6 +86,7 @@ class PromotionsController < ApplicationController
         "identifier" => params["promo_identifier"],
         "description" => params["promo_description"],
         "promotion_group_id" => params["promotion_group_id"],
+        "activation_deadline" => activation_deadline,
         "images" => {
             "mobile" => {
               "banner" => params["promo_mobile_banner"],
@@ -173,28 +183,38 @@ class PromotionsController < ApplicationController
   end
 
   def create
+    Time.zone = "America/Los_Angeles"
     oauth_token = OauthManager.execute(client_app: @current_client_app)
     entry_hash = { "entry_items" => [] }
-    params["entry_item"].each_with_index do |entry_item, index|
-      entry_hash["entry_items"] << {
-        "event_participant_id" => entry_item.to_i,
-        "event_participant" => {
-          "id" => entry_item.to_i
-        },
-        "slot_id" => index + 1
-      }
+    unless params["skip_entry"]
+      (params["entry_item"] || []).each_with_index do |entry_item, index|
+        entry_hash["entry_items"] << {
+          "event_participant_id" => entry_item.to_i,
+          "event_participant" => {
+            "id" => entry_item.to_i
+          },
+          "slot_id" => index + 1
+        }
+      end
+    end
+
+    if params["skip_entry"]
+      activation_deadline = Time.zone.parse(params["activation_deadline_date"] + " " + params["activation_deadline_time"])
+    else
+      activation_deadline = nil
     end
 
     post_params = {
       "user_id" => params["user_id"],
-      "contest_template_id" => params[:contest_template_id],
-      "max" => params[:max],
+      "contest_template_id" => params["contest_template_id"],
+      "max" => params["max"],
       "entry" => entry_hash,
       "promotion" => {
         "name" => params["promo_name"],
         "identifier" => params["promo_identifier"],
         "description" => params["promo_description"],
         "promotion_group_id" => params["promotion_group_id"],
+        "activation_deadline" => activation_deadline,
         "images" => {
             "mobile" => {
               "banner" => params["promo_mobile_banner"],
@@ -288,7 +308,7 @@ class PromotionsController < ApplicationController
       promo_contest = {
         "persisted" => false,
         "promotion" => { },
-        "contest_template" => { "id" => params[:contest_template_id] },
+        "contest_template" => { "id" => params["contest_template_id"] },
         "event_set" => { },
         "game" => {
           "id" => params[:game_id]
