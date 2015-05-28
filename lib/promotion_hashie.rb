@@ -6,7 +6,7 @@ class PromotionHashie < Hashie::Dash
   property :display_type
   property :promotion_group_id
   property :activation_deadline
-  property :invitation_hashtag
+  property :invitation_hashtag, default: "#"
   property :name_logo, default: 
     {
       "css_class" => "icon-star",
