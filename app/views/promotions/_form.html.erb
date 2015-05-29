@@ -125,27 +125,29 @@
       <strong>Prizes</strong>
       <div id="prize_rows">
 
-  <%- if @promotion_target.contest_template.prize_table.blank? %>
-        <div class="prize_row">
-          Start Place
-          <%= number_field_tag "prize_table[start_place][]", 1, min: 1, onchange: "update_prize_places();" %>
-          &nbsp;
-          End Place
-          <%= number_field_tag "prize_table[end_place][]", 1, min: 1, onchange: "update_prize_places();" %>
-          &nbsp;
-          <%= select_tag "prize_table[prize_type][]", options_for_select(["Cash","Ticket","Other"],"Cash"), onchange: "prize_type_changed(this);" %>
-          &nbsp;
-          Value
-          <span class="dollar_prize_value">$<%= number_field_tag "prize_table[prize_num_value][]", 1, min: 1, size: "3" %></span>
-          <span class="text_prize_value" style="display:none;"><%= text_field_tag "prize_table[prize_txt_value][]", "" %></span>
-          &nbsp;
-          Icon Hash
-          <%= text_area_tag "prize_table[icon][]", '{ "css_class": "", "unicode": "", "url": "" }' %>
-          &nbsp;
-          <span class="delete_prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete</a></span>
-        </div>
-  <%- else %>
-    <%- @promotion_target.contest_template.prize_table.each_with_index do |prize_row, row_index| %>
+
+    <%-
+      if @promotion_target.contest_template.prize_table.present?
+        prize_table = @promotion_target.contest_template.prize_table
+      else
+        # defaults
+        prize_table = {
+          "start_place" => 1,
+          "end_place" => 1,
+          "prizes" => [
+            {
+              "type" => "Cash",
+              "value" => 1,
+              "label" => "",
+              "icon" => '{ "css_class": "", "unicode": "", "url": "" }'
+            }
+          ]
+        }
+
+      end
+    %>
+
+    <%- prize_table.each_with_index do |prize_row, row_index| %>
         <div class="prize_row">
           <div class="prize_range" style="float: left;">
             <br/>
@@ -196,7 +198,6 @@
           <div style="clear: both;"></div>
         </div>
     <%- end %>
-  <%- end %>
 
 
 

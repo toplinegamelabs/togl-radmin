@@ -351,12 +351,15 @@ private
     prize_params = params["prize_table"]
     prizes = []
     params["prize_table"].each do |prize_row|
+      contains_other_prize_type = false
+      total_value = 0
       prizes_hash = []
       prize_row["options"].each do |option_row|
         if ["Ticket","Cash"].include?(option_row["prize_type"])
           value = option_row["prize_num_value"].to_i * 100
           label = "$#{option_row["prize_num_value"].to_i}"
-        else
+        elsif option_row["prize_type"] = "Other"
+          contains_other_prize_type = true
           value = option_row["prize_num_value"].to_i * 100
           label = option_row["prize_txt_value"]
         end
@@ -374,19 +377,23 @@ private
         else
           option_row_hash["icon"] = nil
         end
-
+        total_value += value
         prizes_hash << option_row_hash
       end
 
-
-
+      if contains_other_prize_type
+        total_value_label = "Estimated total value: $#{total_value}.00"
+      else
+        total_value_label = nil
+      end
+      
       prize_row_hash = {
         "start_place" => prize_row["start_place"],
         "end_place" => prize_row["end_place"],
-        "total_value_label" => "Estimated total value: $1250.00",
+        "total_value_label" => total_value_label,
+        "total_value" => total_value
         "prizes" => prizes_hash
       }
-
 
       prizes << prize_row_hash
     end
