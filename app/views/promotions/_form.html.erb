@@ -1,9 +1,3 @@
-
-
-
-
-
-
 <%- if @promotion_target.persisted? %>
 
   <strong><%= @promotion_target.contest_type %> Settings</strong><br/>
@@ -47,7 +41,6 @@
 
   <div id="target_settings">
     <strong>Contest/Challenge Settings</strong><br/>
-
 
     <%= label_tag :game_id, "Game" %>
     <%= select_tag :game_id, options_for_select(@games, @promotion_target.contest_template.game.id), onchange: "game_changed();" %>
@@ -104,13 +97,41 @@
 
 
 
-      <%= label_tag :entry_item, "", id: "entry_item_label", style: "display: none;" %>
-      <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display: none;" %>
+
       <br/>
       <br/>
-      <span id="entry_title" style=""><strong>Entries</strong></span>
-      <div id="entries_sub_form"></div>
+      <%= check_box_tag :skip_entry, :picked, @promotion_target.promotion.activation_deadline.present?, onchange: "skip_entry_changed();" %>
+      <%= label_tag :skip_entry, "Pending Promotion (wait for user to fill out own entry)" %>
+     
+
+      <div id="entry_select">
+        <br/>
+        <strong>Entry</strong><br/>
+        <%= label_tag :entry_item, "", id: "entry_item_label", style: "display:none;" %>
+        <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display:none;" %>
+        <br/>
+        <div id="entries_sub_form"></div><br/>
+      </div>
+      <br/>
       <span id="entries_output"></span>
+
+      <div id="activation_deadline" style="display:none;">
+        <br/>
+        <strong>Activation Deadline Date/Time (Pacific timezone)</strong><br/>
+        <%- 
+          if @promotion_target.promotion.activation_deadline
+            activation_date_string = DateTime.parse(@promotion_target.promotion.activation_deadline).strftime("%Y-%m-%d")
+            activation_time_string = DateTime.parse(@promotion_target.promotion.activation_deadline).strftime("%H:%M")
+          else
+            activation_date_string = ""
+            activation_time_string = ""
+          end
+        %>
+        <%= date_field_tag :activation_deadline_date, activation_date_string, onchange: "validate();" %>
+        <%= time_field_tag :activation_deadline_time, activation_time_string, onchange: "validate();" %>
+      </div>
+
+      <br/>
 
 
     </div>
@@ -120,7 +141,7 @@
   <%- end %>
 
 
-    <br/>
+
     <div id="prize-table" style="display:none;">
       <strong>Prizes</strong>
       <div id="prize_rows">
@@ -131,7 +152,7 @@
         prize_table = @promotion_target.contest_template.prize_table
       else
         # defaults
-        prize_table = {
+        prize_table = [{
           "start_place" => 1,
           "end_place" => 1,
           "prizes" => [
@@ -142,8 +163,7 @@
               "icon" => '{ "css_class": "", "unicode": "", "url": "" }'
             }
           ]
-        }
-
+        }]
       end
     %>
 
@@ -208,7 +228,9 @@
 
 
   </div>
-  <br/>
+    <br/>
+    <br/>
+
   <strong>Promo Basics</strong><br/>
   <%= label_tag :promo_name, "Displayed Name" %>
   <%= text_field_tag :promo_name, @promotion_target.promotion.name, onchange: "validate();" %>
@@ -234,6 +256,12 @@
   <%= label_tag :promo_description, "Description" %>
   <%= text_area_tag :promo_description, @promotion_target.promotion.description, onchange: "validate();" %>
   <br/>
+  
+  <%= label_tag :invitation_hashtag, "Invitation Hashtag" %>
+  <%= text_field_tag :invitation_hashtag, @promotion_target.promotion.invitation_hashtag %>
+  <br/>
+  
+
 
   <br/>
   <strong>Promo Visuals</strong><br/>
@@ -425,6 +453,7 @@
     }
     c_or_c_changed();
     init_prizes();
+    skip_entry_changed();
   }
 
   function validate() {
@@ -437,8 +466,20 @@
       $("[for=promo_name]").css("color", "red");
     }
 
-    // entriesss
-    if($("input[name=c_or_c]:checked").val() == "challenge" || user_found) {
+    // *************************************************************************
+    // entry or activation deadline
+    // *************************************************************************
+
+    if($("#skip_entry").prop("checked")) {
+      if($("#activation_deadline_date").val() != null && $("#activation_deadline_date").val() != ""
+        && $("#activation_deadline_time").val() != null && $("#activation_deadline_time").val() != "") {
+        $("#activation_deadline").css("color", "black");
+      } else {
+        $("#activation_deadline").css("color", "red");
+        valid = false;
+      }
+    } else if ($("input[name=c_or_c]:checked").val() == "challenge" || user_found) {
+      // entriesss
       entry_count = $("[id^=entry_item_drop]").length;
       unique_entry_count = $.unique($.map($("[id^=entry_item_drop_]"), function( i ) { return $(i).val(); })).length;
       valid_entries = (entry_count > 0 && entry_count == unique_entry_count);
@@ -726,7 +767,6 @@
           $("#game_output").text("No open event sets for this game.");
         } else {
           $("#game_output").text("");
-
           $('#event_set_id').append("<option value=\"\"></option>");
           $.each(data, function(index, option) {
             $('#event_set_id').append("<option value=\"" + option[0] + "\">" + option[1] + "</option>");
@@ -736,9 +776,9 @@
           $("#event_set_id").val(<%= @promotion_target.contest_template.event_set.id %>);
           event_set_changed();
         }
+
         validate();
         reveal_prize_section();
-
       });
     } else {
       validate();
@@ -767,13 +807,17 @@
       // $("[id^='entry_item_label_']").remove();
       // $("[id^='entry_item_drop_']").remove();
       
-    
+    $("#entries_sub_form").empty();
       // update entry items
       if($("#event_set_id").val() != "") {
+        if(!$("#skip_entry").prop("checked")) {
+          $("#entry_select").show();
+        }
         update_submit(false);
         //loading stuff UI
 
-  <%- if !@promotion_target.persisted? %>      
+  <%- if !@promotion_target.persisted? %>
+        document.getElementById('skip_entry').setAttribute("disabled", "disabled");
         document.getElementById('game_id').setAttribute("disabled", "disabled");
         document.getElementById('event_set_id').setAttribute("disabled", "disabled");
         document.getElementById('submitter').setAttribute("disabled", "disabled");
@@ -781,10 +825,6 @@
         $("#entries_output").text("Loading entry items...");
         $("#entries_output").append("<br/><br/>");
         $("#entries_output").css("color", "blue");
-
-
-
-
         $.getJSON( "/games/" + $("#game_id").val() + "/event_sets/" + $("#event_set_id").val() + "/event_participants.json", function(data) {
           if (data.length == 0) {
             $("#es_output").text("No event participants are available for this event set.");
@@ -810,21 +850,20 @@
               label.show();
               drop.show();
 
-    <%- if @promotion_target.entry.entry_items.present? %>
+    <%- if @promotion_target.try(:entry).try(:entry_items).present? %>
               drop.val(entry_selections[index+1]);
     <%- end %>
               //$('#contest_template_id').append("<option value=\"" + option[1] + "\">" + option[0] + "</option>");
             });
-
           }
         }).always(function() {
 
   <%- if !@promotion_target.persisted? %>
+          document.getElementById('skip_entry').removeAttribute("disabled");
           document.getElementById('event_set_id').removeAttribute("disabled");
           document.getElementById('game_id').removeAttribute("disabled");
   <%- end %>
           $("#entries_output").empty();
-
           validate();
         });
       } else {
@@ -838,6 +877,17 @@
       $("#entries_output").append("<br/><br/>");
       $("#entries_output").css("color", "black");
     }
+  }
+
+  function skip_entry_changed() {
+    if($("#skip_entry").prop("checked")) {
+      $("#activation_deadline").show();
+      $("#entry_select").hide();
+    } else {
+      $("#activation_deadline").hide();
+      $("#entry_select").show();
+    }
+    validate();
   }
 
   function update_client_app() {
@@ -1032,8 +1082,6 @@
         $(this).val($("#size").val());
       }
     });
-    validate();
-
   }
 
 
@@ -1060,6 +1108,7 @@
     });
 
 
+    validate();
   }
 
   function reveal_prize_section() {
