@@ -94,6 +94,7 @@ class PromotionsController < ApplicationController
         "promotion_group_id" => params["promotion_group_id"],
         "activation_deadline" => activation_deadline,
         "invitation_hashtag" => params["invitation_hashtag"],
+        "notification" => params["notification"],
         "images" => {
             "mobile" => {
               "banner" => params["promo_mobile_banner"],
@@ -159,6 +160,19 @@ class PromotionsController < ApplicationController
               "body" => {
                 "pre" => params["email_contest_tie_body_pre"],
                 "post" => params["email_contest_tie_body_post"]
+              }
+            },
+            "contest_available" => {
+              "layout" => params["email_contest_available_layout"],
+              "subject" => params["email_contest_available_subject"],
+              "header" => {
+                "image_url" => params["email_contest_available_header_image_url"],
+                "target_url" => params["email_contest_available_header_target_url"],
+                "color_code" => params["email_contest_available_header_color_code"]
+              },
+              "body" => {
+                "pre" => params["email_contest_available_body_pre"],
+                "post" => params["email_contest_available_body_post"]
               }
             }
           },
@@ -233,6 +247,7 @@ class PromotionsController < ApplicationController
         "promotion_group_id" => params["promotion_group_id"],
         "activation_deadline" => activation_deadline,
         "invitation_hashtag" => params["invitation_hashtag"],
+        "notification" => params["notification"],
         "images" => {
             "mobile" => {
               "banner" => params["promo_mobile_banner"],
@@ -303,6 +318,19 @@ class PromotionsController < ApplicationController
             "body" => {
               "pre" => params["email_contest_tie_body_pre"],
               "post" => params["email_contest_tie_body_post"]
+            }
+          },
+          "contest_available" => {
+            "layout" => params["email_contest_available_layout"],
+            "subject" => params["email_contest_available_subject"],
+            "header" => {
+              "image_url" => params["email_contest_available_header_image_url"],
+              "target_url" => params["email_contest_available_header_target_url"],
+              "color_code" => params["email_contest_available_header_color_code"]
+            },
+            "body" => {
+              "pre" => params["email_contest_available_body_pre"],
+              "post" => params["email_contest_available_body_post"]
             }
           }
         }

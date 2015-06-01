@@ -29,13 +29,6 @@
     <br/>
   <%- end %>
 
-  <%= label_tag :entry_item, "", id: "entry_item_label", style: "display: none;" %>
-  <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display: none;" %>
-  <br/>
-  <br/>
-  <span id="entry_title" style=""><strong>Entries</strong></span>
-  <div id="entries_sub_form"></div>
-  <span id="entries_output"></span>
 
 <%- else %>
 
@@ -97,7 +90,13 @@
 
 
 
+    </div>
 
+
+
+  <%- end %>
+
+    <div id="target_settings">
       <br/>
       <br/>
       <%= check_box_tag :skip_entry, :picked, @promotion_target.promotion.activation_deadline.present?, onchange: "skip_entry_changed();" %>
@@ -110,7 +109,7 @@
         <%= label_tag :entry_item, "", id: "entry_item_label", style: "display:none;" %>
         <%= select_tag :entry_item, "", onchange: "validate();", name: "entry_item[]", style: "display:none;" %>
         <br/>
-        <div id="entries_sub_form"></div><br/>
+        <div id="entries_sub_form"></div>
       </div>
       <br/>
       <span id="entries_output"></span>
@@ -127,20 +126,13 @@
             activation_time_string = ""
           end
         %>
+        <%= @promotion_target.promotion.activation_deadline %>
         <%= date_field_tag :activation_deadline_date, activation_date_string, onchange: "validate();" %>
         <%= time_field_tag :activation_deadline_time, activation_time_string, onchange: "validate();" %>
       </div>
 
       <br/>
-
-
     </div>
-
-
-
-  <%- end %>
-
-
 
     <div id="prize-table" style="display:none;">
       <strong>Prizes</strong>
@@ -158,7 +150,7 @@
           "prizes" => [
             {
               "type" => "Cash",
-              "value" => 1,
+              "value" => 100,
               "label" => "",
               "icon" => '{ "css_class": "", "unicode": "", "url": "" }'
             }
@@ -194,7 +186,7 @@
                 <%- if option_row["type"] == "Other" %>
 
                   <span class="dollar_value_label" style="text-align: right;width: 60px;display: inline-block;">Value</span>
-                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", option_row["value"] / 100, min: 1, size: "3" %></span>
+                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", option_row["value"].to_i / 100, min: 1, size: "3" %></span>
                   <span class="text_value_label">Label</span>
                   <span class="text_prize_value"><%= text_field_tag "prize_table[]options[][prize_txt_value]", option_row["label"] %></span>
 
@@ -423,6 +415,54 @@
   <br/>
   <br/>
 
+  <div id="notifications_setup" style="display:none;">
+
+    <strong>Notifications</strong>
+    <br/>
+    Contest Available
+    <br/>
+
+    <em>Email</em><br/>  
+    <%= check_box_tag :email_contest_available_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
+    <%= label_tag :email_contest_available_layout_configurable, "Use Configurable Layout" %>
+    <br/>
+    <%= label_tag :email_contest_available_layout, "Layout" %>
+    <%= text_field_tag :email_contest_available_layout, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+    <br/>
+    <%= label_tag :email_contest_available_subject, "Subject" %>
+    <%= text_field_tag :email_contest_available_subject, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("subject", {}), onchange: "validate();" %>
+    <br/>
+    <%= label_tag :email_contest_available_header_image_url, "Header Image URL" %>
+    <small>http://</small><%= text_field_tag :email_contest_available_header_image_url, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+    <br/>
+    <%= label_tag :email_contest_available_header_color_code, "Header Color Hex" %>
+    <small>#</small><%= text_field_tag :email_contest_available_header_color_code, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+    <br/>
+    <%= label_tag :email_contest_available_header_target_url, "Header Link Target URL" %>
+    <small>http://</small><%= text_field_tag :email_contest_available_header_target_url, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+    <br/>
+    <%= label_tag :email_contest_available_body_pre, "Body (Intro)" %>
+    <%= text_area_tag :email_contest_available_body_pre, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("body", {})["pre"], onchange: "validate();" %>
+    <br/>
+    <%= label_tag :email_contest_available_body_post, "Body (Conclusion)" %>
+    <%= text_area_tag :email_contest_available_body_post, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("body", {})["post"], onchange: "validate();" %>
+    <br/>
+    <br/>
+
+    <em>Push</em><br/>
+    <%= label_tag "notification[name]", "Name" %>
+    <%= text_field_tag "notification[name]", @promotion_target.promotion.fetch("notification", {}).fetch("name", "") %>
+    <br/>
+    <%= label_tag "notification[description]", "Description" %>
+    <%= text_field_tag "notification[description]", @promotion_target.promotion.fetch("notification", {}).fetch("description", "") %>
+    <br/>
+    <%= label_tag "notification[push_text]", "Message" %>
+    <%= text_area_tag "notification[push_text]", @promotion_target.promotion.fetch("notification", {}).fetch("push_text", "") %>
+
+
+    <br/>
+    <br/>
+  </div>
   <%= submit_tag "Submit", id: "submitter" %>
 
 <script type="text/javascript">
@@ -462,6 +502,7 @@
     if($("#promo_name").val() != "") {
       $("[for=promo_name]").css("color", "black");
     } else {
+      console.log("bad no promo name");
       valid = false;
       $("[for=promo_name]").css("color", "red");
     }
@@ -476,6 +517,7 @@
         $("#activation_deadline").css("color", "black");
       } else {
         $("#activation_deadline").css("color", "red");
+        console.log("missing activation deadline");
         valid = false;
       }
     } else if ($("input[name=c_or_c]:checked").val() == "challenge" || user_found) {
@@ -488,6 +530,7 @@
         $("#entries_output").empty();
         $("[id^=entry_item_label_").css("color", "black");
       } else {
+        console.log("missing entry");
         valid = false;
         if(entry_count != unique_entry_count) {
           $("#entries_output").css("color", "red");
@@ -701,6 +744,8 @@
         $("#username_output").text("User found: " + data.username + " // Balance: $" + (data.balance / 100).toFixed(2));
       }
       populate_entries();
+
+      update_pending_promotion_availability();
       validate();
     });
   }
@@ -859,7 +904,7 @@
         }).always(function() {
 
   <%- if !@promotion_target.persisted? %>
-          document.getElementById('skip_entry').removeAttribute("disabled");
+          update_pending_promotion_availability();
           document.getElementById('event_set_id').removeAttribute("disabled");
           document.getElementById('game_id').removeAttribute("disabled");
   <%- end %>
@@ -883,9 +928,11 @@
     if($("#skip_entry").prop("checked")) {
       $("#activation_deadline").show();
       $("#entry_select").hide();
+      $("#notifications_setup").show();
     } else {
       $("#activation_deadline").hide();
       $("#entry_select").show();
+      $("#notifications_setup").hide();
     }
     validate();
   }
@@ -1121,8 +1168,45 @@
 
 
 
+  function update_pending_promotion_availability() {
+    if(user_found) {
+      activate_pending_promotion();
+    } else {
+      disable_pending_promotion();
+    }
+  }
 
+  function disable_pending_promotion() {
+    document.getElementById('skip_entry').setAttribute("disabled", "disabled");
+    document.getElementById('activation_deadline_time').setAttribute("disabled", "disabled");
+    document.getElementById('email_contest_available_layout_configurable').setAttribute("disabled", "disabled");
+    document.getElementById('email_contest_available_layout').setAttribute("disabled", "disabled");
+    document.getElementById('email_contest_available_subject').setAttribute("disabled", "disabled");
+    document.getElementById('email_contest_available_header_image_url').setAttribute("disabled", "disabled");
+    document.getElementById('email_contest_available_header_color_code').setAttribute("disabled", "disabled");
+    document.getElementById('email_contest_available_header_target_url').setAttribute("disabled", "disabled");
+    document.getElementById('email_contest_available_body_pre').setAttribute("disabled", "disabled");
+    document.getElementById('email_contest_available_body_post').setAttribute("disabled", "disabled");
+    document.getElementById('notification_name').setAttribute("disabled", "disabled");
+    document.getElementById('notification_description').setAttribute("disabled", "disabled");
+    document.getElementById('notification_push_text').setAttribute("disabled", "disabled");
+  }
 
+  function activate_pending_promotion() {
+    document.getElementById('skip_entry').removeAttribute("disabled");
+    document.getElementById('activation_deadline_time').removeAttribute("disabled");
+    document.getElementById('email_contest_available_layout_configurable').removeAttribute("disabled");
+    document.getElementById('email_contest_available_layout').removeAttribute("disabled");
+    document.getElementById('email_contest_available_subject').removeAttribute("disabled");
+    document.getElementById('email_contest_available_header_image_url').removeAttribute("disabled");
+    document.getElementById('email_contest_available_header_color_code').removeAttribute("disabled");
+    document.getElementById('email_contest_available_header_target_url').removeAttribute("disabled");
+    document.getElementById('email_contest_available_body_pre').removeAttribute("disabled");
+    document.getElementById('email_contest_available_body_post').removeAttribute("disabled");
+    document.getElementById('notification_name').removeAttribute("disabled");
+    document.getElementById('notification_description').removeAttribute("disabled");
+    document.getElementById('notification_push_text').removeAttribute("disabled");
+  }
 
 
 

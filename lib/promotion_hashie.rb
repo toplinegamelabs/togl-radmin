@@ -6,6 +6,7 @@ class PromotionHashie < Hashie::Dash
   property :promotion_group_id
   property :activation_deadline
   property :invitation_hashtag, default: "#"
+  property :notification, default: {}
   property :name_logo, default: 
     {
       "css_class" => "icon-star",
@@ -22,52 +23,65 @@ class PromotionHashie < Hashie::Dash
   property :emails, default:
     {
       "contest_joined" => {
-        "layout" => "",
-        "subject" => "",
-        "body" => "",
+        "layout" => nil,
+        "subject" => nil,
+        "body" => nil,
         "header" => {
-          "image_url" => "",
-          "target_url" => "",
-          "color_code" => ""
+          "image_url" => nil,
+          "target_url" => nil,
+          "color_code" => nil
         }
       },
       "contest_win" => {
-        "layout" => "",
-        "subject" => "",
+        "layout" => nil,
+        "subject" => nil,
         "body" => {
-          "pre" => "",
-          "post" => ""
+          "pre" => nil,
+          "post" => nil
         },
         "header" => {
-          "image_url" => "",
-          "target_url" => "",
-          "color_code" => ""
+          "image_url" => nil,
+          "target_url" => nil,
+          "color_code" => nil
         }
       },
       "contest_loss" => {
-        "layout" => "",
-        "subject" => "",
+        "layout" => nil,
+        "subject" => nil,
         "body" => {
-          "pre" => "",
-          "post" => ""
+          "pre" => nil,
+          "post" => nil
         },
         "header" => {
-          "image_url" => "",
-          "target_url" => "",
-          "color_code" => ""
+          "image_url" => nil,
+          "target_url" => nil,
+          "color_code" => nil
         }
       },
       "contest_tie" => {
-        "layout" => "",
-        "subject" => "",
+        "layout" => nil,
+        "subject" => nil,
         "body" => {
-          "pre" => "",
-          "post" => ""
+          "pre" => nil,
+          "post" => nil
         },
         "header" => {
-          "image_url" => "",
-          "target_url" => "",
-          "color_code" => ""
+          "image_url" => nil,
+          "target_url" => nil,
+          "color_code" => nil
+        }
+      },
+      "contest_available" => {
+        "layout" => nil,
+        "subject" => nil,
+        "body" => {
+          "pre" => nil,
+          "post" => nil
+        },
+        "header" => {
+          "image_url" => nil,
+          "target_url" => nil,
+          "color_code" => nil
         }
       }
     }
@@ -86,6 +100,7 @@ class PromotionHashie < Hashie::Dash
     promo.promotion_group_id = hash["promotion_group_id"]
     promo.activation_deadline = hash["activation_deadline"]
     promo.invitation_hashtag = hash["invitation_hashtag"]
+    promo.notification = hash["notification"]
     promo
   end
 
