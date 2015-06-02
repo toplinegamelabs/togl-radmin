@@ -94,7 +94,7 @@ class PromotionsController < ApplicationController
         "promotion_group_id" => params["promotion_group_id"],
         "activation_deadline" => activation_deadline,
         "invitation_hashtag" => params["invitation_hashtag"],
-        "notification" => params["notification"],
+        "notification" => activation_deadline.present? ? params["notification"] : nil,
         "images" => {
             "mobile" => {
               "banner" => params["promo_mobile_banner"],
@@ -247,7 +247,7 @@ class PromotionsController < ApplicationController
         "promotion_group_id" => params["promotion_group_id"],
         "activation_deadline" => activation_deadline,
         "invitation_hashtag" => params["invitation_hashtag"],
-        "notification" => params["notification"],
+        "notification" => activation_deadline.present? ? params["notification"] : nil,
         "images" => {
             "mobile" => {
               "banner" => params["promo_mobile_banner"],
