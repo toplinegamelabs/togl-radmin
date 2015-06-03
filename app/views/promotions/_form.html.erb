@@ -1,3 +1,11 @@
+
+<%- 
+  default_header_image_url = "di3648ok8zows.cloudfront.net/public-images/emails/DailyMVP-Logo.png"
+  default_header_color_code = "0161c5"
+  default_header_target_url = "www.dailymvp.com"
+%>
+
+
 <%- if @promotion_target.persisted? %>
 
   <strong><%= @promotion_target.contest_type %> Settings</strong><br/>
@@ -100,8 +108,56 @@
       <br/>
       <br/>
       <%= check_box_tag :skip_entry, :picked, @promotion_target.promotion.activation_deadline.present?, onchange: "skip_entry_changed();" %>
-      <%= label_tag :skip_entry, "Pending Promotion (wait for user to fill out own entry)" %>
+      <%= label_tag :skip_entry, "This Is A Pending Promotion (Create this promotion without entry items selected)" %>
      
+      <div id="notifications_setup" style="display:none;">
+        <br/>
+        <strong>Pending Promotion Notifications</strong>
+        <br/>
+        Contest Available
+        <br/>
+
+        <em>Email</em><br/>  
+        <%= check_box_tag :email_contest_available_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
+        <%= label_tag :email_contest_available_layout_configurable, "Use Configurable Layout" %>
+        <br/>
+        <%= label_tag :email_contest_available_layout, "Layout" %>
+        <%= text_field_tag :email_contest_available_layout, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+        <br/>
+        <%= label_tag :email_contest_available_subject, "Subject" %>
+        <%= text_field_tag :email_contest_available_subject, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("subject", {}), onchange: "validate();" %>
+        <br/>
+        <%= label_tag :email_contest_available_header_image_url, "Header Image URL" %>
+        <small>http://</small><%= text_field_tag :email_contest_available_header_image_url, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+        <br/>
+        <%= label_tag :email_contest_available_header_color_code, "Header Color Hex" %>
+        <small>#</small><%= text_field_tag :email_contest_available_header_color_code, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+        <br/>
+        <%= label_tag :email_contest_available_header_target_url, "Header Link Target URL" %>
+        <small>http://</small><%= text_field_tag :email_contest_available_header_target_url, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+        <br/>
+        <%= label_tag :email_contest_available_body_pre, "Body (Intro)" %>
+        <%= text_area_tag :email_contest_available_body_pre, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("body", {})["pre"], onchange: "validate();" %>
+        <br/>
+        <%= label_tag :email_contest_available_body_post, "Body (Conclusion)" %>
+        <%= text_area_tag :email_contest_available_body_post, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("body", {})["post"], onchange: "validate();" %>
+        <br/>
+        <br/>
+
+        <em>Push</em><br/>
+        <%= label_tag "notification[name]", "Name" %>
+        <%= text_field_tag "notification[name]", @promotion_target.promotion.fetch("notification", {}).fetch("name", "") %>
+        <br/>
+        <%= label_tag "notification[description]", "Description" %>
+        <%= text_field_tag "notification[description]", @promotion_target.promotion.fetch("notification", {}).fetch("description", "") %>
+        <br/>
+        <%= label_tag "notification[push_text]", "Message" %>
+        <%= text_area_tag "notification[push_text]", @promotion_target.promotion.fetch("notification", {}).fetch("push_text", "") %>
+
+
+        <br/>
+        <br/>
+      </div>
 
       <div id="entry_select">
         <br/>
@@ -307,12 +363,6 @@
   <strong>Emails</strong><br/>
 <br/>
 
-  <%- 
-    default_header_image_url = "di3648ok8zows.cloudfront.net/public-images/emails/DailyMVP-Logo.png"
-    default_header_color_code = "0161c5"
-    default_header_target_url = "www.dailymvp.com"
-  %>
-
   <em>Welcome Email</em><br/>
   <%= check_box_tag :email_contest_joined_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
   <%= label_tag :email_contest_joined_layout_configurable, "Use Configurable Layout" %>
@@ -415,54 +465,6 @@
   <br/>
   <br/>
 
-  <div id="notifications_setup" style="display:none;">
-
-    <strong>Notifications</strong>
-    <br/>
-    Contest Available
-    <br/>
-
-    <em>Email</em><br/>  
-    <%= check_box_tag :email_contest_available_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
-    <%= label_tag :email_contest_available_layout_configurable, "Use Configurable Layout" %>
-    <br/>
-    <%= label_tag :email_contest_available_layout, "Layout" %>
-    <%= text_field_tag :email_contest_available_layout, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout", "configurable"), onchange: "validate();" %>
-    <br/>
-    <%= label_tag :email_contest_available_subject, "Subject" %>
-    <%= text_field_tag :email_contest_available_subject, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("subject", {}), onchange: "validate();" %>
-    <br/>
-    <%= label_tag :email_contest_available_header_image_url, "Header Image URL" %>
-    <small>http://</small><%= text_field_tag :email_contest_available_header_image_url, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
-    <br/>
-    <%= label_tag :email_contest_available_header_color_code, "Header Color Hex" %>
-    <small>#</small><%= text_field_tag :email_contest_available_header_color_code, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
-    <br/>
-    <%= label_tag :email_contest_available_header_target_url, "Header Link Target URL" %>
-    <small>http://</small><%= text_field_tag :email_contest_available_header_target_url, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
-    <br/>
-    <%= label_tag :email_contest_available_body_pre, "Body (Intro)" %>
-    <%= text_area_tag :email_contest_available_body_pre, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("body", {})["pre"], onchange: "validate();" %>
-    <br/>
-    <%= label_tag :email_contest_available_body_post, "Body (Conclusion)" %>
-    <%= text_area_tag :email_contest_available_body_post, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("body", {})["post"], onchange: "validate();" %>
-    <br/>
-    <br/>
-
-    <em>Push</em><br/>
-    <%= label_tag "notification[name]", "Name" %>
-    <%= text_field_tag "notification[name]", @promotion_target.promotion.fetch("notification", {}).fetch("name", "") %>
-    <br/>
-    <%= label_tag "notification[description]", "Description" %>
-    <%= text_field_tag "notification[description]", @promotion_target.promotion.fetch("notification", {}).fetch("description", "") %>
-    <br/>
-    <%= label_tag "notification[push_text]", "Message" %>
-    <%= text_area_tag "notification[push_text]", @promotion_target.promotion.fetch("notification", {}).fetch("push_text", "") %>
-
-
-    <br/>
-    <br/>
-  </div>
   <%= submit_tag "Submit", id: "submitter" %>
 
 <script type="text/javascript">
