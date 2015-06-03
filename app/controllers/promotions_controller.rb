@@ -438,8 +438,8 @@ private
       end
       
       prize_row_hash = {
-        "start_place" => prize_row["start_place"],
-        "end_place" => prize_row["end_place"],
+        "start_place" => prize_row["start_place"].to_i,
+        "end_place" => prize_row["end_place"].to_i,
         "total_value_label" => total_value_label,
         "total_value" => total_value,
         "prizes" => prizes_hash
