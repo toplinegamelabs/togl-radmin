@@ -20,7 +20,7 @@ class PromotionsController < ApplicationController
       @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
       @promotion_target.persisted = true
 
-      original_contest_template = @challenge.contest_template
+      original_contest_template = @promotion_target.contest_template
       @promotion_target.contest_template = ContestTemplateHashie.new
       @promotion_target.contest_template.game = original_contest_template.game
       @promotion_target.entry = EntryHashie.new
@@ -232,7 +232,7 @@ class PromotionsController < ApplicationController
       "user_id" => params["user_id"],
       "contest_template_settings" => {
         "game_id"               => params["game_id"],
-        "buy_in"                => params["buy_in"]["value"].to_i * 100,
+        "buy_in"                => params["buy_in"].to_i * 100,
         "size"                  => params["size"],
         "is_publicly_joinable"  => params["is_publicly_joinable"] == "picked",
         "event_set_id"          => params["event_set_id"]

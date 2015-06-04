@@ -122,7 +122,6 @@
             activation_time_string = ""
           end
         %>
-        <%= @promotion_target.promotion.activation_deadline %>
         <%= date_field_tag :activation_deadline_date, activation_date_string, onchange: "validate();" %>
         <%= time_field_tag :activation_deadline_time, activation_time_string, onchange: "validate();" %>
       </div>
