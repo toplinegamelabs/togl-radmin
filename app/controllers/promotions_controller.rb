@@ -18,7 +18,7 @@ class PromotionsController < ApplicationController
       promo_contest["username"] = user["username"]
 
       @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
-      @promotion_target.persisted = true
+      @promotion_target.persisted = false
 
       original_contest_template = @promotion_target.contest_template
       @promotion_target.contest_template = ContestTemplateHashie.new
