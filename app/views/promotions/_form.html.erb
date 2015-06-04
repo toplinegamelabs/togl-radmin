@@ -110,6 +110,23 @@
       <%= check_box_tag :skip_entry, :picked, @promotion_target.promotion.activation_deadline.present?, onchange: "skip_entry_changed();" %>
       <%= label_tag :skip_entry, "This Is A Pending Promotion (Create this promotion without entry items selected)" %>
      
+      <div id="activation_deadline" style="display:none;">
+        <br/>
+        <strong>Activation Deadline Date/Time (Pacific timezone)</strong><br/>
+        <%- 
+          if @promotion_target.promotion.activation_deadline
+            activation_date_string = DateTime.parse(@promotion_target.promotion.activation_deadline).strftime("%Y-%m-%d")
+            activation_time_string = DateTime.parse(@promotion_target.promotion.activation_deadline).strftime("%H:%M")
+          else
+            activation_date_string = ""
+            activation_time_string = ""
+          end
+        %>
+        <%= @promotion_target.promotion.activation_deadline %>
+        <%= date_field_tag :activation_deadline_date, activation_date_string, onchange: "validate();" %>
+        <%= time_field_tag :activation_deadline_time, activation_time_string, onchange: "validate();" %>
+      </div>
+      
       <div id="notifications_setup" style="display:none;">
         <br/>
         <strong>Pending Promotion Notifications</strong>
@@ -169,24 +186,6 @@
       </div>
       <br/>
       <span id="entries_output"></span>
-
-      <div id="activation_deadline" style="display:none;">
-        <br/>
-        <strong>Activation Deadline Date/Time (Pacific timezone)</strong><br/>
-        <%- 
-          if @promotion_target.promotion.activation_deadline
-            activation_date_string = DateTime.parse(@promotion_target.promotion.activation_deadline).strftime("%Y-%m-%d")
-            activation_time_string = DateTime.parse(@promotion_target.promotion.activation_deadline).strftime("%H:%M")
-          else
-            activation_date_string = ""
-            activation_time_string = ""
-          end
-        %>
-        <%= @promotion_target.promotion.activation_deadline %>
-        <%= date_field_tag :activation_deadline_date, activation_date_string, onchange: "validate();" %>
-        <%= time_field_tag :activation_deadline_time, activation_time_string, onchange: "validate();" %>
-      </div>
-
       <br/>
     </div>
 
