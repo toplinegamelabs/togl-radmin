@@ -107,9 +107,10 @@
     <div id="target_settings">
       <br/>
       <br/>
-      <%= check_box_tag :skip_entry, :picked, @promotion_target.promotion.is_pending, onchange: "skip_entry_changed();" %>
-      <%= label_tag :skip_entry, "This Is A Pending Promotion (Create this promotion without entry items selected)" %>
-     
+      <%- if @promotion_target.promotion.is_pending %>
+        <%= check_box_tag :skip_entry, :picked, @promotion_target.promotion.is_pending, onchange: "skip_entry_changed();" %>
+        <%= label_tag :skip_entry, "This Is A Pending Promotion (Create this promotion without entry items selected)" %>
+      <%- end %>
       <div id="activation_deadline" style="display:none;">
         <br/>
         <strong>Activation Deadline Date/Time (Pacific timezone)</strong><br/>
