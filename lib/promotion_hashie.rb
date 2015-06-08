@@ -7,6 +7,8 @@ class PromotionHashie < Hashie::Dash
   property :activation_deadline
   property :invitation_hashtag, default: "#"
   property :notification, default: {}
+  property :is_pending, default: false
+
   property :name_logo, default: 
     {
       "css_class" => "icon-star",
@@ -86,8 +88,6 @@ class PromotionHashie < Hashie::Dash
       }
     }
 
-
-
   def self.build_from_rapi_hash(hash)
     promo = self.new
     promo.name = hash["name"]
@@ -101,6 +101,7 @@ class PromotionHashie < Hashie::Dash
     promo.activation_deadline = hash["activation_deadline"]
     promo.invitation_hashtag = hash["invitation_hashtag"]
     promo.notification = hash["notification"]
+    promo.is_pending = hash["is_pending"]
     promo
   end
 

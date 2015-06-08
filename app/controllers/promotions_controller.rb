@@ -93,6 +93,7 @@ class PromotionsController < ApplicationController
         "description" => params["promo_description"],
         "promotion_group_id" => params["promotion_group_id"],
         "activation_deadline" => activation_deadline,
+        "is_pending" => params["skip_entry"],
         "invitation_hashtag" => params["invitation_hashtag"],
         "notification" => activation_deadline.present? ? params["notification"] : nil,
         "images" => {
@@ -246,6 +247,7 @@ class PromotionsController < ApplicationController
         "description" => params["promo_description"],
         "promotion_group_id" => params["promotion_group_id"],
         "activation_deadline" => activation_deadline,
+        "is_pending" => params["skip_entry"],
         "invitation_hashtag" => params["invitation_hashtag"],
         "notification" => activation_deadline.present? ? params["notification"] : nil,
         "images" => {
