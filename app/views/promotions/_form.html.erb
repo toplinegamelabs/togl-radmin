@@ -900,11 +900,11 @@
           }
         }).always(function() {
 
-  <%- if !@promotion_target.persisted? %>
+
           update_pending_promotion_availability();
           document.getElementById('event_set_id').removeAttribute("disabled");
           document.getElementById('game_id').removeAttribute("disabled");
-  <%- end %>
+
           $("#entries_output").empty();
           validate();
         });
