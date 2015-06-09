@@ -159,15 +159,13 @@
         
         <em>Push</em><br/>
         <%= label_tag "notification[name]", "Name" %>
-        <%= text_field_tag "notification[name]", @promotion_target.promotion.fetch("notification", {}).fetch("name", "") %>
+        <%= text_field_tag "notification[name]", @promotion_target.promotion.notification.fetch("name", "") %>
         <br/>
         <%= label_tag "notification[description]", "Description" %>
-        <%= text_field_tag "notification[description]", @promotion_target.promotion.fetch("notification", {}).fetch("description", "") %>
+        <%= text_field_tag "notification[description]", @promotion_target.promotion.notification.fetch("description", "") %>
         <br/>
         <%= label_tag "notification[push_text]", "Message" %>
-        <%= text_area_tag "notification[push_text]", @promotion_target.promotion.fetch("notification", {}).fetch("push_text", "") %>
-
-
+        <%= text_area_tag "notification[push_text]", @promotion_target.promotion.notification.fetch("push_text", "") %>
         <br/>
         <br/>
       </div>
