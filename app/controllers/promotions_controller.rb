@@ -171,10 +171,7 @@ class PromotionsController < ApplicationController
                 "target_url" => params["email_contest_available_header_target_url"],
                 "color_code" => params["email_contest_available_header_color_code"]
               },
-              "body" => {
-                "pre" => params["email_contest_available_body_pre"],
-                "post" => params["email_contest_available_body_post"]
-              }
+              "body" => params["email_contest_available_body"]
             }
           },
         "name_logo" => {
@@ -330,10 +327,7 @@ class PromotionsController < ApplicationController
               "target_url" => params["email_contest_available_header_target_url"],
               "color_code" => params["email_contest_available_header_color_code"]
             },
-            "body" => {
-              "pre" => params["email_contest_available_body_pre"],
-              "post" => params["email_contest_available_body_post"]
-            }
+            "body" => params["email_contest_available_body"]
           }
         }
       }
