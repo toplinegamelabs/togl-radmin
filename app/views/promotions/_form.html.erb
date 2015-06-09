@@ -107,7 +107,7 @@
     <div id="target_settings">
       <br/>
       <br/>
-      <%- if @promotion_target.promotion.is_pending %>
+      <%- if !@promotion_target.persisted? || @promotion_target.promotion.is_pending %>
         <%= check_box_tag :skip_entry, :picked, @promotion_target.promotion.is_pending, onchange: "skip_entry_changed();" %>
         <%= label_tag :skip_entry, "This Is A Pending Promotion (Create this promotion without entry items selected)" %>
       <%- end %>
