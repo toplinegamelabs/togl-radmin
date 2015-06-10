@@ -361,7 +361,7 @@ class PromotionsController < ApplicationController
             "value" => params["size"]
           },
           "is_publicly_joinable"  => params["is_publicly_joinable"] == "picked",
-          "prize_table"           => prize_hash
+          "prize_table"           => { "overall" => prize_hash }
         },
         "event_set" => { "id" => params["event_set_id"]},
         "game" => {
