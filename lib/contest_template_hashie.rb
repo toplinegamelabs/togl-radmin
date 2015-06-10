@@ -15,7 +15,7 @@ class ContestTemplateHashie < Hashie::Dash
     template.buy_in = hash["buy_in"]
     template.size = hash["size"]
     template.is_publicly_joinable = hash["is_publicly_joinable"]
-    template.prize_table = hash["prize_table"]
+    template.prize_table = hash["prize_table"]["overall"]
     template
   end
 
