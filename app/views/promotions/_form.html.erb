@@ -159,13 +159,13 @@
         
         <em>Push</em><br/>
         <%= label_tag "notification[name]", "Name" %>
-        <%= text_field_tag "notification[name]", @promotion_target.promotion.notification.fetch("name", "") %>
+        <%= text_field_tag "notification[name]", (@promotion_target.promotion.notification || {}).fetch("name", "") %>
         <br/>
         <%= label_tag "notification[description]", "Description" %>
-        <%= text_field_tag "notification[description]", @promotion_target.promotion.notification.fetch("description", "") %>
+        <%= text_field_tag "notification[description]",(@promotion_target.promotion.notification || {}).fetch("description", "") %>
         <br/>
         <%= label_tag "notification[push_text]", "Message" %>
-        <%= text_area_tag "notification[push_text]", @promotion_target.promotion.notification.fetch("push_text", "") %>
+        <%= text_area_tag "notification[push_text]", (@promotion_target.promotion.notification || {}).fetch("push_text", "") %>
         <br/>
         <br/>
       </div>
@@ -540,7 +540,12 @@
 // *****************************************************************************
 // Challenge specific
 // *****************************************************************************
-    
+      <%- if @promotion_target.persisted? %>
+        initial_max = <%= @promotion_target.max %>;
+      <%- else %>
+        initial_max = 0;
+      <%- end %>
+
       // max it out
       if($("#max").val() >= 1) {
         if($("input[name=c_or_c]:checked").val() == "challenge" || user_found) {
@@ -550,9 +555,10 @@
           } else {
             working_buy_in = $("#buy_in").val();
           }
-          if($("#max").val() * (working_buy_in * 100) > balance) { 
+          if(($("#max").val() - initial_max) * (working_buy_in * 100) > balance) { 
             $("[for=buy_in]").css("color", "red");
             $("#buy_in_output").css("color", "red");
+            console.log("not enough balance");
             valid = false;
             $("#buy_in_output").text("Total Buy In: $" + ($("#max").val() * working_buy_in).toFixed(2) + " - this is over budget");
 
@@ -568,6 +574,7 @@
 
     <%- if !@promotion_target.persisted? %>
           valid = false;
+          console.log("max must be >= 1");
           $("[for=max]").css("color", "red");
     <%- end %>
       }
@@ -582,6 +589,7 @@
         if($("#user_id").val() != "") {
           $("[for=username]").css("color", "black");
         } else {
+          console.log("challenge without a creator");
           valid = false;
           $("[for=username]").css("color", "red");
         }
@@ -597,6 +605,7 @@
     if($("#promotion_group_id").val() != "" && $("#promotion_group_id").val() != null) {
       $("[for=promotion_group_id]").css("color", "black");
     } else {
+      console.log("need a promotion group");
       valid = false
       $("[for=promotion_group_id]").css("color", "red");
     }
@@ -620,6 +629,8 @@
           some_end = some_row.children(".prize_range").children("#prize_table__start_place").val();
           if((my_start >= some_start && my_start <= some_end) ||
               (my_end >= some_start && my_end <= some_end)) {
+
+            console.log("prize ranges overlap");
             valid = false;
             my_row.children(".prize_option_output").text("range overlaps");
 
@@ -642,9 +653,12 @@
       } else {
         $("#identifier_output").text("not unique!");
         $("[for=promo_identifier]").css("color", "red");
+        console.log("promo identifier not unique");
         valid = false;
       } 
     } else {
+
+        console.log("missing promo identifier");
       valid = false;
       $("[for=promo_identifier]").css("color", "red");
     }
@@ -654,6 +668,8 @@
       $("[for=game_id]").css("color", "black");
       $("#cc_config").show();
     } else {
+
+        console.log("missing game");
       valid = false;
       $("[for=game_id]").css("color", "red");
       $("#cc_config").hide();
@@ -664,6 +680,7 @@
       $("[for=event_set_id]").css("color", "black");
     } else {
       valid = false;
+        console.log("missing event set");
       $("[for=event_set_id]").css("color", "red");
     }
 
@@ -1172,33 +1189,37 @@
   }
 
   function disable_pending_promotion() {
-    document.getElementById('skip_entry').setAttribute("disabled", "disabled");
-    document.getElementById('activation_deadline_time').setAttribute("disabled", "disabled");
-    document.getElementById('email_contest_available_layout_configurable').setAttribute("disabled", "disabled");
-    document.getElementById('email_contest_available_layout').setAttribute("disabled", "disabled");
-    document.getElementById('email_contest_available_subject').setAttribute("disabled", "disabled");
-    document.getElementById('email_contest_available_header_image_url').setAttribute("disabled", "disabled");
-    document.getElementById('email_contest_available_header_color_code').setAttribute("disabled", "disabled");
-    document.getElementById('email_contest_available_header_target_url').setAttribute("disabled", "disabled");
-    document.getElementById('email_contest_available_body').setAttribute("disabled", "disabled");
-    document.getElementById('notification_name').setAttribute("disabled", "disabled");
-    document.getElementById('notification_description').setAttribute("disabled", "disabled");
-    document.getElementById('notification_push_text').setAttribute("disabled", "disabled");
+    <%- if !@promotion_target.persisted? || @promotion_target.promotion.is_pending %>
+      document.getElementById('skip_entry').setAttribute("disabled", "disabled");
+      document.getElementById('activation_deadline_time').setAttribute("disabled", "disabled");
+      document.getElementById('email_contest_available_layout_configurable').setAttribute("disabled", "disabled");
+      document.getElementById('email_contest_available_layout').setAttribute("disabled", "disabled");
+      document.getElementById('email_contest_available_subject').setAttribute("disabled", "disabled");
+      document.getElementById('email_contest_available_header_image_url').setAttribute("disabled", "disabled");
+      document.getElementById('email_contest_available_header_color_code').setAttribute("disabled", "disabled");
+      document.getElementById('email_contest_available_header_target_url').setAttribute("disabled", "disabled");
+      document.getElementById('email_contest_available_body').setAttribute("disabled", "disabled");
+      document.getElementById('notification_name').setAttribute("disabled", "disabled");
+      document.getElementById('notification_description').setAttribute("disabled", "disabled");
+      document.getElementById('notification_push_text').setAttribute("disabled", "disabled");
+    <%- end %>
   }
 
   function activate_pending_promotion() {
-    document.getElementById('skip_entry').removeAttribute("disabled");
-    document.getElementById('activation_deadline_time').removeAttribute("disabled");
-    document.getElementById('email_contest_available_layout_configurable').removeAttribute("disabled");
-    document.getElementById('email_contest_available_layout').removeAttribute("disabled");
-    document.getElementById('email_contest_available_subject').removeAttribute("disabled");
-    document.getElementById('email_contest_available_header_image_url').removeAttribute("disabled");
-    document.getElementById('email_contest_available_header_color_code').removeAttribute("disabled");
-    document.getElementById('email_contest_available_header_target_url').removeAttribute("disabled");
-    document.getElementById('email_contest_available_body').removeAttribute("disabled");
-    document.getElementById('notification_name').removeAttribute("disabled");
-    document.getElementById('notification_description').removeAttribute("disabled");
-    document.getElementById('notification_push_text').removeAttribute("disabled");
+    <%- if !@promotion_target.persisted? || @promotion_target.promotion.is_pending %>
+      document.getElementById('skip_entry').removeAttribute("disabled");
+      document.getElementById('activation_deadline_time').removeAttribute("disabled");
+      document.getElementById('email_contest_available_layout_configurable').removeAttribute("disabled");
+      document.getElementById('email_contest_available_layout').removeAttribute("disabled");
+      document.getElementById('email_contest_available_subject').removeAttribute("disabled");
+      document.getElementById('email_contest_available_header_image_url').removeAttribute("disabled");
+      document.getElementById('email_contest_available_header_color_code').removeAttribute("disabled");
+      document.getElementById('email_contest_available_header_target_url').removeAttribute("disabled");
+      document.getElementById('email_contest_available_body').removeAttribute("disabled");
+      document.getElementById('notification_name').removeAttribute("disabled");
+      document.getElementById('notification_description').removeAttribute("disabled");
+      document.getElementById('notification_push_text').removeAttribute("disabled");
+    <%- end %>
   }
 
 

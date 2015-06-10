@@ -196,6 +196,9 @@ class PromotionsController < ApplicationController
 
       @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
       @promotion_target.persisted = true
+      @promotion_groups = [[]] + RapiManager.new(oauth_token: oauth_token).list_promotion_groups.collect do |group|
+        [group["identifier"], group["id"]]
+      end
 
       flash.now[:error] = JSON.parse(update_response.body).values.flatten.join("\n")
       render :edit
