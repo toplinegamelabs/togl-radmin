@@ -233,7 +233,7 @@ class PromotionsController < ApplicationController
       "user_id" => params["user_id"],
       "contest_template_settings" => {
         "game_id"               => params["game_id"],
-        "buy_in"                => params["buy_in"].to_i * 100,
+        "buy_in"                => (params["buy_in"].to_f * 100),
         "size"                  => params["size"],
         "is_publicly_joinable"  => params["is_publicly_joinable"] == "picked",
         "event_set_id"          => params["event_set_id"]
@@ -355,7 +355,7 @@ class PromotionsController < ApplicationController
         "promotion" => { },
         "contest_template" => {
           "buy_in"                => {
-            "value" => params["buy_in"].to_i * 100
+            "value" => (params["buy_in"].to_f * 100)
           },
           "size"                  => {
             "value" => params["size"]
@@ -405,11 +405,11 @@ private
       prizes_hash = []
       prize_row["options"].each do |option_row|
         if ["Ticket","Cash"].include?(option_row["prize_type"])
-          value = option_row["prize_num_value"].to_i * 100
-          label = "$#{option_row["prize_num_value"].to_i}"
+          value = (option_row["prize_num_value"].to_f * 100).ceil
+          label = "$%0.2f" % (value / 100)
         elsif option_row["prize_type"] = "Other"
           contains_other_prize_type = true
-          value = option_row["prize_num_value"].to_i * 100
+          value = (option_row["prize_num_value"].to_f * 100).ceil
           label = option_row["prize_txt_value"]
         end
 

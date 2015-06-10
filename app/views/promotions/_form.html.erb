@@ -85,10 +85,8 @@
       <span id="es_output"></span>
       <br/>
 
-
-
       <%= label_tag :buy_in, "Buy In" %>
-      $<%= number_field_tag :buy_in, @promotion_target.contest_template.buy_in["value"].to_i / 100, min: 0, onchange: "validate();" %>
+      $<%= number_field_tag :buy_in, "%0.2f" % (@promotion_target.contest_template.buy_in["value"].to_f / 100), min: 0, step: 'any', onchange: "validate();" %>
       <span id="buy_in_output"></span>
       <br/>
 
@@ -232,18 +230,14 @@
                 &nbsp;
                 <%= select_tag "prize_table[]options[][prize_type]", options_for_select(["Cash","Ticket","Other"],option_row["type"]), onchange: "prize_type_changed(this);" %>
                 &nbsp;
-                <%- if option_row["type"] == "Other" %>
-
+                <%- if option_row["type"] == "Other" %>      
                   <span class="dollar_value_label" style="text-align: right;width: 60px;display: inline-block;">Value</span>
-                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", option_row["value"].to_i / 100, min: 1, size: "3" %></span>
+                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", "%0.2f" % (option_row["value"].to_f / 100), min: 1, step: "any", size: "3" %></span>
                   <span class="text_value_label">Label</span>
                   <span class="text_prize_value"><%= text_field_tag "prize_table[]options[][prize_txt_value]", option_row["label"] %></span>
-
                 <%- else %>
-
                   <span class="dollar_value_label" style="text-align: right;width: 60px;display: inline-block;">Value</span>
-                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", option_row["value"].to_i / 100, min: 1, size: "3" %></span>
-
+                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", "%0.2f" % (option_row["value"].to_f / 100), min: 1, step: "any", size: "3" %></span>
                   <span class="text_value_label">Label</span>
                   <span class="text_prize_value"><%= text_field_tag "prize_table[]options[][prize_txt_value]", "" %></span>
                 <%- end %>
@@ -753,7 +747,7 @@
         balance = data.balance;
         $("#user_id").val(data.id);
         user_found = true;
-        $("#username_output").text("User found: " + data.username + " // Balance: $" + (data.balance / 100).toFixed(2));
+        $("#username_output").text("User found: " + data.username + " // Balance: $" + (data.balance.to_f / 100).toFixed(2));
       }
       populate_entries();
 
