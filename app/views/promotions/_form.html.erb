@@ -137,7 +137,7 @@
         <%= label_tag :email_contest_available_layout_configurable, "Use Configurable Layout" %>
         <br/>
         <%= label_tag :email_contest_available_layout, "Layout" %>
-        <%= text_field_tag :email_contest_available_layout, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+        <%= text_field_tag :email_contest_available_layout, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout") { "configurable" }, onchange: "validate();" %>
         <br/>
         <%= label_tag :email_contest_available_subject, "Subject" %>
         <%= text_field_tag :email_contest_available_subject, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("subject", {}), onchange: "validate();" %>
@@ -355,7 +355,7 @@
   <%= label_tag :email_contest_joined_layout_configurable, "Use Configurable Layout" %>
   <br/>
   <%= label_tag :email_contest_joined_layout, "Layout" %>
-  <%= text_field_tag :email_contest_joined_layout, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_layout, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("layout") { "configurable" }, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_subject, "Subject" %>
   <%= text_field_tag :email_contest_joined_subject, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("subject", {}), onchange: "validate();" %>
@@ -378,7 +378,7 @@
   <%= label_tag :email_contest_win_layout_configurable, "Use Configurable Layout" %>
   <br/>
   <%= label_tag :email_contest_win_layout, "Layout" %>
-  <%= text_field_tag :email_contest_win_layout, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_layout, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("layout") { "configurable" }, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_subject, "Subject" %>
   <%= text_field_tag :email_contest_win_subject, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("subject", {}), onchange: "validate();" %>
@@ -404,7 +404,7 @@
   <%= label_tag :email_contest_loss_layout_configurable, "Use Configurable Layout" %>
   <br/>
   <%= label_tag :email_contest_loss_layout, "Layout" %>
-  <%= text_field_tag :email_contest_loss_layout, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_layout, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("layout") { "configurable" }, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_subject, "Subject" %>
   <%= text_field_tag :email_contest_loss_subject, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("subject", {}), onchange: "validate();" %>
@@ -430,7 +430,7 @@
   <%= label_tag :email_contest_tie_layout_configurable, "Use Configurable Layout" %>
   <br/>
   <%= label_tag :email_contest_tie_layout, "Layout" %>
-  <%= text_field_tag :email_contest_tie_layout, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("layout", "configurable"), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_layout, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("layout") { "configurable" }, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_subject, "Subject" %>
   <%= text_field_tag :email_contest_tie_subject, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("subject", {}), onchange: "validate();" %>
