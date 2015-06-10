@@ -747,7 +747,7 @@
         balance = data.balance;
         $("#user_id").val(data.id);
         user_found = true;
-        $("#username_output").text("User found: " + data.username + " // Balance: $" + (data.balance.to_f / 100).toFixed(2));
+        $("#username_output").text("User found: " + data.username + " // Balance: $" + (parseFloat(data.balance) / 100).toFixed(2));
       }
       populate_entries();
 
