@@ -152,7 +152,7 @@
         <small>http://</small><%= text_field_tag :email_contest_available_header_target_url, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
         <br/>
         <%= label_tag :email_contest_available_body, "Body" %>
-        <%= text_area_tag :email_contest_available_body, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("body", {})["pre"], onchange: "validate();" %>
+        <%= text_area_tag :email_contest_available_body, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("body") { "" }, onchange: "validate();" %>
         <br/>
         
         <em>Push</em><br/>

@@ -377,8 +377,7 @@ class PromotionsController < ApplicationController
       promo_contest["entry"] = entry_hash
 
       @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
-      # failed create on rapi would lose some info so filling it back in      
-
+      # failed create on rapi would lose some info so filling it back in
       flash.now[:error] = JSON.parse(create_response.body).values.flatten.join("\n")
       render :new
     end

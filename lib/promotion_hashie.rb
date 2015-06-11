@@ -98,7 +98,8 @@ class PromotionHashie < Hashie::Dash
     promo.images = hash["images"]
     promo.emails = hash["emails"]
     promo.promotion_group_id = hash["promotion_group_id"]
-    promo.activation_deadline = hash["activation_deadline"]
+    # sometimes it comes in as a date (especially when form is in an error state, and we need a string here
+    promo.activation_deadline = hash["activation_deadline"].to_s
     promo.invitation_hashtag = hash["invitation_hashtag"]
     promo.notification = hash["notification"]
     promo.is_pending = hash["is_pending"]
