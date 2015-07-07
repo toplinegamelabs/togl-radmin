@@ -426,7 +426,11 @@ private
 
         # TODO - looping through prizes should fix this... it's currently one level too high
         if option_row["prize_type"] == "Other"
-          option_row_hash["icon"] = JSON.parse(option_row["icon"])
+          begin
+            option_row_hash["icon"] = JSON.parse(option_row["icon"])
+          rescue JSON::ParserError => e
+            option_row_hash["icon"] = nil
+          end 
         else
           option_row_hash["icon"] = nil
         end
