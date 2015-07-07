@@ -429,7 +429,7 @@ private
           begin
             option_row_hash["icon"] = JSON.parse(option_row["icon"])
           rescue JSON::ParserError => e
-            option_row_hash["icon"] = nil
+            option_row_hash["icon"] = { "css_class" => "", "unicode" => "", "url" => "" }
           end 
         else
           option_row_hash["icon"] = nil
