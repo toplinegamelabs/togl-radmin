@@ -408,10 +408,7 @@ private
       total_value = 0
       prizes_hash = []
       prize_row["options"].each do |option_row|
-        if option_row["prize_type"] == "Cash"
-          value = (option_row["prize_num_value"].to_f * 100).ceil
-          label = "#{"$%0.2f" % (value / 100.0)} Ticket"
-        elsif option_row["prize_type"] == "Ticket"
+        if ["Ticket","Cash"].include?(option_row["prize_type"])
           value = (option_row["prize_num_value"].to_f * 100).ceil
           label = "$%0.2f" % (value / 100.0)
         elsif option_row["prize_type"] == "Other"
@@ -442,7 +439,7 @@ private
       end
 
       if contains_other_prize_type
-        total_value_label = "Estimated total value: #{"$%0.2f" % (total_value / 100.0)}"
+        total_value_label = "Estimated total value: $#{"$%0.2f" % (total_value / 100.0)}"
       else
         total_value_label = nil
       end
