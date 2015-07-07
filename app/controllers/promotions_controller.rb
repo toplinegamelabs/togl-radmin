@@ -439,7 +439,7 @@ private
       end
 
       if contains_other_prize_type
-        total_value_label = "Estimated total value: #{"$%0.2f" % (total_value / 100.0)}"
+        total_value_label = "Estimated total value: $#{number_with_precision(total_value / 100.0, :precision => 2, :delimiter => ',')}"
       else
         total_value_label = nil
       end
