@@ -23,6 +23,7 @@ class PromotionsController < ApplicationController
       original_contest_template = @promotion_target.contest_template
       @promotion_target.contest_template = ContestTemplateHashie.new
       @promotion_target.contest_template.game = original_contest_template.game
+      @promotion_target.contest_template.prize_table = original_contest_template.prize_table
       @promotion_target.entry = EntryHashie.new
     else
       @promotion_target = PromotionTargetHashie.new
@@ -84,6 +85,9 @@ class PromotionsController < ApplicationController
 
     put_params = {
       "user_id" => params["user_id"],
+      "contest_template_settings" => {
+        "is_publicly_joinable"  => params["is_publicly_joinable"] == "picked"
+      },
       "entry" => entry_hash,
       "max" => params["max"],
       "prizes" => prize_hash,
@@ -122,7 +126,7 @@ class PromotionsController < ApplicationController
                 "target_url" => params["email_contest_joined_header_target_url"],
                 "color_code" => params["email_contest_joined_header_color_code"]
               },
-              "body" => params["email_contest_joined_body"]
+              "body" => params["email_contest_joined_body"].to_s.gsub("\r\n", "")
             },
             "contest_win" => {
               "layout" => params["email_contest_win_layout"],
@@ -133,8 +137,8 @@ class PromotionsController < ApplicationController
                 "color_code" => params["email_contest_win_header_color_code"]
               },
               "body" => {
-                "pre" => params["email_contest_win_body_pre"],
-                "post" => params["email_contest_win_body_post"]
+                "pre" => params["email_contest_win_body_pre"].to_s.gsub("\r\n", ""),
+                "post" => params["email_contest_win_body_post"].to_s.gsub("\r\n", "")
               }
             },
             "contest_loss" => {
@@ -146,8 +150,8 @@ class PromotionsController < ApplicationController
                 "color_code" => params["email_contest_loss_header_color_code"]
               },
               "body" => {
-                "pre" => params["email_contest_loss_body_pre"],
-                "post" => params["email_contest_loss_body_post"]
+                "pre" => params["email_contest_loss_body_pre"].to_s.gsub("\r\n", ""),
+                "post" => params["email_contest_loss_body_post"].to_s.gsub("\r\n", "")
               }
             },
             "contest_tie" => {
@@ -159,8 +163,8 @@ class PromotionsController < ApplicationController
                 "color_code" => params["email_contest_tie_header_color_code"]
               },
               "body" => {
-                "pre" => params["email_contest_tie_body_pre"],
-                "post" => params["email_contest_tie_body_post"]
+                "pre" => params["email_contest_tie_body_pre"].to_s.gsub("\r\n", ""),
+                "post" => params["email_contest_tie_body_post"].to_s.gsub("\r\n", "")
               }
             },
             "contest_available" => {
@@ -171,7 +175,7 @@ class PromotionsController < ApplicationController
                 "target_url" => params["email_contest_available_header_target_url"],
                 "color_code" => params["email_contest_available_header_color_code"]
               },
-              "body" => params["email_contest_available_body"]
+              "body" => params["email_contest_available_body"].to_s.gsub("\r\n", "")
             }
           },
         "name_logo" => {
@@ -281,7 +285,7 @@ class PromotionsController < ApplicationController
               "target_url" => params["email_contest_joined_header_target_url"],
               "color_code" => params["email_contest_joined_header_color_code"]
             },
-            "body" => params["email_contest_joined_body"]
+            "body" => params["email_contest_joined_body"].to_s.gsub("\r\n", "")
           },
           "contest_win" => {
             "layout" => params["email_contest_win_layout"],
@@ -292,8 +296,8 @@ class PromotionsController < ApplicationController
               "color_code" => params["email_contest_win_header_color_code"]
             },
             "body" => {
-              "pre" => params["email_contest_win_body_pre"],
-              "post" => params["email_contest_win_body_post"]
+              "pre" => params["email_contest_win_body_pre"].to_s.gsub("\r\n", ""),
+              "post" => params["email_contest_win_body_post"].to_s.gsub("\r\n", "")
             }
           },
           "contest_loss" => {
@@ -305,8 +309,8 @@ class PromotionsController < ApplicationController
               "color_code" => params["email_contest_loss_header_color_code"]
             },
             "body" => {
-              "pre" => params["email_contest_loss_body_pre"],
-              "post" => params["email_contest_loss_body_post"]
+              "pre" => params["email_contest_loss_body_pre"].to_s.gsub("\r\n", ""),
+              "post" => params["email_contest_loss_body_post"].to_s.gsub("\r\n", "")
             }
           },
           "contest_tie" => {
@@ -318,8 +322,8 @@ class PromotionsController < ApplicationController
               "color_code" => params["email_contest_tie_header_color_code"]
             },
             "body" => {
-              "pre" => params["email_contest_tie_body_pre"],
-              "post" => params["email_contest_tie_body_post"]
+              "pre" => params["email_contest_tie_body_pre"].to_s.gsub("\r\n", ""),
+              "post" => params["email_contest_tie_body_post"].to_s.gsub("\r\n", "")
             }
           },
           "contest_available" => {
@@ -330,7 +334,7 @@ class PromotionsController < ApplicationController
               "target_url" => params["email_contest_available_header_target_url"],
               "color_code" => params["email_contest_available_header_color_code"]
             },
-            "body" => params["email_contest_available_body"]
+            "body" => params["email_contest_available_body"].to_s.gsub("\r\n", "")
           }
         }
       }
@@ -406,7 +410,7 @@ private
       prize_row["options"].each do |option_row|
         if ["Ticket","Cash"].include?(option_row["prize_type"])
           value = (option_row["prize_num_value"].to_f * 100).ceil
-          label = "$%0.2f" % (value / 100)
+          label = "$%0.2f" % (value / 100.0)
         elsif option_row["prize_type"] = "Other"
           contains_other_prize_type = true
           value = (option_row["prize_num_value"].to_f * 100).ceil

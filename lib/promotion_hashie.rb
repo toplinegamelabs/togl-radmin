@@ -25,65 +25,62 @@ class PromotionHashie < Hashie::Dash
   property :emails, default:
     {
       "contest_joined" => {
-        "layout" => nil,
-        "subject" => nil,
-        "body" => nil,
+        "layout" => "",
+        "subject" => "",
+        "body" => "",
         "header" => {
-          "image_url" => nil,
-          "target_url" => nil,
-          "color_code" => nil
+          "image_url" => "",
+          "target_url" => "",
+          "color_code" => ""
         }
       },
       "contest_win" => {
-        "layout" => nil,
-        "subject" => nil,
+        "layout" => "",
+        "subject" => "",
         "body" => {
-          "pre" => nil,
-          "post" => nil
+          "pre" => "",
+          "post" => ""
         },
         "header" => {
-          "image_url" => nil,
-          "target_url" => nil,
-          "color_code" => nil
+          "image_url" => "",
+          "target_url" => "",
+          "color_code" => ""
         }
       },
       "contest_loss" => {
-        "layout" => nil,
-        "subject" => nil,
+        "layout" => "",
+        "subject" => "",
         "body" => {
-          "pre" => nil,
-          "post" => nil
+          "pre" => "",
+          "post" => ""
         },
         "header" => {
-          "image_url" => nil,
-          "target_url" => nil,
-          "color_code" => nil
+          "image_url" => "",
+          "target_url" => "",
+          "color_code" => ""
         }
       },
       "contest_tie" => {
-        "layout" => nil,
-        "subject" => nil,
+        "layout" => "",
+        "subject" => "",
         "body" => {
-          "pre" => nil,
-          "post" => nil
+          "pre" => "",
+          "post" => ""
         },
         "header" => {
-          "image_url" => nil,
-          "target_url" => nil,
-          "color_code" => nil
+          "image_url" => "",
+          "target_url" => "",
+          "color_code" => ""
         }
       },
       "contest_available" => {
-        "layout" => nil,
-        "subject" => nil,
-        "body" => {
-          "pre" => nil,
-          "post" => nil
-        },
+        "layout" => "",
+        "subject" => "",
+        "body" => "",
         "header" => {
-          "image_url" => nil,
-          "target_url" => nil,
-          "color_code" => nil
+          "image_url" => "",
+          "target_url" => "",
+          "color_code" => ""
         }
       }
     }

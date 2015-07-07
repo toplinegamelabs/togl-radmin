@@ -16,6 +16,7 @@ class ContestTemplateHashie < Hashie::Dash
     template.size = hash["size"]
     template.is_publicly_joinable = hash["is_publicly_joinable"]
     template.prize_table = hash.fetch("prize_table", {})["overall"]
+
     template
   end
 
