@@ -426,7 +426,7 @@ private
 
         # TODO - looping through prizes should fix this... it's currently one level too high
         if option_row["prize_type"] == "Other"
-          option_row_hash["icon"] = option_row["icon"]
+          option_row_hash["icon"] = JSON.parse(option_row["icon"])
         else
           option_row_hash["icon"] = nil
         end
