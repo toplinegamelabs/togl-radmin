@@ -427,15 +427,16 @@ private
 
         # TODO - looping through prizes should fix this... it's currently one level too high
 puts "------------------------------------------------------"
-puts option_row
+puts option_row["icon"]
+
         if option_row["prize_type"] == "Other"
           begin
-
+            JSON.parse(option_row["icon"])
 puts "a"
-            option_row_hash["icon"] = JSON.parse(option_row["icon"])
+            option_row_hash["icon"] = option_row["icon"]
           rescue JSON::ParserError => e
 puts "b"
-            option_row_hash["icon"] = { "css_class" => "", "unicode" => "", "url" => "" }
+            option_row_hash["icon"] = '{ "css_class": "", "unicode": "", "url": "" }'
           end 
         else
 

@@ -213,7 +213,7 @@
               "type" => "Cash",
               "value" => 100,
               "label" => "",
-              "icon" => '{ "css_class": "", "unicode": "", "url": "" }'
+              "icon" => '{ "css_class":"", "unicode":"", "url":"" }'
             }
           ]
         }]
@@ -257,7 +257,7 @@
                 <%- end %>
                 &nbsp;
                 Icon Hash
-                <%= text_area_tag "prize_table[]options[][icon]", option_row["icon"] %>
+                <%= text_area_tag "prize_table[]options[][icon]", option_row["icon"].present? ? JSON.generate(JSON.parse(option_row["icon"])) : '{ "css_class":"", "unicode":"", "url":"" }' %>
                 &nbsp;
                 <span class="delete_prize" style="display:none;"><a href="javascript:void(0)" onclick="delete_prize(this);">delete prize range</a></span>
               </div>
