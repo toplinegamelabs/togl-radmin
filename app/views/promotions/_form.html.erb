@@ -15,6 +15,12 @@
   <span style="color: #BBB"><%= @promotion_target.username || "No Featured User" %></span>
   <%= hidden_field_tag :username, @promotion_target.username %>
   <br/>
+
+  <%- if @promotion_target.invitation_link.present? %>
+    <%= label_tag "Invite Link" %>
+    <a href="<%= @promotion_target.invitation_link %>"><%= @promotion_target.invitation_link %></a>
+    <br/>
+  <%- end %>
   
   <%= label_tag :game_id, "Game" %>
   <span style="color: #BBB"><%= @promotion_target.contest_template.game.name %></span>
@@ -359,6 +365,41 @@
 <br/>
 
   <em>Welcome Email</em><br/>
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  WORK HERE WORK HERE
+  have a generic method that can enable/disable all email fields
+  <%= check_box_tag :enable_contest_joined_email, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("enabled", true), onchange: "..................();" %>
+  <%= label_tag :enable_contest_joined_email, "Enable" %>
+  <br/>
   <%= check_box_tag :email_contest_joined_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
   <%= label_tag :email_contest_joined_layout_configurable, "Use Configurable Layout" %>
   <br/>
@@ -1087,14 +1128,14 @@
   }
   function add_prize() {
     // only add if last range is below current contest size
-    size = parseInt($("#size").val());
-    end = parseInt($("#prize_rows").children().last().children(".prize_range").children("#prize_table__start_place").val());
+    // size = parseInt($("#size").val());
+    // end = parseInt($("#prize_rows").children().last().children(".prize_range").children("#prize_table__end_place").val());
 
     prev_row = $(".prize_row").last()
     cloned_row = $(".prize_row").last().clone();
 
     // start place is based on prev row
-    prev_end_place = parseInt(prev_row.children(".prize_range").children("#prize_table__start_place").val());
+    prev_end_place = parseInt(prev_row.children(".prize_range").children("#prize_table__end_place").val());
     cloned_row.children(".prize_range").children("#prize_table__start_place").val(prev_end_place+1);
 
     prev_row.children(".prize_options").children().each(function(index) {
@@ -1200,6 +1241,7 @@
         $(this).val($("#size").val());
       }
     });
+    validate();
   }
 
 
