@@ -3,6 +3,7 @@ class PromotionsController < ApplicationController
 
   require 'net/http'
   require 'uri'
+  include ActionView::Helpers::NumberHelper  
 
   def index
     oauth_token = OauthManager.execute(client_app: @current_client_app)
