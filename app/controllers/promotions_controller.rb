@@ -426,13 +426,20 @@ private
 
 
         # TODO - looping through prizes should fix this... it's currently one level too high
+puts "------------------------------------------------------"
+puts option_row
         if option_row["prize_type"] == "Other"
           begin
+
+puts "a"
             option_row_hash["icon"] = JSON.parse(option_row["icon"])
           rescue JSON::ParserError => e
+puts "b"
             option_row_hash["icon"] = { "css_class" => "", "unicode" => "", "url" => "" }
           end 
         else
+
+puts "c"
           option_row_hash["icon"] = nil
         end
         total_value += value

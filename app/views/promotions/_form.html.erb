@@ -141,7 +141,7 @@
         Contest Available
         <br/>
 
-        <em>Email</em><br/>  
+        <em>Email</em><br/>
         <%= check_box_tag :email_contest_available_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
         <%= label_tag :email_contest_available_layout_configurable, "Use Configurable Layout" %>
         <br/>
@@ -365,39 +365,7 @@
 <br/>
 
   <em>Welcome Email</em><br/>
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  WORK HERE WORK HERE
-  have a generic method that can enable/disable all email fields
-  <%= check_box_tag :enable_contest_joined_email, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("enabled", true), onchange: "..................();" %>
+  <%= check_box_tag :enable_contest_joined_email, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("enabled", true), onchange: "update_email_fields('contest_joined');" %>
   <%= label_tag :enable_contest_joined_email, "Enable" %>
   <br/>
   <%= check_box_tag :email_contest_joined_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
@@ -423,6 +391,9 @@
   <br/><br/>
 
   <em>Contest (Win) Email</em><br/>
+  <%= check_box_tag :enable_contest_win_email, :picked, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("enabled", true), onchange: "update_email_fields('contest_win');" %>
+  <%= label_tag :enable_contest_win_email, "Enable (default will be sent if disabled)" %>
+  <br/>
   <%= check_box_tag :email_contest_win_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
   <%= label_tag :email_contest_win_layout_configurable, "Use Configurable Layout" %>
   <br/>
@@ -449,6 +420,9 @@
   <br/><br/>
 
   <em>Contest (Loss) Email</em><br/>  
+  <%= check_box_tag :enable_contest_loss_email, :picked, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("enabled", true), onchange: "update_email_fields('contest_loss');" %>
+  <%= label_tag :enable_contest_loss_email, "Enable (default will be sent if disabled)" %>
+  <br/>
   <%= check_box_tag :email_contest_loss_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
   <%= label_tag :email_contest_loss_layout_configurable, "Use Configurable Layout" %>
   <br/>
@@ -475,6 +449,10 @@
   <br/><br/>
 
   <em>Contest (Tie) Email</em><br/>  
+  <%= check_box_tag :enable_contest_tie_email, :picked, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("enabled", true), onchange: "update_email_fields('contest_tie');" %>
+  <%= label_tag :enable_contest_tie_email, "Enable (default will be sent if disabled)" %>
+  <br/>
+  
   <%= check_box_tag :email_contest_tie_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();" %>
   <%= label_tag :email_contest_tie_layout_configurable, "Use Configurable Layout" %>
   <br/>
@@ -830,11 +808,56 @@
     update_submit(valid);
   }
 
+// *****************************************************************************
+// helpers to change html elements based on given data
+// *****************************************************************************
   function update_submit(valid) {
     if(valid) {
       document.getElementById('submitter').removeAttribute("disabled");
     } else {
       document.getElementById('submitter').setAttribute("disabled", "disabled");
+    }
+  }
+
+  function update_email_fields(email_name) {
+    if($("#enable_" + email_name + "_email:checked").val() == "picked") {
+      document.getElementById("email_" + email_name + "_layout_configurable").removeAttribute("disabled");
+      document.getElementById("email_" + email_name + "_layout").removeAttribute("disabled");
+      document.getElementById("email_" + email_name + "_subject").removeAttribute("disabled");
+      document.getElementById("email_" + email_name + "_header_image_url").removeAttribute("disabled");
+      document.getElementById("email_" + email_name + "_header_color_code").removeAttribute("disabled");
+      document.getElementById("email_" + email_name + "_header_target_url").removeAttribute("disabled");
+      body = document.getElementById("email_" + email_name + "_body")
+      if(body != null) {
+        body.removeAttribute("disabled");
+      }
+      body = document.getElementById("email_" + email_name + "_body_pre")
+      if(body != null) {
+        body.removeAttribute("disabled");
+      }
+      body = document.getElementById("email_" + email_name + "_body_post")
+      if(body != null) {
+        body.removeAttribute("disabled");
+      }
+    } else {
+      document.getElementById("email_" + email_name + "_layout_configurable").setAttribute("disabled", "disabled");
+      document.getElementById("email_" + email_name + "_layout").setAttribute("disabled", "disabled");
+      document.getElementById("email_" + email_name + "_subject").setAttribute("disabled", "disabled");
+      document.getElementById("email_" + email_name + "_header_image_url").setAttribute("disabled", "disabled");
+      document.getElementById("email_" + email_name + "_header_color_code").setAttribute("disabled", "disabled");
+      document.getElementById("email_" + email_name + "_header_target_url").setAttribute("disabled", "disabled");
+      body = document.getElementById("email_" + email_name + "_body")
+      if(body != null) {
+        body.setAttribute("disabled", "disabled");
+      }
+      body = document.getElementById("email_" + email_name + "_body_pre")
+      if(body != null) {
+        body.setAttribute("disabled", "disabled");
+      }
+      body = document.getElementById("email_" + email_name + "_body_post")
+      if(body != null) {
+        body.setAttribute("disabled", "disabled");
+      }
     }
   }
 
