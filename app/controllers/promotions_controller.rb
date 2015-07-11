@@ -120,6 +120,7 @@ class PromotionsController < ApplicationController
           },
         "emails" => {
             "contest_joined" => {
+              "enabled" => params["enable_contest_joined_email"] == "picked",
               "layout" => params["email_contest_joined_layout"],
               "subject" => params["email_contest_joined_subject"],
               "header" => {
@@ -130,6 +131,7 @@ class PromotionsController < ApplicationController
               "body" => params["email_contest_joined_body"].to_s.gsub("\r\n", "")
             },
             "contest_win" => {
+              "enabled" => params["enable_contest_win_email"] == "picked",
               "layout" => params["email_contest_win_layout"],
               "subject" => params["email_contest_win_subject"],
               "header" => {
@@ -143,6 +145,7 @@ class PromotionsController < ApplicationController
               }
             },
             "contest_loss" => {
+              "enabled" => params["enable_contest_loss_email"] == "picked",
               "layout" => params["email_contest_loss_layout"],
               "subject" => params["email_contest_loss_subject"],
               "header" => {
@@ -156,6 +159,7 @@ class PromotionsController < ApplicationController
               }
             },
             "contest_tie" => {
+              "enabled" => params["enable_contest_tie_email"] == "picked",
               "layout" => params["email_contest_tie_layout"],
               "subject" => params["email_contest_tie_subject"],
               "header" => {
@@ -279,6 +283,7 @@ class PromotionsController < ApplicationController
         "display_type" => params["promo_display_type"],
         "emails" => {
           "contest_joined" => {
+            "enabled" => params["enable_contest_joined_email"] == "picked",
             "layout" => params["email_contest_joined_layout"],
             "subject" => params["email_contest_joined_subject"],
             "header" => {
@@ -289,6 +294,7 @@ class PromotionsController < ApplicationController
             "body" => params["email_contest_joined_body"].to_s.gsub("\r\n", "")
           },
           "contest_win" => {
+            "enabled" => params["enable_contest_win_email"] == "picked",
             "layout" => params["email_contest_win_layout"],
             "subject" => params["email_contest_win_subject"],
             "header" => {
@@ -302,6 +308,7 @@ class PromotionsController < ApplicationController
             }
           },
           "contest_loss" => {
+            "enabled" => params["enable_contest_loss_email"] == "picked",
             "layout" => params["email_contest_loss_layout"],
             "subject" => params["email_contest_loss_subject"],
             "header" => {
@@ -315,6 +322,7 @@ class PromotionsController < ApplicationController
             }
           },
           "contest_tie" => {
+            "enabled" => params["enable_contest_tie_email"] == "picked",
             "layout" => params["email_contest_tie_layout"],
             "subject" => params["email_contest_tie_subject"],
             "header" => {
@@ -426,21 +434,13 @@ private
 
 
         # TODO - looping through prizes should fix this... it's currently one level too high
-puts "------------------------------------------------------"
-puts option_row["icon"]
-
         if option_row["prize_type"] == "Other"
           begin
-            JSON.parse(option_row["icon"])
-puts "a"
-            option_row_hash["icon"] = option_row["icon"]
+            option_row_hash["icon"] = JSON.parse(option_row["icon"])
           rescue JSON::ParserError => e
-puts "b"
-            option_row_hash["icon"] = '{ "css_class": "", "unicode": "", "url": "" }'
+            option_row_hash["icon"] = { "css_class" => "", "unicode" => "", "url" => "" }
           end 
         else
-
-puts "c"
           option_row_hash["icon"] = nil
         end
         total_value += value
