@@ -153,13 +153,13 @@
         <span id="email_contest_available_subject_output" style="color: red;"></span>
         <br/>
         <%= label_tag :email_contest_available_header_image_url, "Header Image URL" %>
-        <small>http://</small><%= text_field_tag :email_contest_available_header_image_url, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {}) || {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+        <%= text_field_tag :email_contest_available_header_image_url, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {}) || {})["image_url"] || default_header_image_url, onchange: "validate();" %>
         <br/>
         <%= label_tag :email_contest_available_header_color_code, "Header Color Hex" %>
         <small>#</small><%= text_field_tag :email_contest_available_header_color_code, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {}) || {})["color_code"] || default_header_color_code, onchange: "validate();" %>
         <br/>
         <%= label_tag :email_contest_available_header_target_url, "Header Link Target URL" %>
-        <small>http://</small><%= text_field_tag :email_contest_available_header_target_url, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {}) || {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+        <%= text_field_tag :email_contest_available_header_target_url, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {}) || {})["target_url"] || default_header_target_url, onchange: "validate();" %>
         <br/>
         <%= label_tag :email_contest_available_body, "Body" %>
         <%= text_area_tag :email_contest_available_body, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("body", ""), onchange: "validate();" %>
@@ -213,7 +213,7 @@
               "type" => "Cash",
               "value" => 100,
               "label" => "",
-              "icon" => '{ "css_class":"", "unicode":"", "url":"" }'
+              "icon" => { "css_class" => "", "unicode" => "", "url" => "" }
             }
           ]
         }]
@@ -378,13 +378,13 @@
   <%= text_field_tag :email_contest_joined_subject, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header_image_url, "Header Image URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_joined_header_image_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_header_image_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header_color_code, "Header Color Hex" %>
   <small>#</small><%= text_field_tag :email_contest_joined_header_color_code, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header_target_url, "Header Link Target URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_joined_header_target_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_header_target_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/><br/>
   <%= label_tag :email_contest_joined_body, "Body" %>
   <%= text_area_tag :email_contest_joined_body, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("body", {}), onchange: "validate();" %>
@@ -404,13 +404,13 @@
   <%= text_field_tag :email_contest_win_subject, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header_image_url, "Header Image URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_win_header_image_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_header_image_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header_color_code, "Header Color Hex" %>
   <small>#</small><%= text_field_tag :email_contest_win_header_color_code, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header_target_url, "Header Link Target URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_win_header_target_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_header_target_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_body_pre, "Body (Intro)" %>
   <%= text_area_tag :email_contest_win_body_pre, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("body", {})["pre"], onchange: "validate();" %>
@@ -433,13 +433,13 @@
   <%= text_field_tag :email_contest_loss_subject, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header_image_url, "Header Image URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_loss_header_image_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_header_image_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header_color_code, "Header Color Hex" %>
   <small>#</small><%= text_field_tag :email_contest_loss_header_color_code, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header_target_url, "Header Link Target URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_loss_header_target_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_header_target_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_body_pre, "Body (Intro)" %>
   <%= text_area_tag :email_contest_loss_body_pre, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("body", {})["pre"], onchange: "validate();" %>
@@ -463,13 +463,13 @@
   <%= text_field_tag :email_contest_tie_subject, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("subject", {}), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header_image_url, "Header Image URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_tie_header_image_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_header_image_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header_color_code, "Header Color Hex" %>
   <small>#</small><%= text_field_tag :email_contest_tie_header_color_code, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header_target_url, "Header Link Target URL" %>
-  <small>http://</small><%= text_field_tag :email_contest_tie_header_target_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_header_target_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_body_pre, "Body (Intro)" %>
   <%= text_area_tag :email_contest_tie_body_pre, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("body", {})["pre"], onchange: "validate();" %>

@@ -25,6 +25,7 @@ class PromotionsController < ApplicationController
       @promotion_target.contest_template = ContestTemplateHashie.new
       @promotion_target.contest_template.game = original_contest_template.game
       @promotion_target.contest_template.prize_table = original_contest_template.prize_table
+      @promotion_target.contest_template.buy_in = original_contest_template.buy_in
       @promotion_target.entry = EntryHashie.new
     else
       @promotion_target = PromotionTargetHashie.new
