@@ -498,7 +498,7 @@
     promotion: {
       target: {
         persisted: <%= @promotion_target.persisted? %>,
-        max: <%= @promotion_target.max %>
+        max: <%= @promotion_target.max || 1 %>
       }
     }
   }
