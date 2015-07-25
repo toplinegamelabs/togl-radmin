@@ -12,9 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-
-// gonna disable this 
-// require_tree .
+//= require_tree .
 
 
 
