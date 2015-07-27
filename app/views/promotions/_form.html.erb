@@ -916,8 +916,8 @@
 
   function update_prize_places() {
     // max is the contest size
-    $("input[id=prize_table__start_place]").attr("max",$("#size").val());
-    $("input[id=prize_table__end_place]").attr("max",$("#size").val());
+    $("input[id=prize_table__start_place]").attr("max",$("#size").val() || 0);
+    $("input[id=prize_table__end_place]").attr("max",$("#size").val() || 0);
 
     // force start to be less than max
     $("input[id=prize_table__start_place]").each(function() {
