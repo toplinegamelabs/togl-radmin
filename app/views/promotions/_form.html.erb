@@ -39,6 +39,7 @@
   <%= hidden_field_tag :entry_id, @promotion_target.entry.id %>
   <%= hidden_field_tag :event_set_id, @promotion_target.contest_template.event_set.id %>
   <%= hidden_field_tag :size, @promotion_target.contest_template.size["value"] %>
+  <span id="size_output"></span>
 
   <%- if @promotion_target.max %>
     <%= label_tag :max, "Max Challengers" %>

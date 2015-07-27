@@ -107,6 +107,13 @@ function validateContestTemplate() {
         $("#buy_in_output").text("Total Buy In: $" + ($("#max").val() * working_buy_in).toFixed(2));
       }
     }
+
+    if($("#size").val() < 2) {
+
+      valid = false;
+      $("#size_output").text("Size must be greater than 2");
+      console.log("invalid contest size");
+    }
   }
 
   // *****************************************************************************
