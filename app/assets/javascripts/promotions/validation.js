@@ -227,7 +227,7 @@ function validateEmails() {
 function validateEntry() {
   valid = true;
   $("#entries_output").empty();
-  $("[id^=entry_item_label_").css("color", "black");
+  $("[id^=entry_item_label_]").css("color", "black");
   if($("#skip_entry").prop("checked")) {
     if($("#activation_deadline_date").val() != null && $("#activation_deadline_date").val() != ""
       && $("#activation_deadline_time").val() != null && $("#activation_deadline_time").val() != "") {
@@ -245,7 +245,7 @@ function validateEntry() {
 
     if(valid_entries) {
       $("#entries_output").empty();
-      $("[id^=entry_item_label_").css("color", "black");
+      $("[id^=entry_item_label_]").css("color", "black");
     } else {
       console.log("missing entry");
       valid = false;
