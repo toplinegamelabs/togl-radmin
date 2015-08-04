@@ -6,7 +6,7 @@ class PromotionTargetHashie < Hashie::Dash
   property :promotion, default: PromotionHashie.new
   property :entry, default: EntryHashie.new
   property :contest_type, default: "Contest"
-
+  property :invitation_link
 
   def persisted?
     persisted
@@ -24,7 +24,7 @@ class PromotionTargetHashie < Hashie::Dash
     target.contest_template.event_set = EventSetHashie.build_from_rapi_hash(hash["event_set"])
     target.promotion = PromotionHashie.build_from_rapi_hash(hash["promotion"])
     target.entry = EntryHashie.build_from_rapi_hash(hash["entry"]) if hash["entry"]
-    
+    target.invitation_link = (hash["invitations"].select { |i| i["type"] == "Link" }.first || {})["recipient"] if hash["invitations"]
     target
   end
 end

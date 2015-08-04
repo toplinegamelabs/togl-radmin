@@ -25,6 +25,8 @@ class PromotionsController < ApplicationController
       @promotion_target.contest_template = ContestTemplateHashie.new
       @promotion_target.contest_template.game = original_contest_template.game
       @promotion_target.contest_template.prize_table = original_contest_template.prize_table
+      @promotion_target.contest_template.buy_in = original_contest_template.buy_in
+      @promotion_target.contest_template.size = original_contest_template.size
       @promotion_target.entry = EntryHashie.new
     else
       @promotion_target = PromotionTargetHashie.new
@@ -119,6 +121,7 @@ class PromotionsController < ApplicationController
           },
         "emails" => {
             "contest_joined" => {
+              "enabled" => params["enable_contest_joined_email"] == "picked",
               "layout" => params["email_contest_joined_layout"],
               "subject" => params["email_contest_joined_subject"],
               "header" => {
@@ -129,6 +132,7 @@ class PromotionsController < ApplicationController
               "body" => params["email_contest_joined_body"].to_s.gsub("\r\n", "")
             },
             "contest_win" => {
+              "enabled" => params["enable_contest_win_email"] == "picked",
               "layout" => params["email_contest_win_layout"],
               "subject" => params["email_contest_win_subject"],
               "header" => {
@@ -142,6 +146,7 @@ class PromotionsController < ApplicationController
               }
             },
             "contest_loss" => {
+              "enabled" => params["enable_contest_loss_email"] == "picked",
               "layout" => params["email_contest_loss_layout"],
               "subject" => params["email_contest_loss_subject"],
               "header" => {
@@ -155,6 +160,7 @@ class PromotionsController < ApplicationController
               }
             },
             "contest_tie" => {
+              "enabled" => params["enable_contest_tie_email"] == "picked",
               "layout" => params["email_contest_tie_layout"],
               "subject" => params["email_contest_tie_subject"],
               "header" => {
@@ -278,6 +284,7 @@ class PromotionsController < ApplicationController
         "display_type" => params["promo_display_type"],
         "emails" => {
           "contest_joined" => {
+            "enabled" => params["enable_contest_joined_email"] == "picked",
             "layout" => params["email_contest_joined_layout"],
             "subject" => params["email_contest_joined_subject"],
             "header" => {
@@ -288,6 +295,7 @@ class PromotionsController < ApplicationController
             "body" => params["email_contest_joined_body"].to_s.gsub("\r\n", "")
           },
           "contest_win" => {
+            "enabled" => params["enable_contest_win_email"] == "picked",
             "layout" => params["email_contest_win_layout"],
             "subject" => params["email_contest_win_subject"],
             "header" => {
@@ -301,6 +309,7 @@ class PromotionsController < ApplicationController
             }
           },
           "contest_loss" => {
+            "enabled" => params["enable_contest_loss_email"] == "picked",
             "layout" => params["email_contest_loss_layout"],
             "subject" => params["email_contest_loss_subject"],
             "header" => {
@@ -314,6 +323,7 @@ class PromotionsController < ApplicationController
             }
           },
           "contest_tie" => {
+            "enabled" => params["enable_contest_tie_email"] == "picked",
             "layout" => params["email_contest_tie_layout"],
             "subject" => params["email_contest_tie_subject"],
             "header" => {

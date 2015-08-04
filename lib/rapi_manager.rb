@@ -144,7 +144,6 @@ class RapiManager
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
     end
-
     JSON.parse(json_response.body)
   end
 
