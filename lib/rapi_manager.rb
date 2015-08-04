@@ -1,6 +1,5 @@
 class RapiManager
   def initialize(opts={})
-    @oauth_token = opts.fetch(:oauth_token) { raise 'oauth token required' }
   end
 
 
@@ -9,7 +8,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/games.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
     end
@@ -22,7 +21,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/games/#{game_id}/contest_templates.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -36,7 +35,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/games/#{game_id}/event_sets.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -51,7 +50,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/games/#{game_id}/contest_templates/#{contest_template_id}/event_participants.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
     end
@@ -63,7 +62,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/games/#{game_id}/event_sets/#{event_set_id}/event_participants.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
     end
@@ -75,7 +74,7 @@ class RapiManager
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|
       req.url "/admin/user_lookup.json", { username: username }
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -87,7 +86,7 @@ class RapiManager
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|
       req.url "/admin/user_lookup.json", { user_id: user_id }
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -99,7 +98,7 @@ class RapiManager
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|
       req.url "/admin/user_list.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -112,7 +111,7 @@ class RapiManager
     rapi_conn = get_connection
     json_response = rapi_conn.post do |req|
       req.url '/admin/promotions.json'
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -126,7 +125,7 @@ class RapiManager
     rapi_conn = get_connection
     json_response = rapi_conn.put do |req|
       req.url '/admin/promotions.json'
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -140,7 +139,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/promotions_list.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -155,7 +154,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/promotions_show.json", { identifier: identifier }
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -170,7 +169,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/landing_page_templates.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -184,7 +183,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/landing_page_templates/#{id}.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -198,7 +197,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/landing_pages.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -212,7 +211,7 @@ class RapiManager
 
     json_response = rapi_conn.post do |req|
       req.url '/admin/landing_pages.json'
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -225,7 +224,7 @@ class RapiManager
 
     json_response = rapi_conn.put do |req|
       req.url "/admin/landing_pages/#{id}.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -238,7 +237,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/landing_pages/#{id}.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -252,7 +251,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/promotion_groups/#{id}.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -266,7 +265,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/promotion_groups.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -280,7 +279,7 @@ class RapiManager
 
     json_response = rapi_conn.put do |req|
       req.url "/admin/promotion_groups/#{id}.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -293,7 +292,7 @@ class RapiManager
 
     json_response = rapi_conn.post do |req|
       req.url '/admin/promotion_groups.json'
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -306,7 +305,7 @@ class RapiManager
 
     json_response = rapi_conn.post do |req|
       req.url "/admin/promotion_groups/#{promotion_group_id}/promotion_group_schedules.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -319,7 +318,7 @@ class RapiManager
 
     json_response = rapi_conn.put do |req|
       req.url "/admin/promotion_groups/#{promotion_group_id}/promotion_group_schedules/#{id}.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -332,7 +331,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/promotion_groups/#{promotion_group_id}/promotion_group_schedules.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -345,7 +344,7 @@ class RapiManager
 
     json_response = rapi_conn.delete do |req|
       req.url "/admin/promotion_groups/#{promotion_group_id}/promotion_group_schedules/#{id}.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -358,7 +357,7 @@ class RapiManager
 
     json_response = rapi_conn.get do |req|
       req.url "/admin/promotion_groups/#{promotion_group_id}/promotion_group_schedules/#{id}.json"
-      req.headers['Authorization'] = 'Bearer ' + @oauth_token
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
@@ -370,6 +369,10 @@ class RapiManager
 
 
 private
+
+  def auth_token
+    ENV["AUTH_TOKEN"]
+  end
 
   def admin_token
     ENV['ADMIN_TOKEN']

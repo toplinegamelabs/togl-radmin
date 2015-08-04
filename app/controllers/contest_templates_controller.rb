@@ -4,8 +4,7 @@ class ContestTemplatesController < ApplicationController
   def index
 
     # note: limited to h2h only for challenges
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
-    rapi_response = RapiManager.new(oauth_token: oauth_token).list_contest_templates(params[:game_id])
+    rapi_response = RapiManager.new.list_contest_templates(params[:game_id])
 
     @contest_templates = []
     rapi_response["event_sets"].each do |event_set|

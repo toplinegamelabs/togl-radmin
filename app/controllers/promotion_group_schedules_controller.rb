@@ -7,8 +7,7 @@ class PromotionGroupSchedulesController < ApplicationController
   def index
     Time.zone = "America/Los_Angeles"
     @promotion_group_id = params[:promotion_group_id]
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
-    @promotion_group_schedules = RapiManager.new(oauth_token: oauth_token).list_promotion_group_schedules(@promotion_group_id).collect do |s|
+    @promotion_group_schedules = RapiManager.new.list_promotion_group_schedules(@promotion_group_id).collect do |s|
       PromotionGroupScheduleHashie.build_from_rapi_hash(s)
     end
   end
@@ -16,14 +15,12 @@ class PromotionGroupSchedulesController < ApplicationController
   def edit
     Time.zone = "America/Los_Angeles"
     @promotion_group_id = params[:promotion_group_id]
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
-    @schedule = PromotionGroupScheduleHashie.build_from_rapi_hash(RapiManager.new(oauth_token: oauth_token).show_promotion_group_schedule(@promotion_group_id, params[:id]))
+    @schedule = PromotionGroupScheduleHashie.build_from_rapi_hash(RapiManager.new.show_promotion_group_schedule(@promotion_group_id, params[:id]))
   end
 
   def create
     Time.zone = "America/Los_Angeles"
     @promotion_group_id = params[:promotion_group_id]
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
     
     schedule_params = {
       "promotion_group_schedule" => {
@@ -37,7 +34,7 @@ class PromotionGroupSchedulesController < ApplicationController
       }
     }
 
-    create_response = RapiManager.new(oauth_token: oauth_token).create_promotion_group_schedule(@promotion_group_id, schedule_params.to_json)
+    create_response = RapiManager.new.create_promotion_group_schedule(@promotion_group_id, schedule_params.to_json)
 
     if create_response.status == 200
       flash.keep[:notice] = "Schedule created!"
@@ -50,7 +47,7 @@ class PromotionGroupSchedulesController < ApplicationController
       flash.now[:error] = errors_text
     end
 
-    @promotion_group_schedules = RapiManager.new(oauth_token: oauth_token).list_promotion_group_schedules(@promotion_group_id).collect do |s|
+    @promotion_group_schedules = RapiManager.new.list_promotion_group_schedules(@promotion_group_id).collect do |s|
       PromotionGroupScheduleHashie.build_from_rapi_hash(s)
     end
     render :index
@@ -60,7 +57,6 @@ class PromotionGroupSchedulesController < ApplicationController
   def update
     Time.zone = "America/Los_Angeles"
     @promotion_group_id = params[:promotion_group_id]
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
     
     schedule_params = {
       "promotion_group_schedule" => {
@@ -75,7 +71,7 @@ class PromotionGroupSchedulesController < ApplicationController
       }
     }
 
-    put_response = RapiManager.new(oauth_token: oauth_token).put_promotion_group_schedule(@promotion_group_id, params[:id], schedule_params.to_json)
+    put_response = RapiManager.new.put_promotion_group_schedule(@promotion_group_id, params[:id], schedule_params.to_json)
 
     if put_response.status == 200
       flash.keep[:notice] = "Schedule updated!"
@@ -88,7 +84,7 @@ class PromotionGroupSchedulesController < ApplicationController
       flash.now[:error] = errors_text
     end
 
-    @promotion_group_schedules = RapiManager.new(oauth_token: oauth_token).list_promotion_group_schedules(@promotion_group_id).collect do |s|
+    @promotion_group_schedules = RapiManager.new.list_promotion_group_schedules(@promotion_group_id).collect do |s|
       PromotionGroupScheduleHashie.build_from_rapi_hash(s)
     end
     redirect_to promotion_group_promotion_group_schedules_path(promotion_group_id: params[:promotion_group_id])
@@ -96,8 +92,7 @@ class PromotionGroupSchedulesController < ApplicationController
 
   def destroy
     @promotion_group_id = params[:promotion_group_id]
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
-    RapiManager.new(oauth_token: oauth_token).destroy_promotion_group_schedule(@promotion_group_id, params[:id])
+    RapiManager.new.destroy_promotion_group_schedule(@promotion_group_id, params[:id])
     flash.keep[:notice] = "Schedule deleted"
     redirect_to :back    
   end

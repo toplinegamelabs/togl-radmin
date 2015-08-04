@@ -6,16 +6,16 @@ class PromotionsController < ApplicationController
   include ActionView::Helpers::NumberHelper  
 
   def index
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
-    @promotions = RapiManager.new(oauth_token: oauth_token).list_promotions["promotions"].select { |p| p.present? }
+    
+    @promotions = RapiManager.new.list_promotions["promotions"].select { |p| p.present? }
   end
 
   def new
     if params[:id]
 
-      oauth_token = OauthManager.execute(client_app: @current_client_app)
-      promo_contest = RapiManager.new(oauth_token: oauth_token).show_promotion_by_identifier(params[:id])
-      user = RapiManager.new(oauth_token: oauth_token).show_user_by_id(promo_contest["creator_id"])
+      
+      promo_contest = RapiManager.new.show_promotion_by_identifier(params[:id])
+      user = RapiManager.new.show_user_by_id(promo_contest["creator_id"])
       promo_contest["username"] = user["username"]
 
       @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
@@ -30,38 +30,37 @@ class PromotionsController < ApplicationController
       @promotion_target = PromotionTargetHashie.new
     end
 
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
-    rapi_response = RapiManager.new(oauth_token: oauth_token).list_games
+    rapi_response = RapiManager.new.list_games
 
     @games = [[]] + rapi_response["games"].collect do |game|
       [game["name"], game["id"]]
     end
 
-    @promotion_groups = [[]] + RapiManager.new(oauth_token: oauth_token).list_promotion_groups.collect do |group|
+    @promotion_groups = [[]] + RapiManager.new.list_promotion_groups.collect do |group|
       [group["identifier"], group["id"]]
     end
   end
 
   def edit
     @allow_client_app_selector = false
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
-    promo_contest = RapiManager.new(oauth_token: oauth_token).show_promotion_by_identifier(params[:id])
+    
+    promo_contest = RapiManager.new.show_promotion_by_identifier(params[:id])
     if promo_contest["creator_id"]
-      user = RapiManager.new(oauth_token: oauth_token).show_user_by_id(promo_contest["creator_id"])
+      user = RapiManager.new.show_user_by_id(promo_contest["creator_id"])
       promo_contest["username"] = user["username"] 
     end
 
     @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
     @promotion_target.persisted = true
 
-    @promotion_groups = [[]] + RapiManager.new(oauth_token: oauth_token).list_promotion_groups.collect do |group|
+    @promotion_groups = [[]] + RapiManager.new.list_promotion_groups.collect do |group|
       [group["identifier"], group["id"]]
     end
   end
 
   def update_by_identifier
     Time.zone = "America/Los_Angeles"
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
+    
   
     entry_hash = { "id" => params[:entry_id], "entry_items" => [] }
     unless params["skip_entry"]
@@ -186,13 +185,13 @@ class PromotionsController < ApplicationController
         "display_type" => params["promo_display_type"]
       }
     }
-    update_response = RapiManager.new(oauth_token: oauth_token).update_promotion(put_params.to_json)
+    update_response = RapiManager.new.update_promotion(put_params.to_json)
 
     if update_response.status == 204
       flash.keep[:notice] = "Promotion updated!"
       redirect_to promotions_path
     else
-      promo_contest = RapiManager.new(oauth_token: oauth_token).show_promotion_by_identifier(params["promo_identifier"])
+      promo_contest = RapiManager.new.show_promotion_by_identifier(params["promo_identifier"])
       promo_contest["username"] = params[:username]
       put_params["promotion"]["description"] = put_params["promotion"]["description"].split("\r\n")
       promo_contest["promotion"].merge!(put_params["promotion"])
@@ -201,7 +200,7 @@ class PromotionsController < ApplicationController
 
       @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
       @promotion_target.persisted = true
-      @promotion_groups = [[]] + RapiManager.new(oauth_token: oauth_token).list_promotion_groups.collect do |group|
+      @promotion_groups = [[]] + RapiManager.new.list_promotion_groups.collect do |group|
         [group["identifier"], group["id"]]
       end
 
@@ -212,7 +211,7 @@ class PromotionsController < ApplicationController
 
   def create
     Time.zone = "America/Los_Angeles"
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
+    
     entry_hash = { "entry_items" => [] }
     unless params["skip_entry"]
       (params["entry_item"] || []).each_with_index do |entry_item, index|
@@ -340,18 +339,18 @@ class PromotionsController < ApplicationController
         }
       }
     }
-    create_response = RapiManager.new(oauth_token: oauth_token).create_promo(post_params.to_json)
+    create_response = RapiManager.new.create_promo(post_params.to_json)
 
     if create_response.status == 201
       flash.keep[:notice] = "Promotion created!"
       redirect_to promotions_path
     else
-      rapi_response = RapiManager.new(oauth_token: oauth_token).list_games
+      rapi_response = RapiManager.new.list_games
       @games = [[]] + rapi_response["games"].collect do |game|
         [game["name"], game["id"]]
       end
 
-      @promotion_groups = [[]] + RapiManager.new(oauth_token: oauth_token).list_promotion_groups.collect do |group|
+      @promotion_groups = [[]] + RapiManager.new.list_promotion_groups.collect do |group|
         [group["identifier"], group["id"]]
       end
 
@@ -391,8 +390,7 @@ class PromotionsController < ApplicationController
 
 
   def identifier_check
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
-    rapi_response = RapiManager.new(oauth_token: oauth_token).list_promotions.select { |p| p.present? }
+    rapi_response = RapiManager.new.list_promotions.select { |p| p.present? }
 
     exists = rapi_response.select { |promo_contest| promo_contest["promotion"]["identifier"].to_s.downcase == params[:identifier].to_s.downcase }.present?
 

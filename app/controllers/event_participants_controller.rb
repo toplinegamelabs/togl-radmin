@@ -2,8 +2,7 @@ class EventParticipantsController < ApplicationController
   before_filter :require_user
 
   def index
-    oauth_token = OauthManager.execute(client_app: @current_client_app)
-    rapi_manager = RapiManager.new(oauth_token: oauth_token)
+    rapi_manager = RapiManager.new
     if params[:contest_template_id]
       ep_response = rapi_manager.list_event_participants_by_contest_template(params[:game_id], params[:contest_template_id])
     elsif params[:event_set_id]
