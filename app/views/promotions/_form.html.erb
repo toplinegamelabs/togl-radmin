@@ -835,11 +835,17 @@
     prev_end_place = parseInt(prev_row.children(".prize_range").children("#prize_table__end_place").val());
     cloned_row.children(".prize_range").children("#prize_table__start_place").val(prev_end_place+1);
 
-    prev_row.children(".prize_options").children().each(function(index) {
-      selection = $(prev_row.children(".prize_options").children()[index]).children("#prize_table_prize_type_").val();
-      $(cloned_row.children(".prize_options").children()[index]).children("#prize_table_prize_type_").val(selection);
-    });
+
     cloned_row.appendTo($("#prize_rows"));
+
+
+
+    prev_row.children(".prize_options").children().each(function(index) {
+      selection = $(prev_row.children(".prize_options").children()[index]).children("#prize_table_options__prize_type").val();
+      icon = $(prev_row.children(".prize_options").children()[index]).children("#prize_table_options__icon").val();
+      $(cloned_row.children(".prize_options").children()[index]).children("#prize_table_options__prize_type").val(selection);
+      $(cloned_row.children(".prize_options").children()[index]).children("#prize_table_options__icon").val(icon);
+    });
 
 
     increment_prize_row_index(cloned_row);
@@ -856,10 +862,12 @@
 
   function add_prize_option(element) {
     container = $(element).parent().parent().parent();
-    prev_val = $(element).parent().parent().children("#prize_table_prize_type_").val();
+    prev_type = $(element).parent().parent().children("#prize_table_options__prize_type").val();
+    prev_icon =  $(element).parent().parent().children("#prize_table_options__icon").val();
     cloned = $(element).parent().parent().clone();
     cloned.appendTo($(element).parent().parent().parent());
-    cloned.children("#prize_table_prize_type_").val(prev_val);
+    cloned.children("#prize_table_options__prize_type").val(prev_type);
+    cloned.children("#prize_table_options__icon").val(prev_icon);
 
 
     increment_prize_row_index(cloned.parent());

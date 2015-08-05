@@ -363,7 +363,6 @@ class PromotionsController < ApplicationController
       @promotion_groups = [[]] + RapiManager.new.list_promotion_groups.collect do |group|
         [group["identifier"], group["id"]]
       end
-
       promo_contest = {
         "persisted" => false,
         "promotion" => { },
