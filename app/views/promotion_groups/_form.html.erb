@@ -1,12 +1,10 @@
-  <%= label_tag :promo_identifier, "Promo Identifier" %>
-
+<%= label_tag :promo_identifier, "Promo Identifier" %>
 <%- if @promo_group.persisted? %>
   <span style="color: #BBB"><%= @promo_group.identifier %></span>
   <%= hidden_field_tag :identifier, @promo_group.identifier %>
 <%- else %>
   <%= text_field_tag :identifier, @promo_group.identifier %>
 <%- end %>
-
 <br/>
 
 <%= label_tag :landing_page_id, "Landing Page"%> 
@@ -14,14 +12,17 @@
   options_for_select(@landing_pages.collect { |page| [page["name"], page["id"]] }, @promo_group.landing_page_id) %> 
 <br/>
 
-
 <%= label_tag :ends_at, "Ends On" %>
 <%= date_field_tag :ends_at, @promo_group.ends_at.present? ? DateTime.parse(@promo_group.ends_at).strftime("%Y-%m-%d") : nil %>
 @ 11:59PM Pacific
 <br/>
 
 <%= label_tag :user_group, "Has private user group"%>
-<%= select_tag :user_group, options_for_select([false, true], @promo_group.has_user_group) %> 
+<% if @promo_group.persisted? %>
+  <span style="color: #BBB"><%= @promo_group.has_user_group %></span>
+<% else %>
+  <%= select_tag :user_group, options_for_select([false, true], @promo_group.has_user_group) %> 
+<% end %>
 <br/>
 
 <br/>
