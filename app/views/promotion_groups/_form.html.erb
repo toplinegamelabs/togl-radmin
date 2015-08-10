@@ -19,6 +19,11 @@
 <%= date_field_tag :ends_at, @promo_group.ends_at.present? ? DateTime.parse(@promo_group.ends_at).strftime("%Y-%m-%d") : nil %>
 @ 11:59PM Pacific
 <br/>
+
+<%= label_tag :user_group, "Has private user group"%>
+<%= select_tag :user_group, options_for_select([false, true], @promo_group.has_user_group) %> 
+<br/>
+
 <br/>
 <%= submit_tag "Submit", id: "submitter" %>
 
