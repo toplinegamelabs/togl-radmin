@@ -64,7 +64,8 @@ class PromotionGroupsController < ApplicationController
       "promotion_group" => {
         "identifier" => params[:identifier],
         "landing_page_id" => params[:landing_page_id],
-        "ends_at" => Time.zone.parse(params[:ends_at])
+        "ends_at" => Time.zone.parse(params[:ends_at]),
+        "user_group" => params[:user_group] == 'true'
       }
     }
 
@@ -78,7 +79,7 @@ class PromotionGroupsController < ApplicationController
 
       errors_hash = JSON.parse(create_response.body)
       errors_text = errors_hash.keys.collect { |key|
-        "#{key.to_s} - #{errors_hash[key].join(";")}"
+        "#{key.to_s} - #{errors_hash[key]}"
       }.join("\n")
 
       flash.now[:error] = errors_text
