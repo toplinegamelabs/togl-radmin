@@ -413,6 +413,7 @@ private
     prizes = []
     params["prize_table"].each do |prize_row|
       contains_other_prize_type = false
+      prize_description_override = nil
       total_value = 0
       prizes_hash = []
       prize_row["options"].each do |option_row|
@@ -421,6 +422,7 @@ private
           label = "$%0.2f" % (value / 100.0)
         elsif option_row["prize_type"] == "Other"
           contains_other_prize_type = true
+          prize_description_override = option_row["prize_description_override"] if option_row["prize_description_override"].present?
           value = (option_row["prize_num_value"].to_f * 100).ceil
           label = option_row["prize_txt_value"]
         end
@@ -447,7 +449,11 @@ private
       end
 
       if contains_other_prize_type
-        total_value_label = "Estimated total value: $#{number_with_precision(total_value / 100.0, :precision => 2, :delimiter => ',')}"
+        if prize_description_override
+          total_value_label = prize_description_override
+        else
+          total_value_label = "Estimated total value: $#{number_with_precision(total_value / 100.0, :precision => 2, :delimiter => ',')}"
+        end
       else
         total_value_label = nil
       end
