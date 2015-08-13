@@ -248,18 +248,26 @@
                 <span class="delete_prize_option"><a href="javascript:void(0)" onclick="alert('we should keep at least one prize around');">-</a></span>
                 
                 &nbsp;
-                <%= select_tag "prize_table[]options[][prize_type]", options_for_select(["Cash","Ticket","Other"],option_row["type"]), onchange: "prize_type_changed(this);" %>
+                <%= select_tag "prize_table[]options[][prize_type]", options_for_select(["Cash","Ticket","Other"], option_row["type"]), onchange: "prize_type_changed(this);" %>
                 &nbsp;
                 <%- if option_row["type"] == "Other" %>      
                   <span class="dollar_value_label" style="text-align: right;width: 60px;display: inline-block;">Value</span>
                   <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", "%0.2f" % (option_row["value"].to_f / 100), min: 1, step: "any", size: "3" %></span>
                   <span class="text_value_label">Label</span>
                   <span class="text_prize_value"><%= text_field_tag "prize_table[]options[][prize_txt_value]", option_row["label"] %></span>
-                <%- else %>
+                  <span class="description_label">Description: </span>
+                  <span class="description_value"><i><%= prize_row["total_value_label"] %></i>&nbsp;</span>
+                  <span class="description_override_label">Description Override</span>
+                  <span class="description_override_value"><%= text_field_tag "prize_table[]options[][prize_description_override]", "", placeholder: "(optional)" %></span>
+                 <%- else %>
                   <span class="dollar_value_label" style="text-align: right;width: 60px;display: inline-block;">Value</span>
                   <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", "%0.2f" % (option_row["value"].to_f / 100), min: 1, step: "any", size: "3" %></span>
                   <span class="text_value_label">Label</span>
                   <span class="text_prize_value"><%= text_field_tag "prize_table[]options[][prize_txt_value]", "" %></span>
+                  <span class="description_label">Description: </span>
+                  <span class="description_value"><i>will be generated</i>&nbsp;</span>
+                  <span class="description_override_label">Description Override</span>
+                  <span class="description_override_value"><%= text_field_tag "prize_table[]options[][prize_description_override]", "", placeholder: "(optional)" %></span>
                 <%- end %>
                 &nbsp;
                 Icon Hash
@@ -799,30 +807,43 @@
 
   function prize_type_changed(element) {
     if($(element).val() == "Other") {
-      // $(element).siblings(".text_value_label").show();
-      // $(element).siblings(".text_prize_value").show();
+      $(element).siblings(".text_value_label").show();
+      $(element).siblings(".text_prize_value").show();
       // $(element).siblings(".dollar_prize_value").show();
       $(element).siblings(".dollar_value_label").text("Value");
       $(element).siblings(".text_value_label").css("color", "black");
       $(element).siblings(".text_prize_value").children().attr("disabled", null);
+      $(element).siblings(".description_label").show();
+      $(element).siblings(".description_value").show();
+      $(element).siblings(".description_override_label").show();
+      $(element).siblings(".description_override_value").show();
     } else if ($(element).val() == "Ticket") {
-      // $(element).siblings(".text_prize_value").hide();
-      // $(element).siblings(".text_value_label").hide();
+      $(element).siblings(".text_prize_value").hide();
+      $(element).siblings(".text_value_label").hide();
       // $(element).siblings(".dollar_prize_value").show();
       $(element).siblings(".dollar_value_label").text("Value");
       $(element).siblings(".text_prize_value").children().val("");
       $(element).siblings(".text_value_label").css("color", "grey");
       $(element).siblings(".text_prize_value").children().attr("disabled", "disabled");
+      $(element).siblings(".description_label").hide();
+      $(element).siblings(".description_value").hide();
+      $(element).siblings(".description_override_label").hide();
+      $(element).siblings(".description_override_value").hide();
     } else if ($(element).val() == "Cash") {
-      // $(element).siblings(".text_prize_value").hide();
-      // $(element).siblings(".text_value_label").hide();
+      $(element).siblings(".text_prize_value").hide();
+      $(element).siblings(".text_value_label").hide();
       // $(element).siblings(".dollar_prize_value").show();
       $(element).siblings(".dollar_value_label").text("Amount");
       $(element).siblings(".text_value_label").css("color", "grey");
       $(element).siblings(".text_prize_value").children().val("");
       $(element).siblings(".text_prize_value").children().attr("disabled", "disabled");
+      $(element).siblings(".description_label").hide();
+      $(element).siblings(".description_value").hide();
+      $(element).siblings(".description_override_label").hide();
+      $(element).siblings(".description_override_value").hide();
     }
   }
+  
   function add_prize() {
     // only add if last range is below current contest size
     // size = parseInt($("#size").val());
@@ -835,9 +856,11 @@
     prev_end_place = parseInt(prev_row.children(".prize_range").children("#prize_table__end_place").val());
     cloned_row.children(".prize_range").children("#prize_table__start_place").val(prev_end_place+1);
 
+    //clear new description
+    cloned_row.children(".prize_options").children(".prize_option").children(".description_value").html('<i>will be generated<i>&nbsp;');
+
 
     cloned_row.appendTo($("#prize_rows"));
-
 
 
     prev_row.children(".prize_options").children().each(function(index) {
