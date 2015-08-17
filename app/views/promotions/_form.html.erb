@@ -259,6 +259,8 @@
                   <span class="description_value"><i><%= prize_row["total_value_label"] %></i>&nbsp;</span>
                   <span class="description_override_label">Description Override</span>
                   <span class="description_override_value"><%= text_field_tag "prize_table[]options[][prize_description_override]", "", placeholder: "(optional)" %></span>
+                  <span class="reward_identifer_label">Reward Identifier</span>
+                  <span class="reward_identifer_value"><%= text_field_tag "prize_table[]options[][prize_reward_identifer]", option_row["reward_identifier"], placeholder: "(optional)"%></span>
                  <%- else %>
                   <span class="dollar_value_label" style="text-align: right;width: 60px;display: inline-block;">Value</span>
                   <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", "%0.2f" % (option_row["value"].to_f / 100), min: 1, step: "any", size: "3" %></span>
@@ -268,6 +270,8 @@
                   <span class="description_value"><i>will be generated</i>&nbsp;</span>
                   <span class="description_override_label">Description Override</span>
                   <span class="description_override_value"><%= text_field_tag "prize_table[]options[][prize_description_override]", "", placeholder: "(optional)" %></span>
+                  <span class="reward_identifer_label">Reward Identifier</span>
+                  <span class="reward_identifer_value"><%= text_field_tag "prize_table[]options[][prize_reward_identifer]", "", placeholder: "(optional)" %></span>
                 <%- end %>
                 &nbsp;
                 Icon Hash
@@ -279,6 +283,7 @@
           </div>
           <div class="prize_option_output" style="float: left; color: red;"></div>
           <div style="clear: both;"></div>
+          <hr>
         </div>
     <%- end %>
 
@@ -817,6 +822,8 @@
       $(element).siblings(".description_value").show();
       $(element).siblings(".description_override_label").show();
       $(element).siblings(".description_override_value").show();
+      $(element).siblings(".reward_identifer_label").show();
+      $(element).siblings(".reward_identifer_value").show();
     } else if ($(element).val() == "Ticket") {
       $(element).siblings(".text_prize_value").hide();
       $(element).siblings(".text_value_label").hide();
@@ -829,6 +836,8 @@
       $(element).siblings(".description_value").hide();
       $(element).siblings(".description_override_label").hide();
       $(element).siblings(".description_override_value").hide();
+      $(element).siblings(".reward_identifer_label").hide();
+      $(element).siblings(".reward_identifer_value").hide();
     } else if ($(element).val() == "Cash") {
       $(element).siblings(".text_prize_value").hide();
       $(element).siblings(".text_value_label").hide();
@@ -841,6 +850,8 @@
       $(element).siblings(".description_value").hide();
       $(element).siblings(".description_override_label").hide();
       $(element).siblings(".description_override_value").hide();
+      $(element).siblings(".reward_identifer_label").hide();
+      $(element).siblings(".reward_identifer_value").hide();
     }
   }
   
