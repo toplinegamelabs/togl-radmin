@@ -256,7 +256,7 @@
                   <span class="text_value_label">Label</span>
                   <span class="text_prize_value"><%= text_field_tag "prize_table[]options[][prize_txt_value]", option_row["label"] %></span>
                   <span class="description_label">Description: </span>
-                  <span class="description_value"><%= text_field_tag "prize_table[]options[][prize_description_override]", prize_row["total_value_label"], placeholder: "(optional)" %></span>
+                  <span class="description_value"><%= text_field_tag "prize_table[]options[][prize_description_override]", prize_row["total_value_label"], placeholder: "(will be generated)" %></span>
                   <span class="reward_identifer_label">Reward Identifier</span>
                   <span class="reward_identifer_value"><%= text_field_tag "prize_table[]options[][prize_reward_identifer]", option_row["reward_identifier"], placeholder: "(optional)"%></span>
                  <%- else %>
