@@ -1,9 +1,9 @@
-require 'rapi_manager'
-require 'game_hashie'
-require 'event_set_hashie'
-require 'contest_template_hashie'
-require 'contest_hashie'
-require 'models/contest_seed'
+require "#{Rails.root}/lib/rapi_manager"
+require "#{Rails.root}/lib/game_hashie"
+require "#{Rails.root}/lib/event_set_hashie"
+require "#{Rails.root}/lib/contest_template_hashie"
+require "#{Rails.root}/lib/contest_hashie"
+require "#{Rails.root}/app/models/contest_seed"
 
 class ContestSeeder
   class << self
