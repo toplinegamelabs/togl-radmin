@@ -1,4 +1,8 @@
-Dir[File.dirname(__FILE__)].each {|file| require file }
+require 'rapi_manager'
+require 'game_hashie'
+require 'event_set_hashie'
+require 'contest_template_hashie'
+require 'contest_hashie'
 
 class ContestSeeder
   class << self
