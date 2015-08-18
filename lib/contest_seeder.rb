@@ -3,7 +3,7 @@ require 'game_hashie'
 require 'event_set_hashie'
 require 'contest_template_hashie'
 require 'contest_hashie'
-require 'contest_seed'
+require 'models/contest_seed'
 
 class ContestSeeder
   class << self
