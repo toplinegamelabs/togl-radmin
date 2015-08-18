@@ -252,22 +252,22 @@
                 &nbsp;
                 <%- if option_row["type"] == "Other" %>      
                   <span class="dollar_value_label" style="text-align: right;width: 60px;display: inline-block;">Value</span>
-                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", "%0.2f" % (option_row["value"].to_f / 100), min: 1, step: "any", size: "3" %></span>
+                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", "%0.2f" % (option_row["value"].to_f / 100), min: 1, step: "any", size: "3", onchange: "clear_prize_description(this);" %></span>
                   <span class="text_value_label">Label</span>
                   <span class="text_prize_value"><%= text_field_tag "prize_table[]options[][prize_txt_value]", option_row["label"] %></span>
                   <span class="description_label">Description: </span>
-                  <span class="description_value"><i><%= prize_row["total_value_label"] %></i>&nbsp;</span>
-                  <span class="description_override_label">Description Override</span>
-                  <span class="description_override_value"><%= text_field_tag "prize_table[]options[][prize_description_override]", "", placeholder: "(optional)" %></span>
+                  <span class="description_value"><%= text_field_tag "prize_table[]options[][prize_description_override]", prize_row["total_value_label"], placeholder: "(optional)" %></span>
+                  <span class="reward_identifer_label">Reward Identifier</span>
+                  <span class="reward_identifer_value"><%= text_field_tag "prize_table[]options[][prize_reward_identifer]", option_row["reward_identifier"], placeholder: "(optional)"%></span>
                  <%- else %>
                   <span class="dollar_value_label" style="text-align: right;width: 60px;display: inline-block;">Value</span>
-                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", "%0.2f" % (option_row["value"].to_f / 100), min: 1, step: "any", size: "3" %></span>
+                  <span class="dollar_prize_value">$<%= number_field_tag "prize_table[]options[][prize_num_value]", "%0.2f" % (option_row["value"].to_f / 100), min: 1, step: "any", size: "3", onchange: "clear_prize_description(this);" %></span>
                   <span class="text_value_label">Label</span>
                   <span class="text_prize_value"><%= text_field_tag "prize_table[]options[][prize_txt_value]", "" %></span>
                   <span class="description_label">Description: </span>
-                  <span class="description_value"><i>will be generated</i>&nbsp;</span>
-                  <span class="description_override_label">Description Override</span>
-                  <span class="description_override_value"><%= text_field_tag "prize_table[]options[][prize_description_override]", "", placeholder: "(optional)" %></span>
+                  <span class="description_value"><%= text_field_tag "prize_table[]options[][prize_description_override]", "", placeholder: "(will be generated)" %></span>
+                  <span class="reward_identifer_label">Reward Identifier</span>
+                  <span class="reward_identifer_value"><%= text_field_tag "prize_table[]options[][prize_reward_identifer]", "", placeholder: "(optional)" %></span>
                 <%- end %>
                 &nbsp;
                 Icon Hash
@@ -279,6 +279,7 @@
           </div>
           <div class="prize_option_output" style="float: left; color: red;"></div>
           <div style="clear: both;"></div>
+          <hr>
         </div>
     <%- end %>
 
@@ -815,8 +816,8 @@
       $(element).siblings(".text_prize_value").children().attr("disabled", null);
       $(element).siblings(".description_label").show();
       $(element).siblings(".description_value").show();
-      $(element).siblings(".description_override_label").show();
-      $(element).siblings(".description_override_value").show();
+      $(element).siblings(".reward_identifer_label").show();
+      $(element).siblings(".reward_identifer_value").show();
     } else if ($(element).val() == "Ticket") {
       $(element).siblings(".text_prize_value").hide();
       $(element).siblings(".text_value_label").hide();
@@ -827,8 +828,8 @@
       $(element).siblings(".text_prize_value").children().attr("disabled", "disabled");
       $(element).siblings(".description_label").hide();
       $(element).siblings(".description_value").hide();
-      $(element).siblings(".description_override_label").hide();
-      $(element).siblings(".description_override_value").hide();
+      $(element).siblings(".reward_identifer_label").hide();
+      $(element).siblings(".reward_identifer_value").hide();
     } else if ($(element).val() == "Cash") {
       $(element).siblings(".text_prize_value").hide();
       $(element).siblings(".text_value_label").hide();
@@ -839,11 +840,23 @@
       $(element).siblings(".text_prize_value").children().attr("disabled", "disabled");
       $(element).siblings(".description_label").hide();
       $(element).siblings(".description_value").hide();
-      $(element).siblings(".description_override_label").hide();
-      $(element).siblings(".description_override_value").hide();
+      $(element).siblings(".reward_identifer_label").hide();
+      $(element).siblings(".reward_identifer_value").hide();
     }
   }
   
+  // called when $ amount is changed
+  function clear_prize_description(element) {
+    var prize_row = $(element).parent().parent();
+    var description = prize_row.children(".description_value").children("#prize_table_options__prize_description_override");
+    reset_prize_description(description);
+  }
+
+  function reset_prize_description(description) {
+    description.val('');
+    description.attr("placeholder", "(will be generated)");
+  }
+
   function add_prize() {
     // only add if last range is below current contest size
     // size = parseInt($("#size").val());
@@ -856,8 +869,8 @@
     prev_end_place = parseInt(prev_row.children(".prize_range").children("#prize_table__end_place").val());
     cloned_row.children(".prize_range").children("#prize_table__start_place").val(prev_end_place+1);
 
-    //clear new description
-    cloned_row.children(".prize_options").children(".prize_option").children(".description_value").html('<i>will be generated<i>&nbsp;');
+    var description = cloned_row.children(".prize_options").children(".prize_option").children(".description_value").children("#prize_table_options__prize_description_override");
+    reset_prize_description(description);
 
 
     cloned_row.appendTo($("#prize_rows"));
