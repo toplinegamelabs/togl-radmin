@@ -44,7 +44,30 @@ class RapiManager
     JSON.parse(json_response.body)
   end
 
-  
+  def list_open_contests(game_id, event_set_id)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/games/#{game_id}/event_sets/#{event_set_id}/open_contests"
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+    end
+
+    JSON.parse(json_response.body)
+  end
+
+  def create_empty_contest(contest_template_id)
+    rapi_conn = get_connection
+    json_response = rapi_conn.post do |req|
+      req.url "/admin/contest_templates/#{contest_template_id}/create_empty_contest"
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+  end
+
   def list_event_participants_by_contest_template(game_id, contest_template_id)
     rapi_conn = get_connection
 
@@ -57,6 +80,7 @@ class RapiManager
 
     JSON.parse(json_response.body)
   end
+
   def list_event_participants_by_event_set(game_id, event_set_id)
     rapi_conn = get_connection
 
@@ -106,7 +130,6 @@ class RapiManager
     JSON.parse(json_response.body)
   end
 
-
   def create_promo(params)
     rapi_conn = get_connection
     json_response = rapi_conn.post do |req|
@@ -119,8 +142,6 @@ class RapiManager
     end
   end
 
-  
-
   def update_promotion(params)
     rapi_conn = get_connection
     json_response = rapi_conn.put do |req|
@@ -132,7 +153,6 @@ class RapiManager
       req.body = params
     end
   end
-
 
   def list_promotions
     rapi_conn = get_connection
@@ -147,7 +167,6 @@ class RapiManager
     JSON.parse(json_response.body)
   end
 
-
   def show_promotion_by_identifier(identifier)
     rapi_conn = get_connection
 
@@ -161,7 +180,6 @@ class RapiManager
 
     JSON.parse(json_response.body)["challenge"] || JSON.parse(json_response.body)["contest"]
   end
-
 
   def list_landing_page_templates
     rapi_conn = get_connection
@@ -338,6 +356,7 @@ class RapiManager
 
     JSON.parse(json_response.body)    
   end
+
   def destroy_promotion_group_schedule(promotion_group_id, id)
     rapi_conn = get_connection
 
@@ -351,6 +370,7 @@ class RapiManager
 
     JSON.parse(json_response.body)    
   end
+
   def show_promotion_group_schedule(promotion_group_id, id)
     rapi_conn = get_connection
 
@@ -366,8 +386,7 @@ class RapiManager
   end
 
 
-
-private
+  private
 
   def auth_token
     ENV["AUTH_TOKEN"]
@@ -386,7 +405,7 @@ private
 
     Faraday.new(:url => "#{url}") do |faraday|
       faraday.request  :url_encoded             # form-encode POST params
-      faraday.response :logger                  # log requests to STDOUT
+      # faraday.response :logger                  # log requests to STDOUT
       faraday.adapter  Faraday.default_adapter  # make requests with Net::HTTP
     end
   end

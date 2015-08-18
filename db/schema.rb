@@ -11,10 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141201181840) do
+ActiveRecord::Schema.define(version: 20150817182319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "contest_seeds", force: true do |t|
+    t.string  "game_identifier",                           null: false
+    t.integer "size",                                      null: false
+    t.integer "buy_in",                                    null: false
+    t.integer "minutes_before_lock_cutoff", default: 60,   null: false
+    t.boolean "is_active",                  default: true, null: false
+  end
+
+  add_index "contest_seeds", ["game_identifier", "size", "buy_in"], name: "index_contest_seeds_on_game_identifier_and_size_and_buy_in", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                          null: false
