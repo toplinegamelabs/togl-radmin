@@ -1,4 +1,4 @@
-require 'rapi_manager'
+Dir[File.dirname(__FILE__)].each {|file| require file }
 
 class ContestSeeder
   class << self
