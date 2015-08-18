@@ -1,3 +1,5 @@
+require 'rapi_manager'
+
 class ContestSeeder
   class << self
     def seed_needed_contests
