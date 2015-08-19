@@ -8,7 +8,7 @@ class ContestHashie < Hashie::Dash
 
     contest.contest_template = ContestTemplateHashie.build_from_rapi_hash(hash["contest_template"])
     contest.is_invite_only = hash["is_invite_only"]
-    contest.user_contests_count = hash["num_entries"]
+    contest.num_entries = hash["num_entries"]
 
     contest
   end
