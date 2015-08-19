@@ -6,7 +6,6 @@ class PromotionsController < ApplicationController
   include ActionView::Helpers::NumberHelper  
 
   def index
-    
     @promotions = RapiManager.new.list_promotions["promotions"].select { |p| p.present? }
   end
 
