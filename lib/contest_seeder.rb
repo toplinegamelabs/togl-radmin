@@ -21,7 +21,7 @@ class ContestSeeder
                                                                                      contest_template.is_publicly_creatable? &&
                                                                                      contest_template.lock_time > Time.now + contest_seed.minutes_before_lock_cutoff.minutes}.first
             if contest_template && open_contests.select{|contest| contest.contest_template.id == contest_template.id &&
-                                                                  contest.user_contests_count < contest_seed.size &&
+                                                                  contest.num_entries < contest_seed.size &&
                                                                   !contest.is_invite_only?}.count == 0
               rapi_manager.create_empty_contest(contest_template.id)
             end
