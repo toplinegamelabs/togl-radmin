@@ -4,7 +4,7 @@ class ContestSeed < ActiveRecord::Base
   validates_presence_of :buy_in
   validates_presence_of :minutes_before_lock_cutoff
 
-  validates_uniqueness_of :game_identifier, scope: [:size, :buy_in]
+  validates_uniqueness_of :game_identifier, scope: [:size, :buy_in], message: "Game identifier, size, buy_in combination already exists"
 
   before_create :set_defaults, on: :create
 

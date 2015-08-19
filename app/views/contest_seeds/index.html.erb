@@ -1,0 +1,39 @@
+
+<%= link_to "New Contest Seed", new_contest_seed_path %>
+
+
+<br/>
+<br/>
+<table>
+  <tr>
+    <th>Game</th>
+    <th>Contest Size</th>
+    <th>Buy In</th>
+    <th>Lock Time Cutoff</th>
+    <th>Active?</th>
+    <th>&nbsp;</th>
+  </tr>
+<%- @contest_seeds.each do |contest_seed| %>
+  <tr>
+    <td>
+      <%= contest_seed.game_identifier %>
+    </td>
+    <td>
+      <%= contest_seed.size %>
+    </td>
+    <td>
+      <%= "$%0.2f" % (contest_seed.buy_in / 100.0) %>
+    </td>
+    <td>
+      <%= distance_of_time_in_words(contest_seed.minutes_before_lock_cutoff.minutes) %>
+    </td>
+    <td>
+      <%= contest_seed.is_active? ? "YES" : "NO" %>
+    </td>
+    <td>
+      <%= link_to "Edit", edit_contest_seed_path(contest_seed.id) %>
+      <%= link_to "Delete", contest_seed_path(contest_seed.id), method: :delete, confirm: "Sure?" %>
+    </td>
+  </tr>
+<%- end %>
+</table>

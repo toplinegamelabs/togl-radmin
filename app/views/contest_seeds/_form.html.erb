@@ -1,0 +1,28 @@
+<%= form_for @contest_seed do |f| %>
+
+  <%= f.label :game_identifier, "Game" %><br/>
+  <%= f.select :game_identifier, @games %><br/>
+  <%= f.label :size, "Contest Size" %><br/>
+  <%= f.select :size, [2, 3, 5, 10] %><br/>
+  <%= f.label :buy_in, "Buy In" %><br/>
+  <%= f.select :buy_in, 
+    [
+      ["FREE", 0],
+      ["$1", 100],
+      ["$2", 200],
+      ["$5", 500],
+      ["$10", 1000],
+      ["$20", 2000],
+      ["$50", 5000],
+      ["$100", 10000]
+    ] %><br/>
+
+  <%= f.label :minutes_before_lock_cutoff, "Cutoff Before Lock Time" %><br/>
+  <%= f.number_field :minutes_before_lock_cutoff %> minutes<br/>
+
+
+  <br/>
+
+  <%= f.submit "Submit" %>
+
+<% end %>
