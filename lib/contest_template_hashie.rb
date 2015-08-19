@@ -20,7 +20,7 @@ class ContestTemplateHashie < Hashie::Dash
     template.is_publicly_joinable = hash["is_publicly_joinable"]
     template.prize_table = hash.fetch("prize_table", {})["overall"]
     template.state = hash["state"]
-    template.lock_time = Time.parse(hash["lock_time"])
+    template.lock_time = Time.parse(hash["lock_time"]) if hash["lock_time"]
     template.is_publicly_creatable = hash["is_publicly_creatable"]
 
     template

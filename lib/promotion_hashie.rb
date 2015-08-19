@@ -15,6 +15,12 @@ class PromotionHashie < Hashie::Dash
       "unicode" => "e683" 
     }
 
+  property :prize_source, default:
+    {
+      "label" => "",
+      "image_url" => ""
+    }
+
   property :images, default: 
     {
       "desktop" => {},
@@ -98,6 +104,7 @@ class PromotionHashie < Hashie::Dash
     promo.display_type = hash["display_type"]
     promo.name_logo = hash["name_logo"]
     promo.images = hash["images"]
+    promo.prize_source = hash["prize_source"]
     promo.emails = hash["emails"]
     promo.promotion_group_id = hash["promotion_group_id"]
     # sometimes it comes in as a date (especially when form is in an error state, and we need a string here
