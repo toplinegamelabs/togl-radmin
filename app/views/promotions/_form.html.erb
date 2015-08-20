@@ -320,6 +320,13 @@
   <%= label_tag :promo_description, "Description" %>
   <%= text_area_tag :promo_description, @promotion_target.promotion.description, onchange: "validate();" %>
   <br/>
+
+  <%= label_tag :prize_source_label, "Prize Source Label" %>
+  <%= text_field_tag :prize_source_label, @promotion_target.promotion.prize_source["label"], onchange: "validate();" %>
+  <br/>
+  <%= label_tag :prize_source_image_url, "Prize Source Image URL" %>
+  <%= text_field_tag :prize_source_image_url, @promotion_target.promotion.prize_source["image_url"], onchange: "validate();" %>
+  <br/>
   
   <%= label_tag :invitation_hashtag, "Invitation Hashtag" %>
   <%= text_field_tag :invitation_hashtag, @promotion_target.promotion.invitation_hashtag %>

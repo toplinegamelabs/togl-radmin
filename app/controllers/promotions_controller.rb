@@ -101,6 +101,10 @@ class PromotionsController < ApplicationController
         "is_pending" => params["skip_entry"] == "picked",
         "invitation_hashtag" => params["invitation_hashtag"],
         "notification" => activation_deadline.present? ? params["notification"] : nil,
+        "prize_source" => {
+          "label" => params["prize_source_label"],
+          "image_url" => params["prize_source_image_url"]
+        },
         "images" => {
             "mobile" => {
               "banner" => params["promo_mobile_banner"],
@@ -259,6 +263,10 @@ class PromotionsController < ApplicationController
         "is_pending" => params["skip_entry"] == "picked",
         "invitation_hashtag" => params["invitation_hashtag"],
         "notification" => activation_deadline.present? ? params["notification"] : nil,
+        "prize_source" => {
+          "label" => params["prize_source_label"],
+          "image_url" => params["prize_source_image_url"]
+        },
         "images" => {
             "mobile" => {
               "banner" => params["promo_mobile_banner"],
