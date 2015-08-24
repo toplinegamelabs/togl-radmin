@@ -2,7 +2,9 @@ class ContestSeedsController < ApplicationController
   before_filter :require_user
   before_filter :get_games, except: [:index, :destroy]
   def index
-    @contest_seeds = ContestSeed.all.sort
+    @contest_seeds = ContestSeed.all.sort_by do |contest_seed|
+      [contest_seed.game_identifier, contest_seed.size, contest_seed.buy_in]
+    end
   end
 
   def new
