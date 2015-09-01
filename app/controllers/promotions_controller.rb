@@ -50,7 +50,19 @@ class PromotionsController < ApplicationController
       user = RapiManager.new.show_user_by_id(promo_contest["creator_id"])
       promo_contest["username"] = user["username"] 
     end
-
+    puts "HUHUHUHU"
+    puts "HUHUHUHU"
+    puts "HUHUHUHU"
+    puts "HUHUHUHU"
+    puts "HUHUHUHU"
+    puts "HUHUHUHU"
+puts promo_contest.inspect
+    puts "HUHUHUHU"
+    puts "HUHUHUHU"
+    puts "HUHUHUHU"
+    puts "HUHUHUHU"
+    puts "HUHUHUHU"
+    puts "HUHUHUHU"
     @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
     @promotion_target.persisted = true
 
@@ -122,6 +134,23 @@ class PromotionsController < ApplicationController
               "badge" => params["promo_tablet_badge"]
             }
           },
+        "pushes" => {
+          "contest_win" => {
+            "enabled" => params["enable_contest_win_push"] == "picked",
+            "target_type" => params["push_contest_win_link_target_type"],
+            "message" => params["push_contest_win_push_message"]
+          },
+          "contest_loss" => {
+            "enabled" => params["enable_contest_loss_push"] == "picked",
+            "target_type" => params["push_contest_loss_link_target_type"],
+            "message" => params["push_contest_loss_push_message"]
+          },
+          "contest_tie" => {
+            "enabled" => params["enable_contest_tie_push"] == "picked",
+            "target_type" => params["push_contest_tie_link_target_type"],
+            "message" => params["push_contest_tie_push_message"]
+          }
+        },
         "emails" => {
             "contest_joined" => {
               "enabled" => params["enable_contest_joined_email"] == "picked",
@@ -132,7 +161,11 @@ class PromotionsController < ApplicationController
                 "target_url" => params["email_contest_joined_header_target_url"],
                 "color_code" => params["email_contest_joined_header_color_code"]
               },
-              "body" => params["email_contest_joined_body"].to_s.gsub("\r\n", "")
+              "body" => params["email_contest_joined_body"].to_s.gsub("\r\n", "<br/>"),
+              "action_button" => {
+                "target_type" => params["email_contest_joined_action_button_target_type"],
+                "label" => params["email_contest_joined_action_button_label"]
+              }
             },
             "contest_win" => {
               "enabled" => params["enable_contest_win_email"] == "picked",
@@ -144,8 +177,12 @@ class PromotionsController < ApplicationController
                 "color_code" => params["email_contest_win_header_color_code"]
               },
               "body" => {
-                "pre" => params["email_contest_win_body_pre"].to_s.gsub("\r\n", ""),
-                "post" => params["email_contest_win_body_post"].to_s.gsub("\r\n", "")
+                "pre" => params["email_contest_win_body_pre"].to_s.gsub("\r\n", "<br/>"),
+                "post" => params["email_contest_win_body_post"].to_s.gsub("\r\n", "<br/>")
+              },
+              "action_button" => {
+                "target_type" => params["email_contest_win_action_button_target_type"],
+                "label" => params["email_contest_win_action_button_label"]
               }
             },
             "contest_loss" => {
@@ -158,8 +195,12 @@ class PromotionsController < ApplicationController
                 "color_code" => params["email_contest_loss_header_color_code"]
               },
               "body" => {
-                "pre" => params["email_contest_loss_body_pre"].to_s.gsub("\r\n", ""),
-                "post" => params["email_contest_loss_body_post"].to_s.gsub("\r\n", "")
+                "pre" => params["email_contest_loss_body_pre"].to_s.gsub("\r\n", "<br/>"),
+                "post" => params["email_contest_loss_body_post"].to_s.gsub("\r\n", "<br/>")
+              },
+              "action_button" => {
+                "target_type" => params["email_contest_loss_action_button_target_type"],
+                "label" => params["email_contest_loss_action_button_label"]
               }
             },
             "contest_tie" => {
@@ -172,8 +213,12 @@ class PromotionsController < ApplicationController
                 "color_code" => params["email_contest_tie_header_color_code"]
               },
               "body" => {
-                "pre" => params["email_contest_tie_body_pre"].to_s.gsub("\r\n", ""),
-                "post" => params["email_contest_tie_body_post"].to_s.gsub("\r\n", "")
+                "pre" => params["email_contest_tie_body_pre"].to_s.gsub("\r\n", "<br/>"),
+                "post" => params["email_contest_tie_body_post"].to_s.gsub("\r\n", "<br/>")
+              },
+              "action_button" => {
+                "target_type" => params["email_contest_tie_action_button_target_type"],
+                "label" => params["email_contest_tie_action_button_label"]
               }
             },
             "contest_available" => {
@@ -184,7 +229,10 @@ class PromotionsController < ApplicationController
                 "target_url" => params["email_contest_available_header_target_url"],
                 "color_code" => params["email_contest_available_header_color_code"]
               },
-              "body" => params["email_contest_available_body"].to_s.gsub("\r\n", "")
+              "body" => params["email_contest_available_body"].to_s.gsub("\r\n", "<br/>"),
+              "action_button" => {
+                "label" => params["email_contest_available_action_button_label"]
+              }
             }
           },
         "name_logo" => {
@@ -289,6 +337,23 @@ class PromotionsController < ApplicationController
             "css_class" => params["promo_logo_css_class"]
           },
         "display_type" => params["promo_display_type"],
+        "pushes" => {
+          "contest_win" => {
+            "enabled" => params["enable_contest_win_push"] == "picked",
+            "target_type" => params["push_contest_win_link_target_type"],
+            "message" => params["push_contest_win_push_message"]
+          },
+          "contest_loss" => {
+            "enabled" => params["enable_contest_loss_push"] == "picked",
+            "target_type" => params["push_contest_loss_link_target_type"],
+            "message" => params["push_contest_loss_push_message"]
+          },
+          "contest_tie" => {
+            "enabled" => params["enable_contest_tie_push"] == "picked",
+            "target_type" => params["push_contest_tie_link_target_type"],
+            "message" => params["push_contest_tie_push_message"]
+          }
+        },
         "emails" => {
           "contest_joined" => {
             "enabled" => params["enable_contest_joined_email"] == "picked",
@@ -299,7 +364,7 @@ class PromotionsController < ApplicationController
               "target_url" => params["email_contest_joined_header_target_url"],
               "color_code" => params["email_contest_joined_header_color_code"]
             },
-            "body" => params["email_contest_joined_body"].to_s.gsub("\r\n", "")
+            "body" => params["email_contest_joined_body"].to_s.gsub("\r\n", "<br/>")
           },
           "contest_win" => {
             "enabled" => params["enable_contest_win_email"] == "picked",
@@ -311,8 +376,12 @@ class PromotionsController < ApplicationController
               "color_code" => params["email_contest_win_header_color_code"]
             },
             "body" => {
-              "pre" => params["email_contest_win_body_pre"].to_s.gsub("\r\n", ""),
-              "post" => params["email_contest_win_body_post"].to_s.gsub("\r\n", "")
+              "pre" => params["email_contest_win_body_pre"].to_s.gsub("\r\n", "<br/>"),
+              "post" => params["email_contest_win_body_post"].to_s.gsub("\r\n", "<br/>")
+            },
+            "action_button" => {
+              "target_type" => params["email_contest_win_action_button_target_type"],
+              "label" => params["email_contest_win_action_button_label"]
             }
           },
           "contest_loss" => {
@@ -325,8 +394,12 @@ class PromotionsController < ApplicationController
               "color_code" => params["email_contest_loss_header_color_code"]
             },
             "body" => {
-              "pre" => params["email_contest_loss_body_pre"].to_s.gsub("\r\n", ""),
-              "post" => params["email_contest_loss_body_post"].to_s.gsub("\r\n", "")
+              "pre" => params["email_contest_loss_body_pre"].to_s.gsub("\r\n", "<br/>"),
+              "post" => params["email_contest_loss_body_post"].to_s.gsub("\r\n", "<br/>")
+            },
+            "action_button" => {
+              "target_type" => params["email_contest_loss_action_button_target_type"],
+              "label" => params["email_contest_loss_action_button_label"]
             }
           },
           "contest_tie" => {
@@ -339,8 +412,12 @@ class PromotionsController < ApplicationController
               "color_code" => params["email_contest_tie_header_color_code"]
             },
             "body" => {
-              "pre" => params["email_contest_tie_body_pre"].to_s.gsub("\r\n", ""),
-              "post" => params["email_contest_tie_body_post"].to_s.gsub("\r\n", "")
+              "pre" => params["email_contest_tie_body_pre"].to_s.gsub("\r\n", "<br/>"),
+              "post" => params["email_contest_tie_body_post"].to_s.gsub("\r\n", "<br/>")
+            },
+            "action_button" => {
+              "target_type" => params["email_contest_tie_action_button_target_type"],
+              "label" => params["email_contest_tie_action_button_label"]
             }
           },
           "contest_available" => {
@@ -351,7 +428,10 @@ class PromotionsController < ApplicationController
               "target_url" => params["email_contest_available_header_target_url"],
               "color_code" => params["email_contest_available_header_color_code"]
             },
-            "body" => params["email_contest_available_body"].to_s.gsub("\r\n", "")
+            "body" => params["email_contest_available_body"].to_s.gsub("\r\n", "<br/>"),
+            "action_button" => {
+              "label" => params["email_contest_available_action_button_label"]
+            }
           }
         }
       }

@@ -28,6 +28,25 @@ class PromotionHashie < Hashie::Dash
       "tablet" => {}
     }
 
+  property :pushes, default:
+    {
+      "contest_win" => {
+        "enabled" => true,
+        "message" => "",
+        "target_type" => ""
+      },
+      "contest_loss" => {
+        "enabled" => true,
+        "message" => "",
+        "target_type" => ""
+      },
+      "contest_tie" => {
+        "enabled" => true,
+        "message" => "",
+        "target_type" => ""
+      }
+    }
+
   property :emails, default:
     {
       "contest_joined" => {
@@ -53,6 +72,10 @@ class PromotionHashie < Hashie::Dash
           "image_url" => "",
           "target_url" => "",
           "color_code" => ""
+        },
+        "action_buton" => {
+          "target_type" => "",
+          "label" => ""
         }
       },
       "contest_loss" => {
@@ -67,6 +90,10 @@ class PromotionHashie < Hashie::Dash
           "image_url" => "",
           "target_url" => "",
           "color_code" => ""
+        },
+        "action_buton" => {
+          "target_type" => "",
+          "label" => ""
         }
       },
       "contest_tie" => {
@@ -81,6 +108,10 @@ class PromotionHashie < Hashie::Dash
           "image_url" => "",
           "target_url" => "",
           "color_code" => ""
+        },
+        "action_buton" => {
+          "target_type" => "",
+          "label" => ""
         }
       },
       "contest_available" => {
@@ -92,6 +123,10 @@ class PromotionHashie < Hashie::Dash
           "image_url" => "",
           "target_url" => "",
           "color_code" => ""
+        },
+        "action_buton" => {
+          "target_type" => "",
+          "label" => ""
         }
       }
     }
@@ -106,6 +141,7 @@ class PromotionHashie < Hashie::Dash
     promo.images = hash["images"]
     promo.prize_source = hash["prize_source"] if hash["prize_source"]
     promo.emails = hash["emails"]
+    promo.pushes = hash["pushes"]
     promo.promotion_group_id = hash["promotion_group_id"]
     # sometimes it comes in as a date (especially when form is in an error state, and we need a string here
     promo.activation_deadline = hash["activation_deadline"].to_s

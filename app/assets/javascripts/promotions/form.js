@@ -1,47 +1,65 @@
 function updateEmails() {
+  custom_layouts = ["cbs", "cbs_small_footer", "configurable"];
+
+
   if($("#email_contest_available_layout_configurable").prop("checked")) {
     $("#email_contest_available_layout").val("configurable");
     $("#email_contest_available_layout").prop("readonly", true);
-    $("[id^=email_contest_available_header").prop( "readonly", false);
   } else {
     $("#email_contest_available_layout").prop("readonly", false);
-    $("[id^=email_contest_available_header").prop( "readonly", true);
+  }
+  if(custom_layouts.indexOf($("#email_contest_available_layout").val()) >= 0) {
+    $("[id^=email_contest_available_header]").prop( "readonly", false);
+  } else {
+    $("[id^=email_contest_available_header]").prop( "readonly", true);
   }
 
   if($("#email_contest_joined_layout_configurable").prop("checked")) {
     $("#email_contest_joined_layout").val("configurable");
     $("#email_contest_joined_layout").prop("readonly", true);
-    $("[id^=email_contest_joined_header").prop( "readonly", false);
   } else {
     $("#email_contest_joined_layout").prop("readonly", false);
-    $("[id^=email_contest_joined_header").prop( "readonly", true);
+  }
+  if(custom_layouts.indexOf($("#email_contest_joined_layout").val()) >= 0) {
+    $("[id^=email_contest_joined_header]").prop( "readonly", false);
+  } else {
+    $("[id^=email_contest_joined_header]").prop( "readonly", true);
   }
 
   if($("#email_contest_win_layout_configurable").prop("checked")) {
     $("#email_contest_win_layout").val("configurable");
     $("#email_contest_win_layout").prop("readonly", true);
-    $("[id^=email_contest_win_header").prop( "readonly", false);
   } else {
     $("#email_contest_win_layout").prop("readonly", false);
-    $("[id^=email_contest_win_header").prop( "readonly", true);
+  }
+  if(custom_layouts.indexOf($("#email_contest_win_layout").val()) >= 0) {
+    $("[id^=email_contest_win_header]").prop( "readonly", false);
+  } else {
+    $("[id^=email_contest_win_header]").prop( "readonly", true);
   }
 
   if($("#email_contest_loss_layout_configurable").prop("checked")) {
     $("#email_contest_loss_layout").val("configurable");
     $("#email_contest_loss_layout").prop("readonly", true);
-    $("[id^=email_contest_loss_header").prop( "readonly", false);
   } else {
     $("#email_contest_loss_layout").prop("readonly", false);
-    $("[id^=email_contest_loss_header").prop( "readonly", true);
+  }
+  if(custom_layouts.indexOf($("#email_contest_loss_layout").val()) >= 0) {
+    $("[id^=email_contest_loss_header]").prop( "readonly", false);
+  } else {
+    $("[id^=email_contest_loss_header]").prop( "readonly", true);
   }
 
   if($("#email_contest_tie_layout_configurable").prop("checked")) {
     $("#email_contest_tie_layout").val("configurable");
     $("#email_contest_tie_layout").prop("readonly", true);
-    $("[id^=email_contest_tie_header").prop( "readonly", false);
   } else {
     $("#email_contest_tie_layout").prop("readonly", false);
-    $("[id^=email_contest_tie_header").prop( "readonly", true);
+  }
+  if(custom_layouts.indexOf($("#email_contest_tie_layout").val()) >= 0) {
+    $("[id^=email_contest_tie_header]").prop( "readonly", false);
+  } else {
+    $("[id^=email_contest_tie_header]").prop( "readonly", true);
   }
 }
 
@@ -99,3 +117,16 @@ function update_email_fields(email_name) {
     }
   }
 }
+
+function update_push_fields(push_name) {
+  if($("#enable_" + push_name + "_push:checked").val() == "picked") {
+    document.getElementById("push_" + push_name + "_push_message").removeAttribute("disabled");
+    document.getElementById("push_" + push_name + "_link_target_type_home").removeAttribute("disabled");
+    document.getElementById("push_" + push_name + "_link_target_type_my_contest").removeAttribute("disabled");
+  } else {
+    document.getElementById("push_" + push_name + "_push_message").setAttribute("disabled", "disabled");
+    document.getElementById("push_" + push_name + "_link_target_type_home").setAttribute("disabled", "disabled");
+    document.getElementById("push_" + push_name + "_link_target_type_my_contest").setAttribute("disabled", "disabled");
+  }
+}
+
