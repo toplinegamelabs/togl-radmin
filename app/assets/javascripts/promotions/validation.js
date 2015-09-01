@@ -88,8 +88,8 @@ function validateContestTemplate() {
   }
   if($("input[name=c_or_c]:checked").val() == "challenge" || user_found) {
     var working_buy_in;
-    if(buy_in != null && buy_in != "") {
-      working_buy_in = buy_in;
+    if(dailymvp.buy_in != null && dailymvp.buy_in != "") {
+      dailymvp.buy_in = buy_in;
     } else {
       working_buy_in = $("#buy_in").val();
     }

@@ -659,7 +659,9 @@
     //document.getElementById('contest_template_id').setAttribute("disabled", "disabled");
     balance = 0;
   <%- if @promotion_target.persisted? %>
-    buy_in = <%= @promotion_target.contest_template.buy_in["value"] %>;
+    dailymvp.buy_in = <%= @promotion_target.contest_template.buy_in["value"].to_i || 0 %>;
+  <%- else %>
+    dailymvp.buy_in = 0;
   <%- end %>
     unique_identifier = true;
   
