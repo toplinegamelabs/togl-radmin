@@ -558,8 +558,7 @@
   <%= label_tag :push_contest_loss_link_target_type, "My Contest" %>
   <br/><br/>
 
-  <em>Custom Contest (Tie) Email</em><br/>  
-  <%= @promotion_target.promotion.emails %>
+  <em>Custom Contest (Tie) Email</em><br/>
   <%= check_box_tag :enable_contest_tie_email, :picked, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("enabled", true), onchange: "update_email_fields('contest_tie');" %>
   <%= label_tag :enable_contest_tie_email, "Enable (default will be sent if disabled)" %>
   <br/>
