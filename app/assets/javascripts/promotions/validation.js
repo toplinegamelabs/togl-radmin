@@ -6,32 +6,9 @@ function validate() {
   valid = valid && validatePromotionTarget();
   valid = valid && validateContestTemplate();
   valid = valid && validateEmails();
-
-
-
-
-
-
-
-
-
-
-
-  
   // are we valid?
-  update_submit(valid);
+  updateSubmit(valid);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 function validateBasicPromotionDetails() {
   valid = true;
