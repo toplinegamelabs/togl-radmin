@@ -385,6 +385,20 @@ class RapiManager
     JSON.parse(json_response.body)    
   end
 
+  def get_date_range_metrics(start_date, end_date)
+    rapi_conn = get_connection
+
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/metrics/date_range_stats.json?start_date=#{start_date}&end_date=#{end_date}"
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+
+    JSON.parse(json_response.body)    
+  end
+
 
   private
 

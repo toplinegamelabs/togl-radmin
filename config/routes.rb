@@ -36,6 +36,9 @@ ToglAdmin::Application.routes.draw do
     end
   end
 
+  get "/metrics", to: "metrics#choose_date_range"
+  post "/metrics", to: "metrics#view"
+
 
 
   put "/client_apps" => "application#update_client_app"
