@@ -36,7 +36,8 @@ ToglAdmin::Application.routes.draw do
     end
   end
 
-  resources :metrics, only: [:index, :create]
+  get "/metrics", to: "metrics#choose_date_range"
+  post "/metrics", to: "metrics#view"
 
 
 
