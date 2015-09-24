@@ -1,0 +1,25 @@
+<%= form_tag "/metrics", method: :post do %>
+
+  <%= label_tag :from_year, "From:  Year:" %>
+  <%= select_tag :from_year, options_for_select([Date.today.year-1, Date.today.year]) %>
+  <%= label_tag :from_month, "Month:" %>
+  <%= select_tag :from_month, options_for_select([1,2,3,4,5,6,7,8,9,10,11,12]) %>
+  <%= label_tag :from_day, "Day:" %>
+  <%= select_tag :from_day, options_for_select([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]) %>
+
+  <br/>
+  <br/>
+
+  <%= label_tag :to_year, "To:  Year:" %>
+  <%= select_tag :to_year, options_for_select([Date.today.year-1, Date.today.year]) %>
+  <%= label_tag :to_month, "Month:" %>
+  <%= select_tag :to_month, options_for_select([1,2,3,4,5,6,7,8,9,10,11,12]) %>
+  <%= label_tag :to_day, "Day:" %>
+  <%= select_tag :to_day, options_for_select([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]) %>
+
+  <br/>
+  <br/>
+
+  <%= submit_tag "Submit", id: "submitter" %>
+
+<% end %>

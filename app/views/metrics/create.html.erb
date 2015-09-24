@@ -1,0 +1,17 @@
+Statistics from <%= Date.parse(@response['start_time']) %> to <%= Date.parse(@response['end_time']) %>
+<br/>
+All date boundaries are on Los Angeles local time
+<br/><br/>
+<strong>Signups: </strong> <%= @response['signups'] %><br/>
+Of those <%= @response['signups'] %>, <%= @response['signups_that_played'] %> entered a contest<br/>
+Of those <%= @response['signups'] %>, <%= @response['signups_that_deposited'] %> deposited<br/>
+Of those <%= @response['signups'] %>, <%= @response['signups_that_played_cash'] %> entered a contest with cash<br/>
+<br/>
+<strong>Entries Created: </strong> <%= @response['entry_count'] %><br/>
+<strong>Deposits: </strong> <%= @response['deposits'] %> totalling <%= @response['deposit_sum'] %><br/>
+<strong>Depositing Users: </strong> <%= @response['depositing_users'] %> (unique users that deposited)<br/>
+<strong>New Depositing Users: </strong> <%= @response['users_with_first_deposit'] %> (unique users that deposited for the first time)<br/>
+<strong>Actives: </strong> <%= @response['actives'] %> (unique users that entered a contest)<br/>
+<strong>New Actives: </strong> <%= @response['new_actives'] %> (unique users that entered a contest for the first time)<br/>
+<strong>Paid Actives: </strong> <%= @response['paid_actives'] %> (unique users that entered a contest with cash)<br/>
+<strong>New Paid Actives: </strong> <%= @response['new_paid_actives'] %> (unique users that entered a contest with cash for the first time)<br/>

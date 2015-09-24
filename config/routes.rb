@@ -36,6 +36,8 @@ ToglAdmin::Application.routes.draw do
     end
   end
 
+  resources :metrics, only: [:index, :create]
+
 
 
   put "/client_apps" => "application#update_client_app"
