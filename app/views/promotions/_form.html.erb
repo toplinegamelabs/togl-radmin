@@ -395,7 +395,7 @@
   <%= text_field_tag :email_contest_joined_layout, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
   <br/>
   <%= label_tag :email_contest_joined_subject, "Subject" %>
-  <%= text_field_tag :email_contest_joined_subject, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_subject, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {})["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header_image_url, "Header Image URL" %>
   <%= text_field_tag :email_contest_joined_header_image_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
@@ -435,7 +435,7 @@
   <%= text_field_tag :email_contest_win_layout, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
   <br/>
   <%= label_tag :email_contest_win_subject, "Subject" %>
-  <%= text_field_tag :email_contest_win_subject, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_subject, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {})["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header_image_url, "Header Image URL" %>
   <%= text_field_tag :email_contest_win_header_image_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
@@ -502,7 +502,7 @@
   <%= text_field_tag :email_contest_loss_layout, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
   <br/>
   <%= label_tag :email_contest_loss_subject, "Subject" %>
-  <%= text_field_tag :email_contest_loss_subject, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_subject, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {})["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header_image_url, "Header Image URL" %>
   <%= text_field_tag :email_contest_loss_header_image_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
@@ -568,7 +568,7 @@
   <%= text_field_tag :email_contest_tie_layout, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
   <br/>
   <%= label_tag :email_contest_tie_subject, "Subject" %>
-  <%= text_field_tag :email_contest_tie_subject, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_subject, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {})["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header_image_url, "Header Image URL" %>
   <%= text_field_tag :email_contest_tie_header_image_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
