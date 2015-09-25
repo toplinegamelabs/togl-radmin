@@ -325,7 +325,7 @@ private
     {
       "contest_joined" => {
         "enabled" => params["enable_contest_joined_email"] == "picked",
-        "custom" => params["email_contest_joined_is_custom"] == "picked",
+        "custom" => true,
         "content" => {
           "layout" => params["email_contest_joined_layout"],
           "subject" => params["email_contest_joined_subject"],
@@ -364,7 +364,7 @@ private
       },
       "contest_loss" => {
         "enabled" => params["enable_contest_loss_email"] == "picked",
-        "enabled" => params["email_contest_loss_is_custom"] == "picked",
+        "custom" => params["email_contest_loss_is_custom"] == "picked",
         "content" => {
           "layout" => params["email_contest_loss_layout"],
           "subject" => params["email_contest_loss_subject"],

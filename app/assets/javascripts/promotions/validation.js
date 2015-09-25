@@ -157,7 +157,7 @@ function validateContestTemplate() {
 
 function validateEmails() {
   valid = true;
-  if($("#skip_entry").prop("checked")) {
+  if($("#skip_entry").prop("checked") && $("#enable_contest_available_email").prop("checked")) {
     if($("#email_contest_available_subject").val() != "") {
       $("#email_contest_available_subject_output").text("");
     } else {

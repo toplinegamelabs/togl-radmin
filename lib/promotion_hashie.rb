@@ -51,7 +51,7 @@ class PromotionHashie < Hashie::Dash
     {
       "contest_joined" => {
         "enabled" => true,
-        "custom" => false,
+        "custom" => true,
         "content" => {
           "layout" => "",
           "subject" => "",
@@ -132,7 +132,7 @@ class PromotionHashie < Hashie::Dash
       },
       "contest_available" => {
         "enabled" => true,
-        "custom" => false,
+        "custom" => true,
         "content" => {
           "layout" => "",
           "subject" => "",

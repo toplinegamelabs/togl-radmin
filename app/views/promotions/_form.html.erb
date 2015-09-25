@@ -391,9 +391,6 @@
   <%= check_box_tag :enable_contest_joined_email, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("enabled", true), onchange: "updateEmails();" %>
   <%= label_tag :enable_contest_joined_email, "Enable this email" %>
   <br/>
-  <%= check_box_tag :email_contest_joined_is_custom, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("custom", false), onchange: "updateEmailFields('contest_joined');" %>
-  <%= label_tag :email_contest_joined_is_custom, "Use custom settings for this email" %>
-  <br/>
   <%= label_tag :email_contest_joined_layout, "Layout" %>
   <%= text_field_tag :email_contest_joined_layout, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
   <br/>

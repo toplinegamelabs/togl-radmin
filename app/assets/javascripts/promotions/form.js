@@ -58,7 +58,6 @@ function updateEmails() {
   }
 
   // update based on if emails are custom
-  updateEmailFields('contest_joined');
   updateEmailFields('contest_win');
   updateEmailFields('contest_loss');
   updateEmailFields('contest_tie');  
