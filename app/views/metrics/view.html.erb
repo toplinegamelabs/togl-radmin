@@ -8,6 +8,19 @@ Of those <%= @response['signups'] %>, <%= @response['signups_that_deposited'] %>
 Of those <%= @response['signups'] %>, <%= @response['signups_that_played_cash'] %> entered a contest with cash<br/>
 <br/>
 <strong>Entries Created: </strong> <%= @response['entry_count'] %><br/>
+<%=
+  if @response['entry_count'] > 0
+    cash_percent = (@response['cash_entry_count'].to_f / @response['entry_count']).round(1)
+    ticket_percent = (@response['ticket_entry_count'].to_f / @response['entry_count']).round(1)
+    free_percent = (@response['free_entry_count'].to_f / @response['entry_count']).round(1)
+  else
+    cash_percent = ticket_percent = free_percent = 0
+  end
+%>
+Of those <%= @response['entry_count'] %>, <%= @response['cash_entry_count'] %> (<%= cash_percent %>%) were cash, totalling <%= @response['cash_entry_total'] %> (Avg: <%= @response['cash_entry_avg'] %>) <br/>
+Of those <%= @response['entry_count'] %>, <%= @response['ticket_entry_count'] %> (<%= ticket_percent %>%) were tickets<br/>
+Of those <%= @response['entry_count'] %>, <%= @response['free_entry_count'] %> (<%= free_percent %>%) were free<br/>
+<br/>
 <strong>Deposits: </strong> <%= @response['deposits'] %> totalling <%= @response['deposit_sum'] %><br/>
 <strong>Depositing Users: </strong> <%= @response['depositing_users'] %> (unique users that deposited)<br/>
 <strong>New Depositing Users: </strong> <%= @response['users_with_first_deposit'] %> (unique users that deposited for the first time)<br/>
@@ -15,3 +28,9 @@ Of those <%= @response['signups'] %>, <%= @response['signups_that_played_cash'] 
 <strong>New Actives: </strong> <%= @response['new_actives'] %> (unique users that entered a contest for the first time)<br/>
 <strong>Paid Actives: </strong> <%= @response['paid_actives'] %> (unique users that entered a contest with cash)<br/>
 <strong>New Paid Actives: </strong> <%= @response['new_paid_actives'] %> (unique users that entered a contest with cash for the first time)<br/>
+<br/><br/>
+<strong> CSV output </strong>
+<br/>
+Signups,Signups That Played,Signups That Deposited,Signups That Played Cash,Entries,Cash Entries,Ticket Entries,Free Entries,Deposits,Deposit Total,Depositing Uniques,New Depositing Users,Actives,New Actives,Paid Actives,New Paid Actives<br/>
+<%= @response['signups'] %>,<%= @response['signups_that_played'] %>,<%= @response['signups_that_deposited'] %>,<%= @response['signups_that_played_cash'] %>,<%= @response['entry_count'] %>,<%= @response['cash_entry_count'] %>,<%= @response['ticket_entry_count'] %>,<%= @response['free_entry_count'] %>,<%= @response['deposits'] %>,<%= @response['deposit_sum'] %>,<%= @response['depositing_users'] %>,<%= @response['users_with_first_deposit'] %>,<%= @response['actives'] %>,<%= @response['new_actives'] %>,<%= @response['paid_actives'] %>,<%= @response['new_paid_actives'] %>
+<br/>
