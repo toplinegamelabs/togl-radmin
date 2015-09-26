@@ -10,9 +10,9 @@ Of those <%= @response['signups'] %>, <%= @response['signups_that_played_cash'] 
 <strong>Entries Created: </strong> <%= @response['entry_count'] %><br/>
 <%=
   if @response['entry_count'] > 0
-    cash_percent = (@response['cash_entry_count'].to_f / @response['entry_count']).round(3) * 100
-    ticket_percent = (@response['ticket_entry_count'].to_f / @response['entry_count']).round(3) * 100
-    free_percent = (@response['free_entry_count'].to_f / @response['entry_count']).round(3) * 100
+    cash_percent = (@response['cash_entry_count'].to_f / @response['entry_count'] * 100).round(1)
+    ticket_percent = (@response['ticket_entry_count'].to_f / @response['entry_count'] * 100).round(1)
+    free_percent = (@response['free_entry_count'].to_f / @response['entry_count'] * 100).round(1)
     ''
   else
     cash_percent = ticket_percent = free_percent = 0
