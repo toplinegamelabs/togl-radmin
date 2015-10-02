@@ -6,32 +6,9 @@ function validate() {
   valid = valid && validatePromotionTarget();
   valid = valid && validateContestTemplate();
   valid = valid && validateEmails();
-
-
-
-
-
-
-
-
-
-
-
-  
   // are we valid?
-  update_submit(valid);
+  updateSubmit(valid);
 }
-
-
-
-
-
-
-
-
-
-
-
 
 function validateBasicPromotionDetails() {
   valid = true;
@@ -180,7 +157,7 @@ function validateContestTemplate() {
 
 function validateEmails() {
   valid = true;
-  if($("#skip_entry").prop("checked")) {
+  if($("#skip_entry").prop("checked") && $("#enable_contest_available_email").prop("checked")) {
     if($("#email_contest_available_subject").val() != "") {
       $("#email_contest_available_subject_output").text("");
     } else {

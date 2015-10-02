@@ -51,82 +51,101 @@ class PromotionHashie < Hashie::Dash
     {
       "contest_joined" => {
         "enabled" => true,
-        "layout" => "",
-        "subject" => "",
-        "body" => "",
-        "header" => {
-          "image_url" => "",
-          "target_url" => "",
-          "color_code" => ""
+        "custom" => true,
+        "content" => {
+          "layout" => "",
+          "subject" => "",
+          "body" => "",
+          "header" => {
+            "image_url" => "",
+            "target_url" => "",
+            "color_code" => ""
+          },
+          "action_buton" => {
+            "target_type" => "",
+            "label" => ""
+          }
         }
       },
       "contest_win" => {
         "enabled" => true,
-        "layout" => "",
-        "subject" => "",
-        "body" => {
-          "pre" => "",
-          "post" => ""
-        },
-        "header" => {
-          "image_url" => "",
-          "target_url" => "",
-          "color_code" => ""
-        },
-        "action_buton" => {
-          "target_type" => "",
-          "label" => ""
+        "custom" => false,
+        "content" => {
+          "layout" => "",
+          "subject" => "",
+          "body" => {
+            "pre" => "",
+            "post" => ""
+          },
+          "header" => {
+            "image_url" => "",
+            "target_url" => "",
+            "color_code" => ""
+          },
+          "action_buton" => {
+            "target_type" => "",
+            "label" => ""
+          }
         }
       },
       "contest_loss" => {
         "enabled" => true,
-        "layout" => "",
-        "subject" => "",
-        "body" => {
-          "pre" => "",
-          "post" => ""
-        },
-        "header" => {
-          "image_url" => "",
-          "target_url" => "",
-          "color_code" => ""
-        },
-        "action_buton" => {
-          "target_type" => "",
-          "label" => ""
+        "custom" => false,
+          "content" => {
+          "layout" => "",
+          "subject" => "",
+          "body" => {
+            "pre" => "",
+            "post" => ""
+          },
+          "header" => {
+            "image_url" => "",
+            "target_url" => "",
+            "color_code" => ""
+          },
+          "action_buton" => {
+            "target_type" => "",
+            "label" => ""
+          }
         }
       },
       "contest_tie" => {
         "enabled" => true,
-        "layout" => "",
-        "subject" => "",
-        "body" => {
-          "pre" => "",
-          "post" => ""
-        },
-        "header" => {
-          "image_url" => "",
-          "target_url" => "",
-          "color_code" => ""
-        },
-        "action_buton" => {
-          "target_type" => "",
-          "label" => ""
+        "custom" => false,
+        "content" => {
+          "layout" => "",
+          "subject" => "",
+          "body" => {
+            "pre" => "",
+            "post" => ""
+          },
+          "header" => {
+            "image_url" => "",
+            "target_url" => "",
+            "color_code" => ""
+          },
+          "action_buton" => {
+            "target_type" => "",
+            "label" => ""
+          }
         }
       },
       "contest_available" => {
         "enabled" => true,
-        "layout" => "",
-        "subject" => "",
-        "body" => "",
-        "header" => {
-          "image_url" => "",
-          "target_url" => "",
-          "color_code" => ""
-        },
-        "action_buton" => {
-          "target_type" => "",
-          "label" => ""
+        "custom" => true,
+        "content" => {
+          "layout" => "",
+          "subject" => "",
+          "body" => "",
+          "header" => {
+            "image_url" => "",
+            "target_url" => "",
+            "color_code" => ""
+          },
+          "action_buton" => {
+            "target_type" => "",
+            "label" => ""
+          }
         }
       }
     }

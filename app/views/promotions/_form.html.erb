@@ -125,9 +125,10 @@
         <br/>
         <strong>Activation Deadline Date/Time (Pacific timezone)</strong><br/>
         <%- 
+          Time.zone = "America/Los_Angeles"
           if @promotion_target.promotion.activation_deadline.present?
-            activation_date_string = DateTime.parse(@promotion_target.promotion.activation_deadline).strftime("%Y-%m-%d")
-            activation_time_string = DateTime.parse(@promotion_target.promotion.activation_deadline).strftime("%H:%M")
+            activation_date_string = Time.zone.parse(@promotion_target.promotion.activation_deadline).strftime("%Y-%m-%d")
+            activation_time_string = Time.zone.parse(@promotion_target.promotion.activation_deadline).strftime("%H:%M")
           else
             activation_date_string = ""
             activation_time_string = ""
@@ -145,31 +146,31 @@
         <br/>
 
         <em>Email</em><br/>
-        <%= check_box_tag :email_contest_available_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();updateEmails();" %>
-        <%= label_tag :email_contest_available_layout_configurable, "Use Configurable Layout" %>
+        <%= check_box_tag :enable_contest_available_email, :picked, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("enabled", true), onchange: "updateEmails();" %>
+        <%= label_tag :enable_contest_available_email, "Enable this email" %>
         <br/>
         <%= label_tag :email_contest_available_layout, "Layout" %>
-        <%= text_field_tag :email_contest_available_layout, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
+        <%= text_field_tag :email_contest_available_layout, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "updateEmails();" %>
         <br/>
         <%= label_tag :email_contest_available_subject, "Subject" %>
-        <%= text_field_tag :email_contest_available_subject, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("subject", ""), onchange: "validate();" %>
+        <%= text_field_tag :email_contest_available_subject, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("subject", ""), onchange: "validate();" %>
         <span id="email_contest_available_subject_output" style="color: red;"></span>
         <br/>
         <%= label_tag :email_contest_available_header_image_url, "Header Image URL" %>
-        <%= text_field_tag :email_contest_available_header_image_url, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {}) || {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+        <%= text_field_tag :email_contest_available_header_image_url, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("header", {}) || {})["image_url"] || default_header_image_url, onchange: "validate();" %>
         <br/>
         <%= label_tag :email_contest_available_header_color_code, "Header Color Hex" %>
-        <small>#</small><%= text_field_tag :email_contest_available_header_color_code, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {}) || {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+        <small>#</small><%= text_field_tag :email_contest_available_header_color_code, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("header", {}) || {})["color_code"] || default_header_color_code, onchange: "validate();" %>
         <br/>
         <%= label_tag :email_contest_available_header_target_url, "Header Link Target URL" %>
-        <%= text_field_tag :email_contest_available_header_target_url, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("header", {}) || {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+        <%= text_field_tag :email_contest_available_header_target_url, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("header", {}) || {})["target_url"] || default_header_target_url, onchange: "validate();" %>
         <br/>
         <%= label_tag :email_contest_available_body, "Body" %>
-        <%= text_area_tag :email_contest_available_body, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("body", "").try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
+        <%= text_area_tag :email_contest_available_body, @promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("body", "").try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
         <span id="email_contest_available_body_output" style="color: red;"></span>
         <br/>
         <%= label_tag :email_contest_available_action_button_label, "Button Label" %>
-        <%= text_field_tag :email_contest_available_action_button_label, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("action_button", {}) || {})["label"], onchange: "validate();" %>
+        <%= text_field_tag :email_contest_available_action_button_label, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("action_button", {}) || {})["label"], onchange: "validate();" %>
         <br/>
         
         <em>Push</em><br/>
@@ -387,35 +388,32 @@
 <br/>
 
   <em>Welcome Email</em><br/>
-  <%= check_box_tag :enable_contest_joined_email, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("enabled", true), onchange: "update_email_fields('contest_joined');" %>
-  <%= label_tag :enable_contest_joined_email, "Enable" %>
-  <br/>
-  <%= check_box_tag :email_contest_joined_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();updateEmails();" %>
-  <%= label_tag :email_contest_joined_layout_configurable, "Use Configurable Layout" %>
+  <%= check_box_tag :enable_contest_joined_email, :picked, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("enabled", true), onchange: "updateEmails();" %>
+  <%= label_tag :enable_contest_joined_email, "Enable this email" %>
   <br/>
   <%= label_tag :email_contest_joined_layout, "Layout" %>
-  <%= text_field_tag :email_contest_joined_layout, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
+  <%= text_field_tag :email_contest_joined_layout, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
   <br/>
   <%= label_tag :email_contest_joined_subject, "Subject" %>
-  <%= text_field_tag :email_contest_joined_subject, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_subject, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {})["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header_image_url, "Header Image URL" %>
-  <%= text_field_tag :email_contest_joined_header_image_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_header_image_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header_color_code, "Header Color Hex" %>
-  <small>#</small><%= text_field_tag :email_contest_joined_header_color_code, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <small>#</small><%= text_field_tag :email_contest_joined_header_color_code, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_joined_header_target_url, "Header Link Target URL" %>
-  <%= text_field_tag :email_contest_joined_header_target_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_header_target_url, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/><br/>
   <%= label_tag :email_contest_joined_body, "Body" %>
-  <%= text_area_tag :email_contest_joined_body, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("body", "").try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
+  <%= text_area_tag :email_contest_joined_body, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("body", "").try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
         <br/>
   <%= label_tag :email_contest_joined_action_button_label, "Button Label" %>
-  <%= text_field_tag :email_contest_joined_action_button_label, (@promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("action_button", {}) || {}) ["label"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_joined_action_button_label, (@promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("action_button", {}) || {}) ["label"], onchange: "validate();" %>
   <br/>
   <%- 
-    contest_joined_button_target_type = (@promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("action_button", {}) || {})["target_type"]
+    contest_joined_button_target_type = (@promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("action_button", {}) || {})["target_type"]
     contest_joined_button_target_type = contest_joined_button_target_type.present? ? contest_joined_button_target_type : "my_contest"
   %>
   <%= label_tag :email_contest_joined_action_button_target_type, "Button Target" %>
@@ -427,39 +425,39 @@
   <br/><br/>
 
   <em>Custom Contest (Win) Email</em><br/>
-  <%= check_box_tag :enable_contest_win_email, :picked, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("enabled", true), onchange: "update_email_fields('contest_win');" %>
-  <%= label_tag :enable_contest_win_email, "Enable (default will be sent if disabled)" %>
+  <%= check_box_tag :enable_contest_win_email, :picked, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("enabled", true), onchange: "updateEmails();" %>
+  <%= label_tag :enable_contest_win_email, "Enable this email" %>
   <br/>
-  <%= check_box_tag :email_contest_win_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();updateEmails();" %>
-  <%= label_tag :email_contest_win_layout_configurable, "Use Configurable Layout" %>
+  <%= check_box_tag :email_contest_win_is_custom, :picked, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("custom", false), onchange: "validate();updateEmailFields('contest_win');" %>
+  <%= label_tag :email_contest_win_is_custom, "Use custom settings for this email" %>
   <br/>
   <%= label_tag :email_contest_win_layout, "Layout" %>
-  <%= text_field_tag :email_contest_win_layout, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
+  <%= text_field_tag :email_contest_win_layout, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
   <br/>
   <%= label_tag :email_contest_win_subject, "Subject" %>
-  <%= text_field_tag :email_contest_win_subject, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_subject, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {})["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header_image_url, "Header Image URL" %>
-  <%= text_field_tag :email_contest_win_header_image_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_header_image_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header_color_code, "Header Color Hex" %>
-  <small>#</small><%= text_field_tag :email_contest_win_header_color_code, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <small>#</small><%= text_field_tag :email_contest_win_header_color_code, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_header_target_url, "Header Link Target URL" %>
-  <%= text_field_tag :email_contest_win_header_target_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_header_target_url, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_body_pre, "Body (Intro)" %>
-  <%= text_area_tag :email_contest_win_body_pre, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("body", {})["pre"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
+  <%= text_area_tag :email_contest_win_body_pre, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("body", {})["pre"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_win_body_post, "Body (Conclusion)" %>
-  <%= text_area_tag :email_contest_win_body_post, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("body", {})["post"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
+  <%= text_area_tag :email_contest_win_body_post, @promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("body", {})["post"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
         <br/>
 
   <%= label_tag :email_contest_win_action_button_label, "Button Label" %>
-  <%= text_field_tag :email_contest_win_action_button_label, (@promotion_target.promotion.emails.fetch("contest_win", {}).fetch("action_button", {}) || {})["label"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_win_action_button_label, (@promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("action_button", {}) || {})["label"], onchange: "validate();" %>
   <br/>
   <%- 
-    contest_win_button_target_type = (@promotion_target.promotion.emails.fetch("contest_win", {}).fetch("action_button", {}) || {})["target_type"]
+    contest_win_button_target_type = (@promotion_target.promotion.emails.fetch("contest_win", {}).fetch("content", {}).fetch("action_button", {}) || {})["target_type"]
     contest_win_button_target_type = contest_win_button_target_type.present? ? contest_win_button_target_type : "my_contest"
   %>
   <%= label_tag :email_contest_win_action_button_target_type, "Button Target" %>
@@ -473,7 +471,7 @@
 
   <em>Custom Contest (Win) Push</em><br/>
   <%= check_box_tag :enable_contest_win_push, :picked, @promotion_target.promotion.pushes.fetch("contest_win", {}).fetch("enabled", true), onchange: "update_push_fields('contest_win');" %>
-  <%= label_tag :enable_contest_win_push, "Enable (default will be sent if disabled)" %>
+  <%= label_tag :enable_contest_win_push, "Use custom settings for this push" %>
   <br/>
   <%= label_tag :push_contest_win_push_message, "Message" %>
   <%= text_field_tag :push_contest_win_push_message, @promotion_target.promotion.pushes.fetch("contest_win", {})["message"], onchange: "validate();" %>
@@ -494,38 +492,38 @@
 
 
   <em>Custom Contest (Loss) Email</em><br/>  
-  <%= check_box_tag :enable_contest_loss_email, :picked, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("enabled", true), onchange: "update_email_fields('contest_loss');" %>
-  <%= label_tag :enable_contest_loss_email, "Enable (default will be sent if disabled)" %>
+  <%= check_box_tag :enable_contest_loss_email, :picked, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("enabled", true), onchange: "updateEmails();" %>
+  <%= label_tag :enable_contest_loss_email, "Enable this email" %>
   <br/>
-  <%= check_box_tag :email_contest_loss_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();updateEmails();" %>
-  <%= label_tag :email_contest_loss_layout_configurable, "Use Configurable Layout" %>
+  <%= check_box_tag :email_contest_loss_is_custom, :picked, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("custom", false), onchange: "updateEmailFields('contest_loss');" %>
+  <%= label_tag :email_contest_loss_is_custom, "Use custom settings for this email" %>
   <br/>
   <%= label_tag :email_contest_loss_layout, "Layout" %>
-  <%= text_field_tag :email_contest_loss_layout, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
+  <%= text_field_tag :email_contest_loss_layout, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
   <br/>
   <%= label_tag :email_contest_loss_subject, "Subject" %>
-  <%= text_field_tag :email_contest_loss_subject, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_subject, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {})["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header_image_url, "Header Image URL" %>
-  <%= text_field_tag :email_contest_loss_header_image_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_header_image_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header_color_code, "Header Color Hex" %>
-  <small>#</small><%= text_field_tag :email_contest_loss_header_color_code, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <small>#</small><%= text_field_tag :email_contest_loss_header_color_code, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_header_target_url, "Header Link Target URL" %>
-  <%= text_field_tag :email_contest_loss_header_target_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_header_target_url, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_body_pre, "Body (Intro)" %>
-  <%= text_area_tag :email_contest_loss_body_pre, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("body", {})["pre"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
+  <%= text_area_tag :email_contest_loss_body_pre, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("body", {})["pre"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_loss_body_post, "Body (Conclusion)" %>
-  <%= text_area_tag :email_contest_loss_body_post, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("body", {})["post"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>  <br/>
+  <%= text_area_tag :email_contest_loss_body_post, @promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("body", {})["post"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>  <br/>
         <br/>
   <%= label_tag :email_contest_loss_action_button_label, "Button Label" %>
-  <%= text_field_tag :email_contest_loss_action_button_label, (@promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("action_button", {}) || {})["label"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_loss_action_button_label, (@promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("action_button", {}) || {})["label"], onchange: "validate();" %>
   <br/>
   <%- 
-    contest_loss_button_target_type = (@promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("action_button", {}) || {})["target_type"]
+    contest_loss_button_target_type = (@promotion_target.promotion.emails.fetch("contest_loss", {}).fetch("content", {}).fetch("action_button", {}) || {})["target_type"]
     contest_loss_button_target_type = contest_loss_button_target_type.present? ? contest_loss_button_target_type : "my_contest"
   %>
   <%= label_tag :email_contest_loss_action_button_target_type, "Button Target" %>
@@ -541,7 +539,7 @@
 
   <em>Custom Contest (Loss) Push</em><br/>
   <%= check_box_tag :enable_contest_loss_push, :picked, @promotion_target.promotion.pushes.fetch("contest_loss", {}).fetch("enabled", true), onchange: "update_push_fields('contest_loss');" %>
-  <%= label_tag :enable_contest_loss_push, "Enable (default will be sent if disabled)" %>
+  <%= label_tag :enable_contest_loss_push, "Use custom settings for this push" %>
   <br/>
   <%= label_tag :push_contest_loss_push_message, "Message" %>
   <%= text_field_tag :push_contest_loss_push_message, @promotion_target.promotion.pushes.fetch("contest_loss", {})["message"], onchange: "validate();" %>
@@ -559,39 +557,39 @@
   <br/><br/>
 
   <em>Custom Contest (Tie) Email</em><br/>
-  <%= check_box_tag :enable_contest_tie_email, :picked, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("enabled", true), onchange: "update_email_fields('contest_tie');" %>
-  <%= label_tag :enable_contest_tie_email, "Enable (default will be sent if disabled)" %>
+  <%= check_box_tag :enable_contest_tie_email, :picked, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("enabled", true), onchange: "updateEmails();" %>
+  <%= label_tag :enable_contest_tie_email, "Enable this email" %>
   <br/>
   
-  <%= check_box_tag :email_contest_tie_layout_configurable, :picked, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("layout", "configurable") == "configurable", onchange: "validate();updateEmails();" %>
-  <%= label_tag :email_contest_tie_layout_configurable, "Use Configurable Layout" %>
+  <%= check_box_tag :email_contest_tie_is_custom, :picked, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("custom", false), onchange: "updateEmailFields('contest_tie');" %>
+  <%= label_tag :email_contest_tie_is_custom, "Use custom settings for this email" %>
   <br/>
   <%= label_tag :email_contest_tie_layout, "Layout" %>
-  <%= text_field_tag :email_contest_tie_layout, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
+  <%= text_field_tag :email_contest_tie_layout, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
   <br/>
   <%= label_tag :email_contest_tie_subject, "Subject" %>
-  <%= text_field_tag :email_contest_tie_subject, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("subject", {}), onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_subject, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {})["subject"], onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header_image_url, "Header Image URL" %>
-  <%= text_field_tag :email_contest_tie_header_image_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_header_image_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("header", {})["image_url"] || default_header_image_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header_color_code, "Header Color Hex" %>
-  <small>#</small><%= text_field_tag :email_contest_tie_header_color_code, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
+  <small>#</small><%= text_field_tag :email_contest_tie_header_color_code, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("header", {})["color_code"] || default_header_color_code, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_header_target_url, "Header Link Target URL" %>
-  <%= text_field_tag :email_contest_tie_header_target_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_header_target_url, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("header", {})["target_url"] || default_header_target_url, onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_body_pre, "Body (Intro)" %>
-  <%= text_area_tag :email_contest_tie_body_pre, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("body", {})["pre"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
+  <%= text_area_tag :email_contest_tie_body_pre, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("body", {})["pre"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_body_post, "Body (Conclusion)" %>
-  <%= text_area_tag :email_contest_tie_body_post, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("body", {})["post"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
+  <%= text_area_tag :email_contest_tie_body_post, @promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("body", {})["post"].try(:gsub, "<br/>", "\r\n"), onchange: "validate();" %>
   <br/>
   <%= label_tag :email_contest_tie_action_button_label, "Button Label" %>
-  <%= text_field_tag :email_contest_tie_action_button_label, (@promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("action_button", {}) || {})["label"], onchange: "validate();" %>
+  <%= text_field_tag :email_contest_tie_action_button_label, (@promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("action_button", {}) || {})["label"], onchange: "validate();" %>
   <br/>
   <%- 
-    contest_tie_button_target_type = (@promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("action_button", {}) || {})["target_type"]
+    contest_tie_button_target_type = (@promotion_target.promotion.emails.fetch("contest_tie", {}).fetch("content", {}).fetch("action_button", {}) || {})["target_type"]
     contest_tie_button_target_type = contest_tie_button_target_type.present? ? contest_tie_button_target_type : "my_contest"
   %>
   <%= label_tag :email_contest_tie_action_button_target_type, "Button Target" %>
@@ -607,7 +605,7 @@
 
   <em>Custom Contest (Tie) Push</em><br/>
   <%= check_box_tag :enable_contest_tie_push, :picked, @promotion_target.promotion.pushes.fetch("contest_tie", {}).fetch("enabled", true), onchange: "update_push_fields('contest_tie');" %>
-  <%= label_tag :enable_contest_tie_push, "Enable (default will be sent if disabled)" %>
+  <%= label_tag :enable_contest_tie_push, "Use custom settings for this push" %>
   <br/>
   <%= label_tag :push_contest_tie_push_message, "Message" %>
   <%= text_field_tag :push_contest_tie_push_message, @promotion_target.promotion.pushes.fetch("contest_tie", {})["message"], onchange: "validate();" %>
@@ -805,7 +803,7 @@
         if(!$("#skip_entry").prop("checked")) {
           $("#entry_select").show();
         }
-        update_submit(false);
+        updateSubmit(false);
         //loading stuff UI
 
   <%- if !@promotion_target.persisted? %>
@@ -1169,13 +1167,13 @@
     <%- if !@promotion_target.persisted? || @promotion_target.promotion.is_pending %>
       document.getElementById('skip_entry').setAttribute("disabled", "disabled");
       document.getElementById('activation_deadline_time').setAttribute("disabled", "disabled");
-      document.getElementById('email_contest_available_layout_configurable').setAttribute("disabled", "disabled");
       document.getElementById('email_contest_available_layout').setAttribute("disabled", "disabled");
       document.getElementById('email_contest_available_subject').setAttribute("disabled", "disabled");
       document.getElementById('email_contest_available_header_image_url').setAttribute("disabled", "disabled");
       document.getElementById('email_contest_available_header_color_code').setAttribute("disabled", "disabled");
       document.getElementById('email_contest_available_header_target_url').setAttribute("disabled", "disabled");
       document.getElementById('email_contest_available_body').setAttribute("disabled", "disabled");
+      document.getElementById('email_contest_available_action_button_label').setAttribute("disabled", "disabled");
       document.getElementById('notification_name').setAttribute("disabled", "disabled");
       document.getElementById('notification_description').setAttribute("disabled", "disabled");
       document.getElementById('notification_push_text').setAttribute("disabled", "disabled");
@@ -1186,21 +1184,16 @@
     <%- if !@promotion_target.persisted? || @promotion_target.promotion.is_pending %>
       document.getElementById('skip_entry').removeAttribute("disabled");
       document.getElementById('activation_deadline_time').removeAttribute("disabled");
-      document.getElementById('email_contest_available_layout_configurable').removeAttribute("disabled");
       document.getElementById('email_contest_available_layout').removeAttribute("disabled");
       document.getElementById('email_contest_available_subject').removeAttribute("disabled");
       document.getElementById('email_contest_available_header_image_url').removeAttribute("disabled");
       document.getElementById('email_contest_available_header_color_code').removeAttribute("disabled");
       document.getElementById('email_contest_available_header_target_url').removeAttribute("disabled");
       document.getElementById('email_contest_available_body').removeAttribute("disabled");
+      document.getElementById('email_contest_available_action_button_label').removeAttribute("disabled");
       document.getElementById('notification_name').removeAttribute("disabled");
       document.getElementById('notification_description').removeAttribute("disabled");
       document.getElementById('notification_push_text').removeAttribute("disabled");
     <%- end %>
   }
-
-
-
-
 </script>
-

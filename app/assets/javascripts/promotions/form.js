@@ -1,74 +1,72 @@
 function updateEmails() {
   custom_layouts = ["cbs", "cbs_small_footer", "configurable"];
 
-
-  if($("#email_contest_available_layout_configurable").prop("checked")) {
-    $("#email_contest_available_layout").val("configurable");
-    $("#email_contest_available_layout").prop("readonly", true);
+  // update based on if emails are enabled
+  if($("#enable_contest_available_email").prop("checked")) {
+    $("[id^=email_contest_available_]").prop("disabled", false);
+    if(custom_layouts.indexOf($("#email_contest_available_layout").val()) >= 0) {
+      $("[id^=email_contest_available_header]").prop( "readonly", false);
+    } else {
+      $("[id^=email_contest_available_header]").prop( "readonly", true);
+    }
   } else {
-    $("#email_contest_available_layout").prop("readonly", false);
-  }
-  if(custom_layouts.indexOf($("#email_contest_available_layout").val()) >= 0) {
-    $("[id^=email_contest_available_header]").prop( "readonly", false);
-  } else {
-    $("[id^=email_contest_available_header]").prop( "readonly", true);
-  }
-
-  if($("#email_contest_joined_layout_configurable").prop("checked")) {
-    $("#email_contest_joined_layout").val("configurable");
-    $("#email_contest_joined_layout").prop("readonly", true);
-  } else {
-    $("#email_contest_joined_layout").prop("readonly", false);
-  }
-  if(custom_layouts.indexOf($("#email_contest_joined_layout").val()) >= 0) {
-    $("[id^=email_contest_joined_header]").prop( "readonly", false);
-  } else {
-    $("[id^=email_contest_joined_header]").prop( "readonly", true);
+    $("[id^=email_contest_available_]").prop("disabled", true);
   }
 
-  if($("#email_contest_win_layout_configurable").prop("checked")) {
-    $("#email_contest_win_layout").val("configurable");
-    $("#email_contest_win_layout").prop("readonly", true);
+  if($("#enable_contest_joined_email").prop("checked")) {
+    $("[id^=email_contest_joined_]").prop("disabled", false);
+    if(custom_layouts.indexOf($("#email_contest_joined_layout").val()) >= 0) {
+      $("[id^=email_contest_joined_header]").prop( "readonly", false);
+    } else {
+      $("[id^=email_contest_joined_header]").prop( "readonly", true);
+    }
   } else {
-    $("#email_contest_win_layout").prop("readonly", false);
-  }
-  if(custom_layouts.indexOf($("#email_contest_win_layout").val()) >= 0) {
-    $("[id^=email_contest_win_header]").prop( "readonly", false);
-  } else {
-    $("[id^=email_contest_win_header]").prop( "readonly", true);
-  }
-
-  if($("#email_contest_loss_layout_configurable").prop("checked")) {
-    $("#email_contest_loss_layout").val("configurable");
-    $("#email_contest_loss_layout").prop("readonly", true);
-  } else {
-    $("#email_contest_loss_layout").prop("readonly", false);
-  }
-  if(custom_layouts.indexOf($("#email_contest_loss_layout").val()) >= 0) {
-    $("[id^=email_contest_loss_header]").prop( "readonly", false);
-  } else {
-    $("[id^=email_contest_loss_header]").prop( "readonly", true);
+    $("[id^=email_contest_joined_]").prop("disabled", true);
   }
 
-  if($("#email_contest_tie_layout_configurable").prop("checked")) {
-    $("#email_contest_tie_layout").val("configurable");
-    $("#email_contest_tie_layout").prop("readonly", true);
+  if($("#enable_contest_win_email").prop("checked")) {
+    $("[id^=email_contest_win_]").prop("disabled", false);
+    if(custom_layouts.indexOf($("#email_contest_win_layout").val()) >= 0) {
+      $("[id^=email_contest_win_header]").prop( "readonly", false);
+    } else {
+      $("[id^=email_contest_win_header]").prop( "readonly", true);
+    }
   } else {
-    $("#email_contest_tie_layout").prop("readonly", false);
+    $("[id^=email_contest_win_]").prop("disabled", true);
   }
-  if(custom_layouts.indexOf($("#email_contest_tie_layout").val()) >= 0) {
-    $("[id^=email_contest_tie_header]").prop( "readonly", false);
+
+  if($("#enable_contest_loss_email").prop("checked")) {
+    $("[id^=email_contest_loss_]").prop("disabled", false);
+    if(custom_layouts.indexOf($("#email_contest_loss_layout").val()) >= 0) {
+      $("[id^=email_contest_loss_header]").prop( "readonly", false);
+    } else {
+      $("[id^=email_contest_loss_header]").prop( "readonly", true);
+    }
   } else {
-    $("[id^=email_contest_tie_header]").prop( "readonly", true);
+    $("[id^=email_contest_loss_]").prop("disabled", true);
   }
+
+  if($("#enable_contest_tie_email").prop("checked")) {
+    $("[id^=email_contest_tie_]").prop("disabled", false);
+    if(custom_layouts.indexOf($("#email_contest_tie_layout").val()) >= 0) {
+      $("[id^=email_contest_tie_header]").prop( "readonly", false);
+    } else {
+      $("[id^=email_contest_tie_header]").prop( "readonly", true);
+    }
+  } else {
+    $("[id^=email_contest_tie_]").prop("disabled", true);
+  }
+
+  // update based on if emails are custom
+  updateEmailFields('contest_win');
+  updateEmailFields('contest_loss');
+  updateEmailFields('contest_tie');  
 }
-
-
 
 // *****************************************************************************
 // helpers to change html elements based on given data
 // *****************************************************************************
-function update_submit(valid) {
+function updateSubmit(valid) {
   if(valid) {
     document.getElementById('submitter').removeAttribute("disabled");
   } else {
@@ -76,45 +74,11 @@ function update_submit(valid) {
   }
 }
 
-function update_email_fields(email_name) {
-  if($("#enable_" + email_name + "_email:checked").val() == "picked") {
-    document.getElementById("email_" + email_name + "_layout_configurable").removeAttribute("disabled");
-    document.getElementById("email_" + email_name + "_layout").removeAttribute("disabled");
-    document.getElementById("email_" + email_name + "_subject").removeAttribute("disabled");
-    document.getElementById("email_" + email_name + "_header_image_url").removeAttribute("disabled");
-    document.getElementById("email_" + email_name + "_header_color_code").removeAttribute("disabled");
-    document.getElementById("email_" + email_name + "_header_target_url").removeAttribute("disabled");
-    body = document.getElementById("email_" + email_name + "_body")
-    if(body != null) {
-      body.removeAttribute("disabled");
-    }
-    body = document.getElementById("email_" + email_name + "_body_pre")
-    if(body != null) {
-      body.removeAttribute("disabled");
-    }
-    body = document.getElementById("email_" + email_name + "_body_post")
-    if(body != null) {
-      body.removeAttribute("disabled");
-    }
+function updateEmailFields(email_name) {
+  if($("#email_" + email_name + "_is_custom:checked").val() == "picked") {
+    $("[id^=email_" + email_name + "_]").not("#email_" + email_name + "_is_custom").prop("disabled", false);
   } else {
-    document.getElementById("email_" + email_name + "_layout_configurable").setAttribute("disabled", "disabled");
-    document.getElementById("email_" + email_name + "_layout").setAttribute("disabled", "disabled");
-    document.getElementById("email_" + email_name + "_subject").setAttribute("disabled", "disabled");
-    document.getElementById("email_" + email_name + "_header_image_url").setAttribute("disabled", "disabled");
-    document.getElementById("email_" + email_name + "_header_color_code").setAttribute("disabled", "disabled");
-    document.getElementById("email_" + email_name + "_header_target_url").setAttribute("disabled", "disabled");
-    body = document.getElementById("email_" + email_name + "_body")
-    if(body != null) {
-      body.setAttribute("disabled", "disabled");
-    }
-    body = document.getElementById("email_" + email_name + "_body_pre")
-    if(body != null) {
-      body.setAttribute("disabled", "disabled");
-    }
-    body = document.getElementById("email_" + email_name + "_body_post")
-    if(body != null) {
-      body.setAttribute("disabled", "disabled");
-    }
+    $("[id^=email_" + email_name + "_]").not("#email_" + email_name + "_is_custom").prop("disabled", true);
   }
 }
 
