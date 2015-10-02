@@ -118,8 +118,8 @@
       <br/>
       <br/>
       <%- if !@promotion_target.persisted? || @promotion_target.promotion.is_pending %>
-        <%= check_box_tag :skip_entry, :picked, @promotion_target.promotion.is_pending, onchange: "skip_entry_changed();" %>
-        <%= label_tag :skip_entry, "This Is A Pending Promotion (Create this promotion without entry items selected)" %>
+        <%= check_box_tag :pending_promotion, :picked, @promotion_target.promotion.is_pending, onchange: "pending_promotion_changed();" %>
+        <%= label_tag :pending_promotion, "This Is A Pending Promotion (Create this promotion without entry items selected)" %>
       <%- end %>
       <div id="activation_deadline" style="display:none;">
         <br/>
@@ -672,7 +672,7 @@
     }
     c_or_c_changed();
     init_prizes();
-    skip_entry_changed();
+    pending_promotion_changed();
     updateEmails();
   }
 
@@ -691,8 +691,6 @@
         $("#username_output").text("User found: " + data.username + " // Balance: $" + (parseFloat(data.balance) / 100).toFixed(2));
       }
       populate_entries();
-
-      update_pending_promotion_availability();
       validate();
     });
   }
@@ -800,14 +798,14 @@
     $("#entries_sub_form").empty();
       // update entry items
       if($("#event_set_id").val() != "") {
-        if(!$("#skip_entry").prop("checked")) {
+        if(!$("#pending_promotion").prop("checked")) {
           $("#entry_select").show();
         }
         updateSubmit(false);
         //loading stuff UI
 
   <%- if !@promotion_target.persisted? %>
-        document.getElementById('skip_entry').setAttribute("disabled", "disabled");
+        document.getElementById('pending_promotion').setAttribute("disabled", "disabled");
         document.getElementById('game_id').setAttribute("disabled", "disabled");
         document.getElementById('event_set_id').setAttribute("disabled", "disabled");
         document.getElementById('submitter').setAttribute("disabled", "disabled");
@@ -823,8 +821,8 @@
           });
           if (missing_slot) {
             $("#es_output").text("Event participants are missing for this event set. Promotion can only be created as pending.");
-            $("#skip_entry").prop("checked", true);
-            skip_entry_changed();
+            $("#pending_promotion").prop("checked", true);
+            pending_promotion_changed();
           } else {
             $("#es_output").text("");
             $.each(data, function(index, slot) {
@@ -855,7 +853,6 @@
         }).always(function() {
 
 <%- if !@promotion_target.persisted? %>
-          update_pending_promotion_availability();
           document.getElementById('event_set_id').removeAttribute("disabled");
           document.getElementById('game_id').removeAttribute("disabled");
 <%- end %>
@@ -875,8 +872,8 @@
     }
   }
 
-  function skip_entry_changed() {
-    if($("#skip_entry").prop("checked")) {
+  function pending_promotion_changed() {
+    if($("#pending_promotion").prop("checked")) {
       $("#activation_deadline").show();
       $("#entry_select").hide();
       $("#notifications_setup").show();
@@ -1152,20 +1149,9 @@
 <%- end %> 
   }
 
-
-
-
-  function update_pending_promotion_availability() {
-    if(user_found) {
-      activate_pending_promotion();
-    } else {
-      disable_pending_promotion();
-    }
-  }
-
   function disable_pending_promotion() {
     <%- if !@promotion_target.persisted? || @promotion_target.promotion.is_pending %>
-      document.getElementById('skip_entry').setAttribute("disabled", "disabled");
+      document.getElementById('pending_promotion').setAttribute("disabled", "disabled");
       document.getElementById('activation_deadline_time').setAttribute("disabled", "disabled");
       document.getElementById('email_contest_available_layout').setAttribute("disabled", "disabled");
       document.getElementById('email_contest_available_subject').setAttribute("disabled", "disabled");
@@ -1182,7 +1168,7 @@
 
   function activate_pending_promotion() {
     <%- if !@promotion_target.persisted? || @promotion_target.promotion.is_pending %>
-      document.getElementById('skip_entry').removeAttribute("disabled");
+      document.getElementById('pending_promotion').removeAttribute("disabled");
       document.getElementById('activation_deadline_time').removeAttribute("disabled");
       document.getElementById('email_contest_available_layout').removeAttribute("disabled");
       document.getElementById('email_contest_available_subject').removeAttribute("disabled");

@@ -157,7 +157,7 @@ function validateContestTemplate() {
 
 function validateEmails() {
   valid = true;
-  if($("#skip_entry").prop("checked") && $("#enable_contest_available_email").prop("checked")) {
+  if($("#pending_promotion").prop("checked") && $("#enable_contest_available_email").prop("checked")) {
     if($("#email_contest_available_subject").val() != "") {
       $("#email_contest_available_subject_output").text("");
     } else {
@@ -205,7 +205,7 @@ function validateEntry() {
   valid = true;
   $("#entries_output").empty();
   $("[id^=entry_item_label_]").css("color", "black");
-  if($("#skip_entry").prop("checked")) {
+  if($("#pending_promotion").prop("checked")) {
     if($("#activation_deadline_date").val() != null && $("#activation_deadline_date").val() != ""
       && $("#activation_deadline_time").val() != null && $("#activation_deadline_time").val() != "") {
       $("#activation_deadline").css("color", "black");

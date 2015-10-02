@@ -63,7 +63,7 @@ class PromotionsController < ApplicationController
     
   
     entry_hash = { "id" => params[:entry_id], "entry_items" => [] }
-    unless params["skip_entry"]
+    unless params["pending_promotion"]
       (params["entry_item"] || []).each_with_index do |entry_item, index|
         entry_hash["entry_items"] << {
           "event_participant_id" => entry_item.to_i,
@@ -75,7 +75,7 @@ class PromotionsController < ApplicationController
       end
     end
 
-    if params["skip_entry"]
+    if params["pending_promotion"]
       activation_deadline = Time.zone.parse(params["activation_deadline_date"] + " " + params["activation_deadline_time"])
     else
       activation_deadline = nil
@@ -97,7 +97,7 @@ class PromotionsController < ApplicationController
         "description" => params["promo_description"],
         "promotion_group_id" => params["promotion_group_id"],
         "activation_deadline" => activation_deadline,
-        "is_pending" => params["skip_entry"] == "picked",
+        "is_pending" => params["pending_promotion"] == "picked",
         "invitation_hashtag" => params["invitation_hashtag"],
         "notification" => activation_deadline.present? ? params["notification"] : nil,
         "prize_source" => {
@@ -174,7 +174,7 @@ class PromotionsController < ApplicationController
     Time.zone = "America/Los_Angeles"
     
     entry_hash = { "entry_items" => [] }
-    unless params["skip_entry"]
+    unless params["pending_promotion"]
       (params["entry_item"] || []).each_with_index do |entry_item, index|
         entry_hash["entry_items"] << {
           "event_participant_id" => entry_item.to_i,
@@ -186,7 +186,7 @@ class PromotionsController < ApplicationController
       end
     end
 
-    if params["skip_entry"]
+    if params["pending_promotion"]
       activation_deadline = Time.zone.parse(params["activation_deadline_date"] + " " + params["activation_deadline_time"])
     else
       activation_deadline = nil
@@ -212,7 +212,7 @@ class PromotionsController < ApplicationController
         "description" => params["promo_description"],
         "promotion_group_id" => params["promotion_group_id"],
         "activation_deadline" => activation_deadline,
-        "is_pending" => params["skip_entry"] == "picked",
+        "is_pending" => params["pending_promotion"] == "picked",
         "invitation_hashtag" => params["invitation_hashtag"],
         "notification" => activation_deadline.present? ? params["notification"] : nil,
         "prize_source" => {
@@ -405,7 +405,7 @@ private
         }
       },
       "contest_available" => {
-        "enabled" => params["enable_contest_available_email"] == "picked",
+        "enabled" => params["pending_promotion"] == "picked" && params["enable_contest_available_email"] == "picked",
         "custom" => true,
         "content" => {
           "layout" => params["email_contest_available_layout"],
