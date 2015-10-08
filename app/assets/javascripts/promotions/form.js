@@ -1,5 +1,5 @@
 function updateEmails() {
-  custom_layouts = ["cbs", "cbs_small_footer", "configurable"];
+  custom_layouts = ["truestars", "cbs", "cbs_small_footer", "configurable"];
 
   // update based on if emails are enabled
   if($("#enable_contest_available_email").prop("checked")) {
