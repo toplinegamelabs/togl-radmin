@@ -825,6 +825,8 @@
             pending_promotion_changed();
           } else {
             $("#es_output").text("");
+            document.getElementById('submitter').removeAttribute("disabled");
+            document.getElementById('pending_promotion').removeAttribute("disabled");
             $.each(data, function(index, slot) {
 
               var drop = $("#entry_item").clone();
