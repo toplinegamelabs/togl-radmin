@@ -50,7 +50,7 @@ class PromotionHashie < Hashie::Dash
   property :emails, default:
     {
       "contest_joined" => {
-        "enabled" => true,
+        "enabled" => false,
         "custom" => true,
         "content" => {
           "layout" => "",
