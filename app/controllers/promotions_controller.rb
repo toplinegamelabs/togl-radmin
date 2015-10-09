@@ -50,6 +50,7 @@ class PromotionsController < ApplicationController
       user = RapiManager.new.show_user_by_id(promo_contest["creator_id"])
       promo_contest["username"] = user["username"] 
     end
+
     @promotion_target = PromotionTargetHashie.build_from_rapi_hash(promo_contest)
     @promotion_target.persisted = true
 
