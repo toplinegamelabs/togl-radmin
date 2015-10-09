@@ -417,6 +417,7 @@ private
           },
           "body" => params["email_contest_available_body"].to_s.gsub("\r\n", "<br/>"),
           "action_button" => {
+            "target_type" => params["email_contest_available_action_button_target_type"],
             "label" => params["email_contest_available_action_button_label"]
           }
         }

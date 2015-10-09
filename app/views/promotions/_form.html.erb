@@ -172,7 +172,18 @@
         <%= label_tag :email_contest_available_action_button_label, "Button Label" %>
         <%= text_field_tag :email_contest_available_action_button_label, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("action_button", {}) || {})["label"], onchange: "validate();" %>
         <br/>
-        
+        <%= label_tag :email_contest_available_action_button_target_type, "Button Target" %>
+        <%= radio_button_tag :email_contest_available_action_button_target_type, :home, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("action_button", {}) || {}).fetch("target_type", "home") == "home", onchange: "validate();" %>
+        <%= label_tag :email_contest_available_action_button_target_type, "Home" %>
+        &nbsp;
+        <%= radio_button_tag :email_contest_available_action_button_target_type, :landing_page, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("action_button", {}) || {})["target_type"] == "landing_page", onchange: "validate();" %>
+        <%= label_tag :email_contest_available_action_button_target_type, "Landing Page" %>
+        &nbsp;
+        <%= radio_button_tag :email_contest_available_action_button_target_type, :invitation_link, (@promotion_target.promotion.emails.fetch("contest_available", {}).fetch("content", {}).fetch("action_button", {}) || {})["target_type"] == "invitation_link", onchange: "validate();" %>
+        <%= label_tag :email_contest_available_action_button_target_type, "Invitation Link" %>
+        <br/>
+
+
         <em>Push</em><br/>
         <%= label_tag "notification[name]", "Name" %>
         <%= text_field_tag "notification[name]", (@promotion_target.promotion.notification || {}).fetch("name", ""), onchange: "validate();" %>
@@ -186,7 +197,13 @@
         <%= text_area_tag "notification[push_text]", (@promotion_target.promotion.notification || {}).fetch("push_text", ""), onchange: "validate();" %>
         <span id="notification_push_text_output" style="color: red;"></span>
         <br/>
-        <br/>
+        <%= label_tag "notification[link_target_type]", "Link Target" %>
+        <%= radio_button_tag "notification[link_target_type]", :home, (@promotion_target.promotion.notification || {}).fetch("link_target_type", "home") == "home", onchange: "validate();" %>
+        <%= label_tag "notification[link_target_type]", "Home" %>
+        &nbsp;
+        <%= radio_button_tag "notification[link_target_type]", :invitation_link, (@promotion_target.promotion.notification || {}).fetch("link_target_type", "") == "invitation_link", onchange: "validate();" %>
+        <%= label_tag "notification[link_target_type]", "Invitation Link" %>
+        <br/><br/>
       </div>
 
       <div id="entry_select">
@@ -392,7 +409,7 @@
   <%= label_tag :enable_contest_joined_email, "Enable this email" %>
   <br/>
   <%= label_tag :email_contest_joined_layout, "Layout" %>
-  <%= text_field_tag :email_contest_joined_layout, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("layout") { "configurable" }, onchange: "validate();updateEmails();" %>
+  <%= text_field_tag :email_contest_joined_layout, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {}).fetch("layout") || "configurable", onchange: "validate();updateEmails();" %>
   <br/>
   <%= label_tag :email_contest_joined_subject, "Subject" %>
   <%= text_field_tag :email_contest_joined_subject, @promotion_target.promotion.emails.fetch("contest_joined", {}).fetch("content", {})["subject"], onchange: "validate();" %>
