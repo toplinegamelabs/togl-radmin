@@ -108,6 +108,10 @@
     </div>
 
   <%- end %>
+    <br/>
+    <%= label_tag :sort_ranking, "Sort Ranking (Higher numbers get priority)" %>
+    <%= number_field_tag :sort_ranking, @promotion_target.promotion.sort_ranking, step: 'any', onchange: "validate();" %>
+      
 
     <div id="target_settings">
       <br/>
@@ -838,7 +842,9 @@
           } else {
             $("#es_output").text("");
             document.getElementById('submitter').removeAttribute("disabled");
-            document.getElementById('pending_promotion').removeAttribute("disabled");
+            if (document.getElementById('pending_promotion')) {
+              document.getElementById('pending_promotion').removeAttribute("disabled");
+            }
             $.each(data, function(index, slot) {
 
               var drop = $("#entry_item").clone();

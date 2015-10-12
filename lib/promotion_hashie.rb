@@ -8,6 +8,7 @@ class PromotionHashie < Hashie::Dash
   property :invitation_hashtag, default: "#"
   property :notification, default: {}
   property :is_pending, default: false
+  property :sort_ranking, default: 0
 
   property :name_logo, default: 
     {

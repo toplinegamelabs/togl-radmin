@@ -95,6 +95,7 @@ class PromotionsController < ApplicationController
       "promotion" => {
         "name" => params["promo_name"],
         "identifier" => params["promo_identifier"],
+        "sort_ranking" => params["sort_ranking"],
         "description" => params["promo_description"],
         "promotion_group_id" => params["promotion_group_id"],
         "activation_deadline" => activation_deadline,
@@ -210,6 +211,7 @@ class PromotionsController < ApplicationController
       "promotion" => {
         "name" => params["promo_name"],
         "identifier" => params["promo_identifier"],
+        "sort_ranking" => params["sort_ranking"],
         "description" => params["promo_description"],
         "promotion_group_id" => params["promotion_group_id"],
         "activation_deadline" => activation_deadline,
