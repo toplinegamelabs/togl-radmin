@@ -24,6 +24,17 @@ ToglAdmin::Application.routes.draw do
     end
   end
 
+  resources :users, only: [] do
+    collection do
+      get "search"
+      get "search_csv"
+    end
+    member do
+      patch "enable"
+      patch "disable"
+    end
+  end
+
   get "/rapi_users/csv_list", to: "rapi_users#csv_list"
   get "/rapi_users/search", to: "rapi_users#search", as: "rapi_user_search"
 

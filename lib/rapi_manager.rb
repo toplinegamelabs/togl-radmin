@@ -118,6 +118,42 @@ class RapiManager
     JSON.parse(json_response.body)
   end
 
+  def search_users(query_string)
+    rapi_conn = get_connection
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/user_search.json", { query: query_string }
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+    JSON.parse(json_response.body)["users"]
+  end
+
+  def search_users_csv(query_string)
+    rapi_conn = get_connection
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/user_search.csv", { query: query_string }
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+    json_response.body
+  end
+
+  def update_user(id, properties)
+    rapi_conn = get_connection
+    json_response = rapi_conn.patch do |req|
+      req.url "/admin/users/#{id}.json"
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+      req.body = properties
+    end
+  end
+
   def user_csv_list
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|
