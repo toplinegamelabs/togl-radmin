@@ -154,18 +154,6 @@ class RapiManager
     end
   end
 
-  def user_csv_list
-    rapi_conn = get_connection
-    json_response = rapi_conn.get do |req|
-      req.url "/admin/user_list.json"
-      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
-      req.headers['Content-Type'] = 'application/json'
-      req.headers['Accept'] = 'application/json'
-      req.headers['ADMIN-TOKEN'] = admin_token
-    end
-    JSON.parse(json_response.body)
-  end
-
   def create_promo(params)
     rapi_conn = get_connection
     json_response = rapi_conn.post do |req|
