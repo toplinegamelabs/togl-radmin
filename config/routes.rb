@@ -15,6 +15,8 @@ ToglAdmin::Application.routes.draw do
     end
   end
 
+  resources :other_tools, only: [:index]
+
   resources :contest_seeds, only: [:new, :index, :edit, :create, :update, :destroy]
 
   resources :promotions, only: [:new, :index, :show, :edit, :create, :update] do
