@@ -142,6 +142,42 @@ class RapiManager
     JSON.parse(json_response.body)["user_identity"]
   end
 
+  def lookup_user_contests_by_username(username)
+    rapi_conn = get_connection
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/user_contests_lookup.json", { username: username }
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+    JSON.parse(json_response.body)["contests"]
+  end
+
+  def lookup_user_contests_by_email(email)
+    rapi_conn = get_connection
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/user_contests_lookup.json", { email: email }
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+    JSON.parse(json_response.body)["contests"]
+  end
+
+  def lookup_user_contests_by_user_uuid(user_uuid)
+    rapi_conn = get_connection
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/user_contests_lookup.json", { user_uuid: user_uuid }
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+    JSON.parse(json_response.body)["contests"]
+  end
+
   def search_users_csv(query_string)
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|
