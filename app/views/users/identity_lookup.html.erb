@@ -17,41 +17,22 @@
 <br/>
 <%- if @identity_information.present? %>
   <table>
-    <tr>
-      <td>Timestamp</td>
-      <td>Successful?</td>
-      <td>Full Name</td>
-      <td>Birthdate</td>
-      <td>Address</td>
-      <td>City</td>
-      <td>Postal Code</td>
-      <td>State Code</td>
-      <td>Country Code</td>
-      <td>Identity Confidence Score</td>
-      <td>Fraud Confidence Score</td>
-      <td>Response Code</td>
-      <td>Response Message</td>
-      <td>Location Detail</td>
-      <td>Reason Codes</td>
-      <td>&nbsp;</td>
-    </tr>
-    <tr>
-      <td><%= @identity_information["created_at"] %></td>
-      <td><%= @identity_information["was_successful"] %></td>
-      <td><%= @identity_information["request"]["FullName"] %></td>
-      <td><%= @identity_information["request"]["DateOfBirth"] %></td>
-      <td><%= @identity_information["request"]["AddressLine1"] %></td>
-      <td><%= @identity_information["request"]["City"] %></td>
-      <td><%= @identity_information["request"]["PostalCode"] %></td>
-      <td><%= @identity_information["request"]["StateCode"] %></td>
-      <td><%= @identity_information["request"]["CountryCode"] %></td>
-      <td><%= @identity_information["response"]["IdentityConfidenceScore"] %></td>
-      <td><%= @identity_information["response"]["FraudConfidenceScore"] %></td>
-      <td><%= @identity_information["response"]["ResponseCode"] %></td>
-      <td><%= @identity_information["response"]["ResponseMessage"] %></td>
-      <td><%= @identity_information["response"]["LocationDetail"] %></td>
-      <td><%= @identity_information["response"]["ReasonCodes"] %></td>
-    </tr>
+    <tr><td>Timestamp: <%= @identity_information["created_at"] %></td></tr>
+    <tr><td>Successful?: <%= @identity_information["was_successful"] %></td></tr>
+    <tr><td>Full Name: <%= @identity_information["request"]["FullName"] %></td></tr>
+    <tr><td>Birthdate: <%= @identity_information["request"]["DateOfBirth"] %></td></tr>
+    <tr><td>Address: <%= @identity_information["request"]["AddressLine1"] %></td></tr>
+    <tr><td>City: <%= @identity_information["request"]["City"] %></td></tr>
+    <tr><td>Postal Code: <%= @identity_information["request"]["PostalCode"] %></td></tr>
+    <tr><td>State Code: <%= @identity_information["request"]["StateCode"] %></td></tr>
+    <tr><td>Country Code: <%= @identity_information["request"]["CountryCode"] %></td></tr>
+    <tr><td>Identity Confidence Score: <%= @identity_information["response"]["IdentityConfidenceScore"] %></td></tr>
+    <tr><td>Fraud Confidence Score: <%= @identity_information["response"]["FraudConfidenceScore"] %></td></tr>
+    <tr><td>Response Code: <%= @identity_information["response"]["ResponseCode"] %></td></tr>
+    <tr><td>Response Message: <%= @identity_information["response"]["ResponseMessage"] %></td></tr>
+    <tr><td>Location Detail: <%= @identity_information["response"]["LocationDetail"] %></td></tr>
+    <tr><td>Reason Codes: <%= @identity_information["response"]["ReasonCodes"] %></td></tr>
+    <tr><td>&nbsp;</td></tr>
   </table>
 <%- else %>
   <p>

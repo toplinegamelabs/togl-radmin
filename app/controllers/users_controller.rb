@@ -5,9 +5,9 @@ class UsersController < ApplicationController
 
   def identity_lookup
     @user_uuid = params[:user_uuid]
-    @identity_information = RapiManager.new.lookup_user_identity(params[:user_uuid])
-    puts @user_uuid
-    puts @identity_information
+    if @user_uuid.present?
+      @identity_information = RapiManager.new.lookup_user_identity(@user_uuid)
+    end
   end
 
   def search_csv
