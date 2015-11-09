@@ -130,6 +130,18 @@ class RapiManager
     JSON.parse(json_response.body)["users"]
   end
 
+  def lookup_user_identity(user_uuid)
+    rapi_conn = get_connection
+    json_response = rapi_conn.get do |req|
+      req.url "/admin/user_identity_lookup.json", { user_uuid: user_uuid }
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+    end
+    JSON.parse(json_response.body)["user_identity"]
+  end
+
   def search_users_csv(query_string)
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|

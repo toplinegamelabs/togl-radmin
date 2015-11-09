@@ -3,6 +3,11 @@ class UsersController < ApplicationController
     @user_results = RapiManager.new.search_users(params[:query])
   end
 
+  def identity_lookup
+    @user_uuid = params[:user_uuid]
+    @identity_information = RapiManager.new.lookup_user_identity(params[:user_uuid])
+  end
+
   def search_csv
     send_data RapiManager.new.search_users_csv(params[:query]), type: Mime::CSV, disposition: "attachment; filename=users.csv"
   end
