@@ -30,6 +30,7 @@ ToglAdmin::Application.routes.draw do
     collection do
       get "search"
       get "search_csv"
+      get "identity_lookup"
     end
     member do
       patch "enable"
