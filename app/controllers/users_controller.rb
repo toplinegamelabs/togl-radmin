@@ -10,6 +10,10 @@ class UsersController < ApplicationController
     end
   end
 
+  def contests_lookup
+
+  end
+
   def search_csv
     send_data RapiManager.new.search_users_csv(params[:query]), type: Mime::CSV, disposition: "attachment; filename=users.csv"
   end

@@ -1,0 +1,71 @@
+<%= form_tag "/users/contests_lookup", method: :get do %>
+  <%= label_tag :username, "Contests Lookup by Username" %><br/>
+
+  <br/>
+  <%= text_field_tag :username, params[:username] %>
+  <%= submit_tag "Search by Username" %>
+  <br/>
+<%- end %>
+<%= form_tag "/users/contests_lookup", method: :get do %>
+  <%= label_tag :uuid, "Contests Lookup by UUID" %><br/>
+
+  <br/>
+  <%= text_field_tag :uuid, params[:uuid] %>
+  <%= submit_tag "Search by UUID" %>
+  <br/>
+<%- end %>
+<%= form_tag "/users/contests_lookup", method: :get do %>
+  <%= label_tag :email, "Contests Lookup by Email" %><br/>
+
+  <br/>
+  <%= text_field_tag :email, params[:email] %>
+  <%= submit_tag "Search by Email" %>
+  <br/>
+<%- end %>
+
+
+
+<br/>
+<br/>
+<br/>
+<br/>
+<%- if @user_results.present? %>
+  <table>
+    <tr>
+      <td>ID</td>
+      <td>Status</td>
+      <td>UUID</td>
+      <td>Username</td>
+      <td>Email</td>
+      <td>Current Ip</td>
+      <td>Previous Ip</td>
+      <td>Relationship</td>
+      <td>&nbsp;</td>
+    </tr>
+  <%- @user_results.each do |result| %>
+    <tr>
+      <td><%= result["id"] %></td>
+      <td><%= result["state"] %></td>
+      <td><%= result["uuid"] %></td>
+      <td><%= result["username"] %></td>
+      <td><%= result["email"] %></td>
+      <td><%= result["current_login_ip"] %></td>
+      <td><%= result["last_login_ip"] %></td>
+      <td><%= result["relationship"] %></td>
+      <td>
+        <%- if result["state"] == "active" %>
+          <%= link_to "Disable", disable_user_path(result["id"]), method: :patch, confirm: "Sure?"  %>
+        <%- elsif result["state"] == "disabled" %>
+          <%= link_to "Activate", enable_user_path(result["id"]), method: :patch, confirm: "Sure?" %>
+        <%- end %>
+      </td>
+    </tr>
+  <%- end %>
+  </table>
+  <br/>
+  <%= link_to "Download CSV", search_csv_users_path(query: params[:query]) %>
+<%- else %>
+  <p>
+  No Results
+  </p>
+<%- end %>
