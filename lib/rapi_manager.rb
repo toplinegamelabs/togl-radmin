@@ -166,10 +166,10 @@ class RapiManager
     JSON.parse(json_response.body)["contests"]
   end
 
-  def lookup_user_contests_by_user_uuid(user_uuid)
+  def lookup_user_contests_by_uuid(uuid)
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|
-      req.url "/admin/user_contests_lookup.json", { user_uuid: user_uuid }
+      req.url "/admin/user_contests_lookup.json", { user_uuid: uuid }
       req.headers['Authorization'] = 'Token token="' + auth_token + '"'
       req.headers['Content-Type'] = 'application/json'
       req.headers['Accept'] = 'application/json'

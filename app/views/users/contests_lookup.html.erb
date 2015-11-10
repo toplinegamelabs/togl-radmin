@@ -1,21 +1,23 @@
 <%= form_tag "/users/contests_lookup", method: :get do %>
-  <%= label_tag :username, "Contests Lookup by Username" %><br/>
+  <%= label_tag :username, "Lookup by Username" %><br/>
 
   <br/>
   <%= text_field_tag :username, params[:username] %>
   <%= submit_tag "Search by Username" %>
   <br/>
+  <br/>
 <%- end %>
 <%= form_tag "/users/contests_lookup", method: :get do %>
-  <%= label_tag :uuid, "Contests Lookup by UUID" %><br/>
+  <%= label_tag :uuid, "Lookup by UUID" %><br/>
 
   <br/>
   <%= text_field_tag :uuid, params[:uuid] %>
   <%= submit_tag "Search by UUID" %>
   <br/>
+  <br/>
 <%- end %>
 <%= form_tag "/users/contests_lookup", method: :get do %>
-  <%= label_tag :email, "Contests Lookup by Email" %><br/>
+  <%= label_tag :email, "Lookup by Email" %><br/>
 
   <br/>
   <%= text_field_tag :email, params[:email] %>
@@ -23,47 +25,36 @@
   <br/>
 <%- end %>
 
-
-
 <br/>
 <br/>
 <br/>
 <br/>
-<%- if @user_results.present? %>
+<%- if @contest_results.present? %>
   <table>
     <tr>
       <td>ID</td>
-      <td>Status</td>
-      <td>UUID</td>
-      <td>Username</td>
-      <td>Email</td>
-      <td>Current Ip</td>
-      <td>Previous Ip</td>
-      <td>Relationship</td>
+      <td>Game</td>
+      <td>Event Set</td>
+      <td>Lock Time</td>
+      <td>Entries</td>
+      <td>Size</td>
+      <td>Buyin</td>
       <td>&nbsp;</td>
     </tr>
-  <%- @user_results.each do |result| %>
+  <%- @contest_results.each do |result| %>
     <tr>
       <td><%= result["id"] %></td>
-      <td><%= result["state"] %></td>
-      <td><%= result["uuid"] %></td>
-      <td><%= result["username"] %></td>
-      <td><%= result["email"] %></td>
-      <td><%= result["current_login_ip"] %></td>
-      <td><%= result["last_login_ip"] %></td>
-      <td><%= result["relationship"] %></td>
-      <td>
-        <%- if result["state"] == "active" %>
-          <%= link_to "Disable", disable_user_path(result["id"]), method: :patch, confirm: "Sure?"  %>
-        <%- elsif result["state"] == "disabled" %>
-          <%= link_to "Activate", enable_user_path(result["id"]), method: :patch, confirm: "Sure?" %>
-        <%- end %>
-      </td>
+      <td><%= result["game"] %></td>
+      <td><%= result["event_set"] %></td>
+      <td><%= result["lock_time"] %></td>
+      <td><%= result["num_entries"] %></td>
+      <td><%= result["size"] %></td>
+      <td><%= result["buy_in"] %></td>
+      <td><%= link_to "Cancel", disable_user_path(result["id"]), method: :patch, confirm: "Sure?"  %></td>
     </tr>
   <%- end %>
   </table>
   <br/>
-  <%= link_to "Download CSV", search_csv_users_path(query: params[:query]) %>
 <%- else %>
   <p>
   No Results
