@@ -12,13 +12,15 @@ class UsersController < ApplicationController
 
   def contests_lookup
     if params[:username].present?
-      @contest_results = RapiManager.new.lookup_user_contests_by_username(params[:username])
-      puts "controller: #{@contest_results.size}"
+      contest_results = RapiManager.new.lookup_user_contests_by_username(params[:username])
     elsif params[:uuid].present?
-      @contest_results = RapiManager.new.lookup_user_contests_by_uuid(params[:uuid])
+      contest_results = RapiManager.new.lookup_user_contests_by_uuid(params[:uuid])
     elsif params[:email].present?
-      @contest_results = RapiManager.new.lookup_user_contests_by_email(params[:email])
+      contest_results = RapiManager.new.lookup_user_contests_by_email(params[:email])
+    else
+      contest_results = nil
     end
+    @contest_results = contest_results
   end
 
   def search_csv
