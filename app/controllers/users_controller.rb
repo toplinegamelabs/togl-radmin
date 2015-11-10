@@ -18,6 +18,9 @@ class UsersController < ApplicationController
     elsif params[:email].present?
       @contest_results = RapiManager.new.lookup_user_contests_by_email(params[:email])
     end
+    if @contest_results.present?
+      puts "size: @contest_results.size"
+    end
   end
 
   def search_csv
