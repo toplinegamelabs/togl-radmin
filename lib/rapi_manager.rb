@@ -178,6 +178,18 @@ class RapiManager
     JSON.parse(json_response.body)["contests"]
   end
 
+  def leave_user_contest(id)
+    rapi_conn = get_connection
+    json_response = rapi_conn.post do |req|
+      req.url "/admin/user_contests/#{id}/leave"
+      req.headers['Authorization'] = 'Token token="' + auth_token + '"'
+      req.headers['Content-Type'] = 'application/json'
+      req.headers['Accept'] = 'application/json'
+      req.headers['ADMIN-TOKEN'] = admin_token
+      req.body = properties
+    end
+  end
+
   def search_users_csv(query_string)
     rapi_conn = get_connection
     json_response = rapi_conn.get do |req|

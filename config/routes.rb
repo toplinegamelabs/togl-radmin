@@ -39,6 +39,8 @@ ToglAdmin::Application.routes.draw do
     end
   end
 
+  post "/user_contests/:id/leave", to: "user_contests#leave"
+
   get "/rapi_users/csv_list", to: "rapi_users#csv_list"
   get "/rapi_users/search", to: "rapi_users#search", as: "rapi_user_search"
 

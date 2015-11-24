@@ -3,24 +3,9 @@
     <th>Available Tools</th>
     <th>&nbsp;</th>
   </tr>
-  <tr>
-    <td>
-      <%= link_to "Contest Seeds", contest_seeds_path %>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <%= link_to "Metrics", metrics_path %>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <%= link_to "User Management", search_users_path %>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <%= link_to "User Identity Lookup", { controller: :users, action: :identity_lookup } %>
-    </td>
-  </tr>
+  <tr><td><%= link_to "Contest Seeds", contest_seeds_path %></td></tr>
+  <tr><td><%= link_to "Metrics", metrics_path %></td></tr>
+  <tr><td><%= link_to "User Management", search_users_path %></td></tr>
+  <tr><td><%= link_to "User Identity Lookup", { controller: :users, action: :identity_lookup } %></td></tr>
+  <tr><td><%= link_to "Leave Contest", { controller: :users, action: :identity_lookup } %></td></tr>
 </table>

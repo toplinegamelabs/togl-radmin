@@ -26,10 +26,6 @@
 <%- end %>
 
 
-<%- puts @contest_results.present? %>
-<%- puts @contest_results.size if @contest_results.present? %>
-
-
 <br/>
 <br/>
 <br/>
@@ -55,7 +51,7 @@
       <td><%= result["num_entries"] %></td>
       <td><%= result["size"] %></td>
       <td><%= result["buy_in"] %></td>
-      <td><%= link_to "Cancel", disable_user_path(result["id"]), method: :patch, confirm: "Sure?"  %></td>
+      <td><%= link_to "Cancel", "/user_contests/#{result['id']}/leave", method: :post, confirm: "Sure?"  %></td>
     </tr>
   <%- end %>
   </table>
