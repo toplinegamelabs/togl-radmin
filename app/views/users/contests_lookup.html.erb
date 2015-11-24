@@ -47,7 +47,7 @@
       <td><%= result["id"] %></td>
       <td><%= result["game"] %></td>
       <td><%= result["event_set"] %></td>
-      <td><%= Time.parse(result["lock_time"]) %></td>
+      <td><%= Time.parse(result["lock_time"]).in_time_zone("America/Los_Angeles") %></td>
       <td><%= result["num_entries"] %></td>
       <td><%= result["size"] %></td>
       <td><%= result["buy_in"] %></td>
