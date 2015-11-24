@@ -187,6 +187,7 @@ class RapiManager
       req.headers['Accept'] = 'application/json'
       req.headers['ADMIN-TOKEN'] = admin_token
     end
+    json_response.status
   end
 
   def search_users_csv(query_string)

@@ -1,1 +1,9 @@
-<%- pp @result %>
+<%- 
+  if @status == 200
+    puts "Success!"
+  elsif @status == 422
+    puts "You're supposedly not allowed to leave this contest..."
+  else
+    puts "Something bad happened.  Let joet know, please"
+  end
+%>
