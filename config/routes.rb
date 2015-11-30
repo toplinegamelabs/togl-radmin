@@ -15,6 +15,8 @@ ToglAdmin::Application.routes.draw do
     end
   end
 
+  resources :other_tools, only: [:index]
+
   resources :contest_seeds, only: [:new, :index, :edit, :create, :update, :destroy]
 
   resources :promotions, only: [:new, :index, :show, :edit, :create, :update] do
@@ -28,12 +30,16 @@ ToglAdmin::Application.routes.draw do
     collection do
       get "search"
       get "search_csv"
+      get "identity_lookup"
+      get "contests_lookup"
     end
     member do
       patch "enable"
       patch "disable"
     end
   end
+
+  post "/user_contests/:id/leave", to: "user_contests#leave"
 
   get "/rapi_users/csv_list", to: "rapi_users#csv_list"
   get "/rapi_users/search", to: "rapi_users#search", as: "rapi_user_search"

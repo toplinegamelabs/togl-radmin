@@ -12,9 +12,6 @@ class RapiUsersController < ApplicationController
   def csv_list
     rapi_response = RapiManager.new.user_csv_list
 
-
-
     send_data rapi_response.join("\n"), filename: "users.csv"
   end
-
 end
